@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Repositories;
+namespace SimpleSAML\Module\oauth2\Repositories;
 
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
-use SimpleSAML\Modules\OAuth2\Entity\AuthCodeEntity;
+use SimpleSAML\Module\oauth2\Entity\AuthCodeEntity;
 
 class AuthCodeRepository extends AbstractDBALRepository implements AuthCodeRepositoryInterface
 {

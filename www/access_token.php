@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-use SimpleSAML\Modules\OAuth2\OAuth2AuthorizationServer;
+use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 

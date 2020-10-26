@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Repositories;
+namespace SimpleSAML\Module\oauth2\Repositories;
 
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
-use SimpleSAML\Modules\OAuth2\Entity\RefreshTokenEntity;
+use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
 class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTokenRepositoryInterface
 {

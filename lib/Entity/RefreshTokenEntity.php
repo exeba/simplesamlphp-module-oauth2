@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Entity;
+namespace SimpleSAML\Module\oauth2\Entity;
 
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;

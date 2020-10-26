@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Form;
+namespace SimpleSAML\Module\oauth2\Form;
 
 use Nette\Forms\Form;
 use SimpleSAML\Module;

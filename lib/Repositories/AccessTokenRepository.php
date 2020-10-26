@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Repositories;
+namespace SimpleSAML\Module\oauth2\Repositories;
 
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use SimpleSAML\Modules\OAuth2\Entity\AccessTokenEntity;
+use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
 
 class AccessTokenRepository extends AbstractDBALRepository implements AccessTokenRepositoryInterface
 {

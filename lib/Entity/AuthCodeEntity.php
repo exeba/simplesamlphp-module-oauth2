@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Entity;
+namespace SimpleSAML\Module\oauth2\Entity;
 
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
+use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
+use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-class AccessTokenEntity implements AccessTokenEntityInterface
+class AuthCodeEntity implements AuthCodeEntityInterface
 {
-    use AccessTokenTrait, TokenEntityTrait, EntityTrait;
+    use EntityTrait, TokenEntityTrait, AuthCodeTrait;
 }

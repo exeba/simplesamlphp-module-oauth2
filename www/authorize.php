@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-use SimpleSAML\Modules\OAuth2\Entity\UserEntity;
-use SimpleSAML\Modules\OAuth2\OAuth2AuthorizationServer;
-use SimpleSAML\Modules\OAuth2\Repositories\ClientRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\UserRepository;
+use SimpleSAML\Module\oauth2\Entity\UserEntity;
+use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
+use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
+use SimpleSAML\Module\oauth2\Repositories\UserRepository;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 

@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2\Repositories;
+namespace SimpleSAML\Module\oauth2\Repositories;
 
 use Doctrine\DBAL\Connection;
 use SimpleSAML\Modules\DBAL\Store\DBAL;

@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-use SimpleSAML\Modules\OAuth2\OAuth2ResourceServer;
-use SimpleSAML\Modules\OAuth2\Repositories\AccessTokenRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\UserRepository;
+use SimpleSAML\Module\oauth2\OAuth2ResourceServer;
+use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
+use SimpleSAML\Module\oauth2\Repositories\UserRepository;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;

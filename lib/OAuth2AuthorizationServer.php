@@ -8,18 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace SimpleSAML\Modules\OAuth2;
+namespace SimpleSAML\Module\oauth2;
 
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
-use SimpleSAML\Modules\OAuth2\Repositories\AccessTokenRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\AuthCodeRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\ClientRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\RefreshTokenRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\ScopeRepository;
+use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
+use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
+use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
+use SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository;
+use SimpleSAML\Module\oauth2\Repositories\ScopeRepository;
 use SimpleSAML\Utils\Config;
 
 class OAuth2AuthorizationServer

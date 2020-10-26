@@ -1,5 +1,5 @@
 {
-    "name": "sgomez/simplesamlphp-module-oauth2",
+    "name": "exeba/simplesamlphp-module-oauth2",
     "description": "A SimpleSAMLphp module adding support for the OAuth2 protocol.",
     "type": "simplesamlphp-module",
     "keywords": [ "oauth2" ],
@@ -11,8 +11,8 @@
         }
     ],
     "autoload": {
-    "psr-0": {
-        "SimpleSAML\\Modules\\OAuth2\\": "lib"
+    "psr-3": {
+        "SimpleSAML\\Module\\oauth2\\": "lib"
         }
     },
     "require": {
