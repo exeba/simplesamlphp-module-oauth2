@@ -24,7 +24,7 @@ try {
     $clientRepository = new ClientRepository();
     $client = $clientRepository->find($clientId);
 
-    $oauth2config = \SimpleSAML_Configuration::getOptionalConfig('module_oauth2.php');
+    $oauth2config = \SimpleSAML\Configuration::getOptionalConfig('module_oauth2.php');
 
     if (!$client || !$client['auth_source']) {
         $as = $oauth2config->getString('auth');
@@ -32,7 +32,7 @@ try {
         $as = $client['auth_source'];
     }
 
-    $auth = new \SimpleSAML_Auth_Simple($as);
+    $auth = new \SimpleSAML\Auth\Simple($as);
     $auth->requireAuth();
 
     $attributes = $auth->getAttributes();

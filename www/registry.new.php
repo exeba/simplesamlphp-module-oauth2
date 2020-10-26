@@ -16,7 +16,7 @@ use SimpleSAML\Utils\Random;
 
 /* Load simpleSAMLphp, configuration and metadata */
 $action = \SimpleSAML\Module::getModuleURL('oauth2/registry.new.php');
-$config = \SimpleSAML_Configuration::getInstance();
+$config = \SimpleSAML\Configuration::getInstance();
 
 Auth::requireAdmin();
 
@@ -41,6 +41,6 @@ if ($form->isSubmitted() && $form->isSuccess()) {
     HTTP::redirectTrustedURL('registry.php');
 }
 
-$template = new \SimpleSAML_XHTML_Template($config, 'oauth2:registry_new');
+$template = new \SimpleSAML\XHTML\Template($config, 'oauth2:registry_new');
 $template->data['form'] = $form;
 $template->show();

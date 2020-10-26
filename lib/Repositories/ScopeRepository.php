@@ -21,7 +21,7 @@ class ScopeRepository implements ScopeRepositoryInterface
      */
     public function getScopeEntityByIdentifier($identifier)
     {
-        $oauth2config = \SimpleSAML_Configuration::getConfig('module_oauth2.php');
+        $oauth2config = \SimpleSAML\Configuration::getConfig('module_oauth2.php');
 
         $scopes = $oauth2config->getArray('scopes');
 

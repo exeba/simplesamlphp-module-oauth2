@@ -36,7 +36,7 @@ class ClientForm extends Form
             ->setRequired('Write one redirect URI at least')
         ;
         $this->addSelect('auth_source', 'Authorization source:')
-            ->setItems(\SimpleSAML_Auth_Source::getSources(), false)
+            ->setItems(\SimpleSAML\Auth\Source::getSources(), false)
             ->setPrompt('Pick an AuthSource or blank for default')
             ->setRequired(false)
         ;

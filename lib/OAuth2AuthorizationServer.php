@@ -32,7 +32,7 @@ class OAuth2AuthorizationServer
             return self::$instance;
         }
 
-        $oauth2config = \SimpleSAML_Configuration::getConfig('module_oauth2.php');
+        $oauth2config = \SimpleSAML\Configuration::getConfig('module_oauth2.php');
         $accessTokenDuration = $oauth2config->getString('accessTokenDuration');
         $authCodeDuration = $oauth2config->getString('authCodeDuration');
         $passPhrase = $oauth2config->getString('pass_phrase', null);
