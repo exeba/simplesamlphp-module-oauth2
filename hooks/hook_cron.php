@@ -18,7 +18,7 @@ function oauth2_hook_cron(&$croninfo)
     assert('array_key_exists("summary", $croninfo)');
     assert('array_key_exists("tag", $croninfo)');
 
-    $oauth2config = SimpleSAML_Configuration::getOptionalConfig('module_oauth2.php');
+    $oauth2config = \SimpleSAML\Configuration::getOptionalConfig('module_oauth2.php');
 
     if (is_null($oauth2config->getValue('cron_tag', 'hourly'))) {
         return;
@@ -30,8 +30,8 @@ function oauth2_hook_cron(&$croninfo)
     try {
         $store = \SimpleSAML\Store::getInstance();
 
-        if (!$store instanceof \SimpleSAML\Modules\DBAL\Store\DBAL) {
-            throw new \SimpleSAML_Error_Exception('OAuth2 module: Only DBAL Store is supported');
+        if (!$store instanceof \SimpleSAML\Module\dbal\Store\DBAL) {
+            throw new \SimpleSAML\Error\Exception('OAuth2 module: Only DBAL Store is supported');
         }
 
         $accessTokenRepository = new AccessTokenRepository();

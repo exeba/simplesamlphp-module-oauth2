@@ -4,8 +4,8 @@ function oauth2_hook_dbal(&$dbinfo)
 {
     $store = \SimpleSAML\Store::getInstance();
 
-    if (!$store instanceof \SimpleSAML\Modules\DBAL\Store\DBAL) {
-        throw new \SimpleSAML_Error_Exception('OAuth2 module: Only DBAL Store is supported');
+    if (!$store instanceof \SimpleSAML\Module\dbal\Store\DBAL) {
+        throw new \SimpleSAML\Error\Exception('OAuth2 module: Only DBAL Store is supported');
     }
 
     $schema = new \Doctrine\DBAL\Schema\Schema();
