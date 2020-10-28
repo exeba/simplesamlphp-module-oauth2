@@ -11,7 +11,7 @@
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use Doctrine\DBAL\Connection;
-use SimpleSAML\Modules\DBAL\Store\DBAL;
+use SimpleSAML\Module\dbal\Store\DBAL;
 
 abstract class AbstractDBALRepository
 {
