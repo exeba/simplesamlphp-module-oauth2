@@ -28,8 +28,9 @@ try {
     $userId = $accessTokenRepository->getUserId($tokenId);
 
     $userRepository = new UserRepository();
-    $attributes['attributes'] = $userRepository->getAttributes($userId);
-    $attributes['username'] = $userId;
+    $attributes = array_map(function($attributeArray) {
+        return $attributeArray[0];
+    }, $userRepository->getAttributes($userId));
 
     $response = new JsonResponse($attributes);
 
