@@ -15,12 +15,6 @@
         "SimpleSAML\\Module\\oauth2\\": "lib"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/exeba/simplesamlphp-module-dbal.git"
-        }
-    ],
     "require": {
         "php"                                       : ">=5.5.9",
         "simplesamlphp/composer-module-installer"   : "~1.0",
