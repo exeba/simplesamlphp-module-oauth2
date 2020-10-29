@@ -8,6 +8,10 @@
         {
             "name": "Sergio Gómez",
             "email": "sergio@uco.es"
+        },
+        {
+            "name": "Sebastiano Degan",
+            "email": "sebdeg87@gmail.com"
         }
     ],
     "autoload": {
