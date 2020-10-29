@@ -100,4 +100,9 @@ class ClientEntity implements ClientEntityInterface
     {
         $this->authSource = $authSource;
     }
+
+    public function isConfidential()
+    {
+        return true;
+    }
 }

@@ -19,16 +19,11 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
     /**
      * {@inheritdoc}
      */
-    public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
+    public function getClientEntity($clientIdentifier)
     {
         /** @var \SimpleSAML\Module\oauth2\Entity\ClientEntity $entity */
         $entity = $this->find($clientIdentifier);
-
         if (!$entity) {
-            return null;
-        }
-
-        if ($clientSecret && $clientSecret !== $entity['secret']) {
             return null;
         }
 
@@ -154,5 +149,19 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
         ], [
             'string',
         ]);
+    }
+
+    public function validateClient($clientIdentifier, $clientSecret, $grantType)
+    {
+        $entity = $this->find($clientIdentifier);
+
+        if (!$entity) {
+            return false;
+        }
+        if ($clientSecret && $clientSecret !== $entity['secret']) {
+            return false;
+        }
+
+        return true;
     }
 }
