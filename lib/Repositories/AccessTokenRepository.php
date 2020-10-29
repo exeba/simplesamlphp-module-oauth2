@@ -24,6 +24,7 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
     {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
+        $accessToken->setUserIdentifier($userIdentifier);
         foreach ($scopes as $scope) {
             $accessToken->addScope($scope);
         }
