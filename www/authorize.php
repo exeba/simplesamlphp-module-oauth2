@@ -8,12 +8,13 @@
  * file that was distributed with this source code.
  */
 
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 use SimpleSAML\Module\oauth2\Repositories\UserRepository;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequestFactory;
 
 try {
     $request = ServerRequestFactory::fromGlobals();
@@ -54,7 +55,7 @@ try {
 
     $response = $server->completeAuthorizationRequest($authRequest, new Response());
 
-    $emiter = new Response\SapiEmitter();
+    $emiter = new SapiEmitter();
     $emiter->emit($response);
 } catch (Exception $e) {
     header('Content-type: text/plain; utf-8', true, 500);
