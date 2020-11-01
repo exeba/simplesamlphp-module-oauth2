@@ -8,9 +8,12 @@
  * file that was distributed with this source code.
  */
 
+use SimpleSAML\Configuration;
+use SimpleSAML\Module\dbal\Store\DBAL;
 use SimpleSAML\Modules\OAuth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Modules\OAuth2\Repositories\AuthCodeRepository;
 use SimpleSAML\Modules\OAuth2\Repositories\RefreshTokenRepository;
+use SimpleSAML\Store;
 
 function oauth2_hook_cron(&$croninfo)
 {
@@ -18,7 +21,7 @@ function oauth2_hook_cron(&$croninfo)
     assert('array_key_exists("summary", $croninfo)');
     assert('array_key_exists("tag", $croninfo)');
 
-    $oauth2config = \SimpleSAML\Configuration::getOptionalConfig('module_oauth2.php');
+    $oauth2config = Configuration::getOptionalConfig('module_oauth2.php');
 
     if (is_null($oauth2config->getValue('cron_tag', 'hourly'))) {
         return;
@@ -28,9 +31,9 @@ function oauth2_hook_cron(&$croninfo)
     }
 
     try {
-        $store = \SimpleSAML\Store::getInstance();
+        $store = Store::getInstance();
 
-        if (!$store instanceof \SimpleSAML\Module\dbal\Store\DBAL) {
+        if (!$store instanceof DBAL) {
             throw new \SimpleSAML\Error\Exception('OAuth2 module: Only DBAL Store is supported');
         }
 

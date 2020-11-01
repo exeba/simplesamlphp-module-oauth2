@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use InvalidArgumentException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Utils\Random;
@@ -21,7 +22,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
      */
     public function getClientEntity($clientIdentifier)
     {
-        /** @var \SimpleSAML\Module\oauth2\Entity\ClientEntity $entity */
+        /** @var ClientEntity $entity */
         $entity = $this->find($clientIdentifier);
         if (!$entity) {
             return null;
@@ -43,7 +44,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
             if (is_string($redirectUri)) {
                 $redirectUri = [$redirectUri];
             } else {
-                throw new \InvalidArgumentException('Client redirect URI must be a string or an array.');
+                throw new InvalidArgumentException('Client redirect URI must be a string or an array.');
             }
         }
 
@@ -100,7 +101,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
      */
     public function find($clientIdentifier)
     {
-        $client = $this->conn->fetchAssoc(
+        $client = $this->conn->fetchAssociative(
             'SELECT * FROM '.$this->getTableName().' WHERE id = ?',
             [
                 $clientIdentifier,
@@ -122,7 +123,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
      */
     public function findAll()
     {
-        $clients = $this->conn->fetchAll(
+        $clients = $this->conn->fetchAllAssociative(
             'SELECT * FROM '.$this->getTableName()
         );
 

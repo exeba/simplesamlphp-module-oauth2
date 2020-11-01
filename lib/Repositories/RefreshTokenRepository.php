@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use DateTime;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
@@ -53,17 +54,17 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        return $this->conn->fetchColumn('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$tokenId]);
+        return $this->conn->fetchOne('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$tokenId]);
     }
 
     public function removeExpiredRefreshTokens()
     {
-        $this->conn->executeUpdate('
+        $this->conn->executeStatement('
                 DELETE FROM '.$this->getTableName().'
                 WHERE expires_at < ?
             ',
             [
-                new \DateTime(),
+                new DateTime(),
             ],
             [
                 'datetime',

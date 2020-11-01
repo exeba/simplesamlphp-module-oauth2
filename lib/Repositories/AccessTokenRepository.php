@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use DateTime;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
@@ -62,7 +63,7 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
 
     public function getUserId($tokenId)
     {
-        $userId = $this->conn->fetchColumn(
+        $userId = $this->conn->fetchOne(
             'SELECT user_id FROM '.$this->getTableName().' WHERE id = ?',
             [$tokenId]
         );
@@ -83,7 +84,7 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        return $this->conn->fetchColumn(
+        return $this->conn->fetchOne(
             'SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?',
             [$tokenId]
         );
@@ -91,9 +92,9 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
 
     public function removeExpiredAccessTokens()
     {
-        $this->conn->executeUpdate(
+        $this->conn->executeStatement(
             'DELETE FROM '.$this->getTableName().' WHERE expires_at < ?',
-            [new \DateTime()],
+            [new DateTime()],
             ['datetime']
         );
     }

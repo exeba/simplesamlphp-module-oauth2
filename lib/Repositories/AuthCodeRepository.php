@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use DateTime;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\AuthCodeEntity;
@@ -64,17 +65,17 @@ class AuthCodeRepository extends AbstractDBALRepository implements AuthCodeRepos
      */
     public function isAuthCodeRevoked($codeId)
     {
-        return $this->conn->fetchColumn('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$codeId]);
+        return $this->conn->fetchOne('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$codeId]);
     }
 
     public function removeExpiredAuthCodes()
     {
-        $this->conn->executeUpdate('
+        $this->conn->executeStatement('
                 DELETE FROM '.$this->getTableName().'
                 WHERE expires_at < ?
             ',
             [
-                new \DateTime(),
+                new DateTime(),
             ],
             [
                 'datetime',

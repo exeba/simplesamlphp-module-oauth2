@@ -1,14 +1,18 @@
 <?php
 
+use Doctrine\DBAL\Schema\Schema;
+use SimpleSAML\Module\dbal\Store\DBAL;
+use SimpleSAML\Store;
+
 function oauth2_hook_dbal(&$dbinfo)
 {
-    $store = \SimpleSAML\Store::getInstance();
+    $store = Store::getInstance();
 
-    if (!$store instanceof \SimpleSAML\Module\dbal\Store\DBAL) {
+    if (!$store instanceof DBAL) {
         throw new \SimpleSAML\Error\Exception('OAuth2 module: Only DBAL Store is supported');
     }
 
-    $schema = new \Doctrine\DBAL\Schema\Schema();
+    $schema = new Schema();
 
     $userTable = $store->getPrefix().'_oauth2_user';
     $user = $schema->createTable($userTable);

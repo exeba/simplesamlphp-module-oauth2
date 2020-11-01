@@ -10,6 +10,8 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use DateTime;
+use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
@@ -21,12 +23,12 @@ class UserRepository extends AbstractDBALRepository implements UserRepositoryInt
         $grantType,
         ClientEntityInterface $clientEntity
     ) {
-        throw new \Exception('Not supported');
+        throw new Exception('Not supported');
     }
 
     public function persistNewUser($id, $attributes)
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         $this->conn->insert($this->getTableName(),
             [
@@ -45,7 +47,7 @@ class UserRepository extends AbstractDBALRepository implements UserRepositoryInt
 
     public function updateUser($id, $attributes)
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         return $this->conn->update($this->getTableName(),
             [
@@ -76,7 +78,7 @@ class UserRepository extends AbstractDBALRepository implements UserRepositoryInt
 
     public function getAttributes($userId)
     {
-        $attributes = $this->conn->fetchColumn(
+        $attributes = $this->conn->fetchOne(
             'SELECT attributes FROM '.$this->getTableName().' WHERE id = ?',
             [$userId]
         );

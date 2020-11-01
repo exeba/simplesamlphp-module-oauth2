@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Entity;
 
+use DateTime;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
 class UserEntity implements UserEntityInterface
@@ -25,12 +26,12 @@ class UserEntity implements UserEntityInterface
     private $attributes;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $createdAt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $updatedAt;
 
@@ -40,7 +41,7 @@ class UserEntity implements UserEntityInterface
     public function __construct($identifier)
     {
         $this->identifier = $identifier;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
         $this->updatedAt = $this->createdAt;
     }
 
@@ -77,7 +78,7 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -85,7 +86,7 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      */
     public function setCreatedAt($createdAt)
     {
@@ -93,7 +94,7 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
@@ -101,7 +102,7 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @param DateTime $updatedAt
      */
     public function setUpdatedAt($updatedAt)
     {

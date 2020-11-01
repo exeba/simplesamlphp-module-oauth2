@@ -10,11 +10,13 @@
 
 namespace SimpleSAML\Module\oauth2;
 
+use DateInterval;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
+use SimpleSAML\Configuration;
 use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
@@ -32,7 +34,7 @@ class OAuth2AuthorizationServer
             return self::$instance;
         }
 
-        $oauth2config = \SimpleSAML\Configuration::getConfig('module_oauth2.php');
+        $oauth2config = Configuration::getConfig('module_oauth2.php');
         $accessTokenDuration = $oauth2config->getString('accessTokenDuration');
         $authCodeDuration = $oauth2config->getString('authCodeDuration');
         $passPhrase = $oauth2config->getString('pass_phrase', null);
@@ -55,28 +57,28 @@ class OAuth2AuthorizationServer
         $authCodeGrant = new AuthCodeGrant(
             new AuthCodeRepository(),
             $refreshTokenRepository,
-            new \DateInterval($authCodeDuration)
+            new DateInterval($authCodeDuration)
         );
-        $authCodeGrant->setRefreshTokenTTL(new \DateInterval($refreshTokenDuration)); // refresh tokens will expire after 1 month
+        $authCodeGrant->setRefreshTokenTTL(new DateInterval($refreshTokenDuration)); // refresh tokens will expire after 1 month
 
         self::$instance->enableGrantType(
             $authCodeGrant,
-            new \DateInterval($accessTokenDuration)
+            new DateInterval($accessTokenDuration)
         );
 
-        $implicitGrant = new ImplicitGrant(new \DateInterval($accessTokenDuration));
+        $implicitGrant = new ImplicitGrant(new DateInterval($accessTokenDuration));
 
         self::$instance->enableGrantType(
             $implicitGrant,
-            new \DateInterval($accessTokenDuration)
+            new DateInterval($accessTokenDuration)
         );
 
         $refreshTokenGrant = new RefreshTokenGrant($refreshTokenRepository);
-        $refreshTokenGrant->setRefreshTokenTTL(new \DateInterval($refreshTokenDuration));
+        $refreshTokenGrant->setRefreshTokenTTL(new DateInterval($refreshTokenDuration));
 
         self::$instance->enableGrantType(
             $refreshTokenGrant,
-            new \DateInterval($authCodeDuration)
+            new DateInterval($authCodeDuration)
         );
 
         return self::$instance;

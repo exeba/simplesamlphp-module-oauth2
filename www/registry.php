@@ -8,13 +8,16 @@
  * file that was distributed with this source code.
  */
 
+use SimpleSAML\Configuration;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
+use SimpleSAML\Session;
 use SimpleSAML\Utils\Auth;
 use SimpleSAML\Utils\HTTP;
+use SimpleSAML\XHTML\Template;
 
-$config = \SimpleSAML\Configuration::getInstance();
-$session = \SimpleSAML\Session::getSessionFromRequest();
-$oauthconfig = \SimpleSAML\Configuration::getOptionalConfig('module_oauth2.php');
+$config = Configuration::getInstance();
+$session = Session::getSessionFromRequest();
+$oauthconfig = Configuration::getOptionalConfig('module_oauth2.php');
 
 Auth::requireAdmin();
 
@@ -34,6 +37,6 @@ if (isset($_REQUEST['restore'])) {
 
 $clients = $clientRepository->findAll();
 
-$template = new \SimpleSAML\XHTML\Template($config, 'oauth2:registry_list');
+$template = new Template($config, 'oauth2:registry_list');
 $template->data['clients'] = $clients;
-$template->show();
+$template->send();

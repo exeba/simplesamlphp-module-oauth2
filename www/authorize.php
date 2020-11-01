@@ -11,6 +11,8 @@
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use SimpleSAML\Auth\Simple;
+use SimpleSAML\Configuration;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
@@ -25,7 +27,7 @@ try {
     $clientRepository = new ClientRepository();
     $client = $clientRepository->find($clientId);
 
-    $oauth2config = \SimpleSAML\Configuration::getOptionalConfig('module_oauth2.php');
+    $oauth2config = Configuration::getOptionalConfig('module_oauth2.php');
 
     if (!$client || !$client['auth_source']) {
         $as = $oauth2config->getString('auth');
@@ -33,14 +35,14 @@ try {
         $as = $client['auth_source'];
     }
 
-    $auth = new \SimpleSAML\Auth\Simple($as);
+    $auth = new Simple($as);
     $auth->requireAuth();
 
     $attributes = $auth->getAttributes();
     $useridattr = $oauth2config->getString('useridattr');
 
     if (!isset($attributes[$useridattr])) {
-        throw new \Exception('Oauth2 useridattr doesn\'t exists. Available attributes are: '.implode(', ', $attributes));
+        throw new Exception('Oauth2 useridattr doesn\'t exists. Available attributes are: '.implode(', ', $attributes));
     }
     $userid = $attributes[$useridattr][0];
 

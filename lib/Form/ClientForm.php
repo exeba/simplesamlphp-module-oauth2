@@ -11,6 +11,7 @@
 namespace SimpleSAML\Module\oauth2\Form;
 
 use Nette\Forms\Form;
+use SimpleSAML\Auth\Source;
 use SimpleSAML\Module;
 
 class ClientForm extends Form
@@ -36,7 +37,7 @@ class ClientForm extends Form
             ->setRequired('Write one redirect URI at least')
         ;
         $this->addSelect('auth_source', 'Authorization source:')
-            ->setItems(\SimpleSAML\Auth\Source::getSources(), false)
+            ->setItems(Source::getSources(), false)
             ->setPrompt('Pick an AuthSource or blank for default')
             ->setRequired(false)
         ;
