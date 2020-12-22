@@ -8,15 +8,19 @@
  * file that was distributed with this source code.
  */
 
-use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Configuration;
+use SimpleSAML\Module;
+use SimpleSAML\Module\oauth2\AuthRequestSerializer;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
+use SimpleSAML\Module\oauth2\Form\AuthorizeForm;
 use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
+use SimpleSAML\Module\oauth2\Repositories\ScopeRepository;
 use SimpleSAML\Module\oauth2\Repositories\UserRepository;
+use SimpleSAML\Utils\Config;
+use SimpleSAML\XHTML\Template;
 
 try {
     $request = ServerRequestFactory::fromGlobals();
@@ -40,7 +44,6 @@ try {
 
     $attributes = $auth->getAttributes();
     $useridattr = $oauth2config->getString('useridattr');
-
     if (!isset($attributes[$useridattr])) {
         throw new Exception('Oauth2 useridattr doesn\'t exists. Available attributes are: '.implode(', ', $attributes));
     }
@@ -53,12 +56,21 @@ try {
     $server = OAuth2AuthorizationServer::getInstance();
     $authRequest = $server->validateAuthorizationRequest($request);
     $authRequest->setUser(new UserEntity($userid));
-    $authRequest->setAuthorizationApproved(true);
 
-    $response = $server->completeAuthorizationRequest($authRequest, new Response());
+    $serializer = new AuthRequestSerializer($clientRepository, new ScopeRepository(), $userRepository, Config::getSecretSalt());
+    $serializedRequest = $serializer->serialize($authRequest);
 
-    $emiter = new SapiEmitter();
-    $emiter->emit($response);
+    $form = new AuthorizeForm('authorize');
+    $form->setDefaults(['authRequest' => $serializedRequest]);
+    $form->setAction(Module::getModuleURL('oauth2/user_choice.php'));
+
+    $config = Configuration::getInstance();
+    $template = new Template($config, 'oauth2:authorize');
+    $template->data['client'] = $client;
+    $template->data['authRequest'] = $authRequest;
+    $template->data['form'] = $form;
+    $template->send();
+
 } catch (Exception $e) {
     header('Content-type: text/plain; utf-8', true, 500);
     header('OAuth-Error: '.$e->getMessage());

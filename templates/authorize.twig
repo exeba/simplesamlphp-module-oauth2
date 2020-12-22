@@ -1,0 +1,21 @@
+{% extends "base.twig" %}
+
+{% block preload %}
+    <link rel="stylesheet" type="text/css" href="/{{ baseurlpath }}module.php/oauth2/resources/style.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Oauth2 Client Authorization</h1>
+    <p>Client <b>{{ client.name }} [{{ client.id }}]</b> is requesting authorization for the following scopes:</p>
+    <ul>
+        {% for scope in authRequest.scopes %}
+        <li><i>{{ scope.identifier }}</i></li>
+        {% endfor %}
+    </ul>
+
+    {{ form | raw }}
+
+{% endblock %}
+
+
+

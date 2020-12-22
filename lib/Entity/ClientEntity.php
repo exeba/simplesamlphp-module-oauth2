@@ -11,16 +11,12 @@
 namespace SimpleSAML\Module\oauth2\Entity;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
 class ClientEntity implements ClientEntityInterface
 {
-    use EntityTrait;
-
-    /**
-     * @var string
-     */
-    private $name;
+    use EntityTrait, ClientTrait;
 
     /**
      * @var string
@@ -30,19 +26,11 @@ class ClientEntity implements ClientEntityInterface
     /**
      * @var string
      */
-    private $redirectUri;
-
-    /**
-     * @var string
-     */
     private $authSource;
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function __construct()
     {
-        return $this->name;
+        $this->isConfidential = true;
     }
 
     /**
@@ -70,14 +58,6 @@ class ClientEntity implements ClientEntityInterface
     }
 
     /**
-     * @return string
-     */
-    public function getRedirectUri()
-    {
-        return $this->redirectUri;
-    }
-
-    /**
      * @param string $redirectUri
      */
     public function setRedirectUri($redirectUri)
@@ -99,10 +79,5 @@ class ClientEntity implements ClientEntityInterface
     public function setAuthSource($authSource)
     {
         $this->authSource = $authSource;
-    }
-
-    public function isConfidential()
-    {
-        return true;
     }
 }

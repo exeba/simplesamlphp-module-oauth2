@@ -38,7 +38,7 @@ function oauth2_hook_dbal(&$dbinfo)
     $accesstoken->addColumn('id', 'string', ['length' => 255]);
     $accesstoken->addColumn('scopes', 'json_array', ['notnull' => false]);
     $accesstoken->addColumn('expires_at', 'datetime');
-    $accesstoken->addColumn('user_id', 'string', ['length' => 255]);
+    $accesstoken->addColumn('user_id', 'string', ['length' => 255, 'notnull' => false]);
     $accesstoken->addColumn('client_id', 'string', ['length' => 255]);
     $accesstoken->addColumn('is_revoked', 'boolean', ['default' => false]);
     $accesstoken->setPrimaryKey(['id']);
