@@ -74,6 +74,6 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
 
     public function getTableName()
     {
-        return $this->store->getPrefix().'_oauth2_refreshtoken';
+        return $this->applyPrefix('oauth2_refreshtoken');
     }
 }

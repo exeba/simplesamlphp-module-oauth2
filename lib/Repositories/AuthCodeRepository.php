@@ -85,6 +85,6 @@ class AuthCodeRepository extends AbstractDBALRepository implements AuthCodeRepos
 
     public function getTableName()
     {
-        return $this->store->getPrefix().'_oauth2_authcode';
+        return $this->applyPrefix('oauth2_authcode');
     }
 }

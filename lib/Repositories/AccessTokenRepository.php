@@ -101,6 +101,6 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
 
     public function getTableName()
     {
-        return $this->store->getPrefix().'_oauth2_accesstoken';
+        return $this->applyPrefix('oauth2_accesstoken');
     }
 }

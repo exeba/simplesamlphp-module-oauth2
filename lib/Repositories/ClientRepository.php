@@ -137,7 +137,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
 
     public function getTableName()
     {
-        return $this->store->getPrefix().'_oauth2_client';
+        return $this->applyPrefix('oauth2_client');
     }
 
     public function restoreSecret($clientIdentifier)
