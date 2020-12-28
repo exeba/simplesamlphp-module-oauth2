@@ -20,12 +20,13 @@
         }
     },
     "require": {
-        "php"                                       : ">=5.5.9",
-        "ext-json"                                  : "*",
-        "simplesamlphp/composer-module-installer"   : "~1.0",
-        "league/oauth2-server"                      : "~8.1",
-        "nette/forms"                               : "~3.0",
-        "exeba/simplesamlphp-module-dbal"           : "~3.0",
+        "php": ">=5.5.9",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "doctrine/dbal": "^2.5",
+        "simplesamlphp/composer-module-installer": "~1.0",
+        "league/oauth2-server": "~8.1",
+        "nette/forms": "~3.0",
         "laminas/laminas-diactoros": "^2.4",
         "laminas/laminas-httphandlerrunner": "^1.2"
     },
