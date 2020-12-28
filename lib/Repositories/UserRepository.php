@@ -88,6 +88,6 @@ class UserRepository extends AbstractDBALRepository implements UserRepositoryInt
 
     public function getTableName()
     {
-        return $this->getPrefix('oauth2_user');
+        return $this->applyPrefix('oauth2_user');
     }
 }
