@@ -46,9 +46,9 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="{{ moduleurlpath }}registry.edit.php?id={{ client.id }}" class="button">Edit config</a>
-                    <a href="{{ moduleurlpath }}registry.php?restore={{ client.id }}" class="button">Restore secret</a>
-                    <a href="{{ moduleurlpath }}registry.php?delete={{ client.id }}" class="button">Delete</a>
+                    <a href="{{ moduleurlpath }}registry/edit.php?id={{ client.id }}" class="button">Edit config</a>
+                    <a href="{{ moduleurlpath }}registry/?restore={{ client.id }}" class="button">Restore secret</a>
+                    <a href="{{ moduleurlpath }}registry/?delete={{ client.id }}" class="button">Delete</a>
                 </td>
             </tr>
         </table>
@@ -61,7 +61,7 @@
         </table>
     {% endfor %}
 
-    <a href="{{ moduleurlpath }}registry.new.php" class="button">Add new client</a>
+    <a href="{{ moduleurlpath }}registry/new.php" class="button">Add new client</a>
 {% endblock %}
 
 

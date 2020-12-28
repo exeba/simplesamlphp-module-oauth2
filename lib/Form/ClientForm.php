@@ -44,7 +44,7 @@ class ClientForm extends Form
 
         $this->addSubmit('submit', 'Submit');
         $this->addButton('return', 'Return')
-            ->setAttribute('onClick', 'parent.location = \''.Module::getModuleURL('oauth2/registry.php').'\'')
+            ->setAttribute('onClick', 'parent.location = \''.Module::getModuleURL('oauth2/registry/').'\'')
         ;
     }
 

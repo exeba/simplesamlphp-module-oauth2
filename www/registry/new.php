@@ -14,43 +14,36 @@ use SimpleSAML\Module\oauth2\Form\ClientForm;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 use SimpleSAML\Utils\Auth;
 use SimpleSAML\Utils\HTTP;
+use SimpleSAML\Utils\Random;
 use SimpleSAML\XHTML\Template;
+
+/* Load simpleSAMLphp, configuration and metadata */
+$action = Module::getModuleURL('oauth2/new.php');
+$config = Configuration::getInstance();
 
 Auth::requireAdmin();
 
-/* Load simpleSAMLphp, configuration and metadata */
-$client_id = $_REQUEST['id'];
-$action = Module::getModuleURL('oauth2/registry.edit.php', ['id' => $client_id]);
-$config = Configuration::getInstance();
-
-$clientRepository = new ClientRepository();
-$client = $clientRepository->find($client_id);
-if (!$client) {
-    header('Content-type: text/plain; utf-8', true, 500);
-
-    echo 'Client not found';
-
-    return;
-}
-
 $form = new ClientForm('client');
 $form->setAction($action);
-$form->setDefaults($client);
 
 if ($form->isSubmitted() && $form->isSuccess()) {
     $client = $form->getValues();
+    $client['id'] = Random::generateID();
+    $client['secret'] = Random::generateID();
 
-    $clientRepository->updateClient(
-        $client_id,
+    $clientRepository = new ClientRepository();
+    $clientRepository->persistNewClient(
+        $client['id'],
+        $client['secret'],
         $client['name'],
         $client['description'],
         $client['auth_source'],
         $client['redirect_uri']
     );
 
-    HTTP::redirectTrustedURL('registry.php');
+    HTTP::redirectTrustedURL('index.php');
 }
 
-$template = new Template($config, 'oauth2:registry_edit');
+$template = new Template($config, 'oauth2:registry/new');
 $template->data['form'] = $form;
 $template->send();
