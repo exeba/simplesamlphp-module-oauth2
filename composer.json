@@ -29,7 +29,8 @@
         "nette/forms": "~3.0",
         "laminas/laminas-diactoros": "^2.4",
         "laminas/laminas-httphandlerrunner": "^1.2",
-        "symfony/psr-http-message-bridge": "^2.0"
+        "symfony/psr-http-message-bridge": "^2.0",
+        "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
         "simplesamlphp/simplesamlphp"               : "~1.18"
