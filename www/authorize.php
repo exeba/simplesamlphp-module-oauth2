@@ -10,7 +10,6 @@
 
 use Laminas\Diactoros\ResponseFactory;
 use SimpleSAML\Configuration;
-use SimpleSAML\Module;
 use SimpleSAML\Module\oauth2\App;
 use SimpleSAML\Module\oauth2\AuthRequestSerializer;
 use SimpleSAML\Module\oauth2\Controller\AuthorizeRequestHandler;
@@ -18,17 +17,21 @@ use SimpleSAML\Module\oauth2\Middleware\RequestExceptionMiddleware;
 use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 use SimpleSAML\Module\oauth2\Repositories\UserRepository;
+use SimpleSAML\Module\oauth2\Services\AuthenticationService;
 
 $responseFactory = new ResponseFactory();
-
 $oauth2config = Configuration::getOptionalConfig('module_oauth2.php');
-$authenticationService = new Module\oauth2\Services\AuthenticationService(
+$authorizationServer = OAuth2AuthorizationServer::getInstance();
+$authRequestSerializer = AuthRequestSerializer::getInstance();
+
+$authenticationService = new AuthenticationService(
         new ClientRepository(),
         $oauth2config);
+
 $handler = new AuthorizeRequestHandler(
         new UserRepository(),
-        OAuth2AuthorizationServer::getInstance(),
-        AuthRequestSerializer::getInstance(),
+        $authorizationServer,
+        $authRequestSerializer,
         $authenticationService,
         $oauth2config);
 
