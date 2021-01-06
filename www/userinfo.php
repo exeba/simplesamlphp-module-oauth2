@@ -1,44 +1,17 @@
 <?php
-/*
- * This file is part of the simplesamlphp-module-oauth2.
- *
- * (c) Sergio Gómez <sergio@uco.es>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
-use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\Diactoros\ResponseFactory;
+use SimpleSAML\Module\oauth2\App;
+use SimpleSAML\Module\oauth2\Middleware\RequestExceptionMiddleware;
+use SimpleSAML\Module\oauth2\Middleware\ResourceRequestMiddleware;
+use SimpleSAML\Module\oauth2\Controller\UserInfoRequestHandler;
+use SimpleSAML\Module\oauth2\Middleware\MiddlewareStack;
 use SimpleSAML\Module\oauth2\OAuth2ResourceServer;
-use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Module\oauth2\Repositories\UserRepository;
 
-try {
-    $server = OAuth2ResourceServer::getInstance();
-    $request = ServerRequestFactory::fromGlobals();
 
-    $authorization = $server->validateAuthenticatedRequest($request);
-
-    $oauth2Attributes = $authorization->getAttributes();
-    $tokenId = $oauth2Attributes['oauth_access_token_id'];
-
-    $accessTokenRepository = new AccessTokenRepository();
-    $userId = $accessTokenRepository->getUserId($tokenId);
-
-    $userRepository = new UserRepository();
-    $attributes = array_map(function($attributeArray) {
-        return $attributeArray[0];
-    }, $userRepository->getAttributes($userId));
-
-    $response = new JsonResponse($attributes);
-
-    $emiter = new SapiEmitter();
-    $emiter->emit($response);
-} catch (Exception $e) {
-    header('Content-type: text/plain; utf-8', true, 500);
-    header('OAuth-Error: '.$e->getMessage());
-
-    print_r($e);
-}
+$middleware = new MiddlewareStack();
+$middleware->addMiddleware(new ResourceRequestMiddleware(OAuth2ResourceServer::getInstance()));
+$middleware->addMiddleware(new RequestExceptionMiddleware(new ResponseFactory()));
+$userInfoHandler = new UserInfoRequestHandler(new UserRepository());
+(new App($middleware))->run($userInfoHandler);

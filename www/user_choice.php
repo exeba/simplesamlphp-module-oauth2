@@ -1,25 +1,19 @@
 <?php
 
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use SimpleSAML\Error\BadRequest;
+use Laminas\Diactoros\ResponseFactory;
+use SimpleSAML\Module\oauth2\App;
 use SimpleSAML\Module\oauth2\AuthRequestSerializer;
-use SimpleSAML\Module\oauth2\Form\AuthorizeForm;
+use SimpleSAML\Module\oauth2\Controller\AuthorizeChoiceHandler;
+use SimpleSAML\Module\oauth2\Middleware\RequestExceptionMiddleware;
 use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
 
-$request = ServerRequestFactory::fromGlobals();
-$form = new AuthorizeForm('authorize');
-if (!$form->isSubmitted() || !$form->isValid()) {
-    throw new BadRequest('AuthorizationRequest not found');
-}
-$form->fireEvents();
 
-$authorizationRequest = AuthRequestSerializer::getInstance()->deserialize($form->getValues()['authRequest']);
-$authorizationRequest->setAuthorizationApproved($form->hasPressed('allow'));
+$responseFactory = new ResponseFactory();
+$handler = new AuthorizeChoiceHandler(
+    $responseFactory,
+    OAuth2AuthorizationServer::getInstance(),
+    AuthRequestSerializer::getInstance());
 
-$server = OAuth2AuthorizationServer::getInstance();
-$response = $server->completeAuthorizationRequest($authorizationRequest, new Response());
+$app = new App(new RequestExceptionMiddleware($responseFactory));
 
-$emitter = new SapiEmitter();
-$emitter->emit($response);
+(new App())->run($handler);

@@ -99,7 +99,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
      *
      * @return array
      */
-    public function find($clientIdentifier)
+    private function find($clientIdentifier)
     {
         $client = $this->conn->fetchAssociative(
             'SELECT * FROM '.$this->getTableName().' WHERE id = ?',

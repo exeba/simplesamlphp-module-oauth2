@@ -14,6 +14,7 @@ use DateTime;
 use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use SimpleSAML\Module\oauth2\Entity\UserEntity;
 
 class UserRepository extends AbstractDBALRepository implements UserRepositoryInterface
 {
@@ -26,14 +27,43 @@ class UserRepository extends AbstractDBALRepository implements UserRepositoryInt
         throw new Exception('Not supported');
     }
 
-    public function persistNewUser($id, $attributes)
+    public function delete($userIdentifier)
+    {
+        $this->conn->delete($this->getTableName(), [
+            'id' => $userIdentifier,
+        ]);
+    }
+
+    public function insertOrCreate(UserEntity $user)
+    {
+        if (0 === $this->updateUser($user)) {
+            $this->persistNewUser($user);
+        }
+    }
+
+    public function updateUser(UserEntity $user)
+    {
+        return $this->conn->update($this->getTableName(),
+            [
+                'attributes' => $user->getAttributes(),
+                'updated_at' => new \DateTime()
+            ], [
+                'id' => $user->getIdentifier()
+            ], [
+                'json_array',
+                'datetime',
+            ]
+        );
+    }
+
+    public function persistNewUser(UserEntity $user)
     {
         $now = new DateTime();
 
         $this->conn->insert($this->getTableName(),
             [
-                'id' => $id,
-                'attributes' => $attributes,
+                'id' => $user->getIdentifier(),
+                'attributes' => $user->getAttributes(),
                 'created_at' => $now,
                 'updated_at' => $now,
             ], [
@@ -43,37 +73,6 @@ class UserRepository extends AbstractDBALRepository implements UserRepositoryInt
                 'datetime',
             ]
         );
-    }
-
-    public function updateUser($id, $attributes)
-    {
-        $now = new DateTime();
-
-        return $this->conn->update($this->getTableName(),
-            [
-                'attributes' => $attributes,
-                'updated_at' => $now,
-            ], [
-               'id' => $id,
-            ], [
-                'json_array',
-                'datetime',
-            ]
-        );
-    }
-
-    public function delete($userIdentifier)
-    {
-        $this->conn->delete($this->getTableName(), [
-            'id' => $userIdentifier,
-        ]);
-    }
-
-    public function insertOrCreate($userId, $attributes)
-    {
-        if (0 === $this->updateUser($userId, $attributes)) {
-            $this->persistNewUser($userId, $attributes);
-        }
     }
 
     public function getAttributes($userId)

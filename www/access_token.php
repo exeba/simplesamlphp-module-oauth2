@@ -1,29 +1,17 @@
 <?php
-/*
- * This file is part of the simplesamlphp-module-oauth2.
- *
- * (c) Sergio Gómez <sergio@uco.es>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\Diactoros\ResponseFactory;
+use SimpleSAML\Module\oauth2\App;
+use SimpleSAML\Module\oauth2\Controller\AccessTokenRequestHandler;
 use SimpleSAML\Module\oauth2\OAuth2AuthorizationServer;
+use SimpleSAML\Module\oauth2\Middleware\RequestExceptionMiddleware;
 
-try {
-    $server = OAuth2AuthorizationServer::getInstance();
-    $request = ServerRequestFactory::fromGlobals();
 
-    $response = $server->respondToAccessTokenRequest($request, new Response());
+$responseFactory = new ResponseFactory();
+$handler = new AccessTokenRequestHandler(
+        OAuth2AuthorizationServer::getInstance(),
+        $responseFactory);
 
-    $emiter = new SapiEmitter();
-    $emiter->emit($response);
-} catch (Exception $e) {
-    header('Content-type: text/plain; utf-8', true, 500);
-    header('OAuth-Error: '.$e->getMessage());
+$app = new App(new RequestExceptionMiddleware($responseFactory));
 
-    print_r($e);
-}
+(new App())->run($handler);

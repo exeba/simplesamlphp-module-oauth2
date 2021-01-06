@@ -15,8 +15,13 @@
         }
     ],
     "autoload": {
-    "psr-4": {
-        "SimpleSAML\\Module\\oauth2\\": "lib"
+        "psr-4": {
+            "SimpleSAML\\Module\\oauth2\\": "lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SimpleSAML\\Module\\oauth2\\": "tests"
         }
     },
     "require": {
@@ -33,6 +38,7 @@
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
-        "simplesamlphp/simplesamlphp"               : "~1.18"
+        "simplesamlphp/simplesamlphp"               : "~1.18",
+        "phpunit/phpunit": "^8.0"
     }
 }
