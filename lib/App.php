@@ -5,29 +5,33 @@ namespace SimpleSAML\Module\oauth2;
 
 
 use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use SimpleSAML\Module\oauth2\Middleware\NoOpMiddleware;
 
 class App
 {
     private $emitter;
-
     private $middleware;
+    private $handler;
 
-    public function __construct(MiddlewareInterface $middleware = null)
+    public function __construct(
+        EmitterInterface $emitter,
+        MiddlewareInterface $middleware,
+        RequestHandlerInterface $handler)
     {
-        $this->middleware = $middleware ?? new NoOpMiddleware();
-        $this->emitter = new SapiEmitter();
+
+        $this->emitter = $emitter;
+        $this->middleware = $middleware;
+        $this->handler = $handler;
     }
 
-    public function run(RequestHandlerInterface $handler)
+    public function run()
     {
         $serverRequest = $this->buildServerRequest();
-        $response = $this->middleware->process($serverRequest, $handler);
+        $response = $this->middleware->process($serverRequest, $this->handler);
         $this->sendResponse($response);
     }
 

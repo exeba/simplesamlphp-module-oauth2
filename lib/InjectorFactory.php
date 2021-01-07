@@ -8,6 +8,8 @@ use Laminas\Di\Injector;
 use Laminas\Di\Config as DIConfig;
 use Laminas\Di\Resolver\TypeInjection;
 use Laminas\Diactoros\ResponseFactory;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -35,6 +37,7 @@ class InjectorFactory
     public static function getInjector() {
         return new Injector(new DIConfig([
             'preferences' => [
+                EmitterInterface::class => SapiEmitter::class,
                 ResponseFactoryInterface::class => ResponseFactory::class,
                 ClientRepositoryInterface::class => ClientRepository::class,
                 UserRepositoryInterface::class => UserRepository::class,

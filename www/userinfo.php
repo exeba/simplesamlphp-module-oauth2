@@ -15,6 +15,8 @@ $middleware = new MiddlewareStack();
 $middleware->addMiddleware($injector->create(ResourceRequestMiddleware::class));
 $middleware->addMiddleware($injector->create(RequestExceptionMiddleware::class));
 
-$handler = $injector->create(UserInfoRequestHandler::class);
+$injector->create(App::class, [
+    'middleware' => $middleware,
+    'handler' => $injector->create(UserInfoRequestHandler::class),
+])->run();
 
-(new App($middleware))->run($handler);

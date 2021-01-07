@@ -10,9 +10,7 @@ use SimpleSAML\Module\oauth2\Middleware\RequestExceptionMiddleware;
 $injector = InjectorFactory::getInjector();
 $injector->create(AuthorizationServerConfigurator::class);
 
-$middleware = $injector->create(RequestExceptionMiddleware::class);
-$handler = $injector->create(AccessTokenRequestHandler::class);
-
-$app = new App($middleware);
-
-(new App())->run($handler);
+$injector->create(App::class, [
+    'middleware' => $injector->create(RequestExceptionMiddleware::class),
+    'handler' => $injector->create(AccessTokenRequestHandler::class),
+])->run();
