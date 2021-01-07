@@ -10,10 +10,6 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
-use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
-use SimpleSAML\Module\oauth2\Repositories\ScopeRepository;
-use SimpleSAML\Module\oauth2\Repositories\UserRepository;
-use SimpleSAML\Utils\Config;
 
 class AuthRequestSerializer
 {
@@ -24,19 +20,6 @@ class AuthRequestSerializer
     private $clientRepository;
     private $scopeRepository;
     private $userRepository;
-
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new AuthRequestSerializer(
-                    new ClientRepository(),
-                    new ScopeRepository(),
-                    new UserRepository(),
-                    Config::getSecretSalt());
-        }
-
-        return self::$instance;
-    }
 
     public function __construct(
             ClientRepositoryInterface $clientRepository,
