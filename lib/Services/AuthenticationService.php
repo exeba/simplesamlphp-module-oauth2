@@ -19,12 +19,17 @@ class AuthenticationService
 {
 
     private $clientRepository;
-    private $oauth2config;
+    private $userIdAttribute;
+    private $defaultAuthenticationSource;
 
-    public function __construct(ClientRepository $clientRepository, Configuration $oauth2config)
+    public function __construct(
+            ClientRepository $clientRepository,
+            $userIdAttribute,
+            $defaultAuthenticationSource)
     {
         $this->clientRepository = $clientRepository;
-        $this->oauth2config = $oauth2config;
+        $this->userIdAttribute = $userIdAttribute;
+        $this->defaultAuthenticationSource = $defaultAuthenticationSource;
     }
 
     public function getUserEntity(ServerRequestInterface $request): UserEntity
@@ -37,11 +42,10 @@ class AuthenticationService
 
     private function buildUserFromAttributes($attributes): UserEntity
     {
-        $useridattr = $this->oauth2config->getString('useridattr');
-        if (!isset($attributes[$useridattr])) {
+        if (!isset($attributes[$this->userIdAttribute])) {
             throw new \Exception('Oauth2 useridattr doesn\'t exists. Available attributes are: '.implode(', ', $attributes));
         }
-        $userid = $attributes[$useridattr][0];
+        $userid = $attributes[$this->userIdAttribute][0];
 
         $user = new UserEntity($userid);
         $user->setAttributes($attributes);
@@ -53,7 +57,7 @@ class AuthenticationService
     {
         $clientEntity = $this->getClientEntityOrThrow($request);
 
-        return $clientEntity->getAuthSource() ?? $this->oauth2config->getString('auth');;
+        return $clientEntity->getAuthSource() ?? $this->defaultAuthenticationSource;
     }
 
     private function getClientEntityOrThrow(ServerRequestInterface $request): ClientEntityInterface

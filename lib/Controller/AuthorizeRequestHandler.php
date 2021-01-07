@@ -28,20 +28,17 @@ class AuthorizeRequestHandler implements RequestHandlerInterface
     private $authorizationServer;
     private $authRequestSerializer;
     private $authenticationService;
-    private $oauth2config;
 
     public function __construct(
             UserRepositoryInterface $userRepository,
             AuthorizationServer $authorizationServer,
             AuthRequestSerializer $authRequestSerializer,
-            AuthenticationService $authenticationService,
-            Configuration $oauth2config)
+            AuthenticationService $authenticationService)
     {
         $this->userRepository = $userRepository;
         $this->authorizationServer = $authorizationServer;
         $this->authenticationService = $authenticationService;
         $this->authRequestSerializer = $authRequestSerializer;
-        $this->oauth2config = $oauth2config;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
