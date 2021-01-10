@@ -22,7 +22,7 @@ class TemplatedResponseBuilder
     public function buildResponse(string $template, $data): ResponseInterface
     {
         $config = Configuration::getInstance();
-        $template = new Template($config, 'oauth2:authorize');
+        $template = new Template($config, $template);
         $template->data = $data;
 
         return $this->psrHttpFactory->createResponse($template);
