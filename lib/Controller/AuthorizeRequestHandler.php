@@ -4,10 +4,6 @@
 namespace SimpleSAML\Module\oauth2\Controller;
 
 
-use Laminas\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\StreamFactory;
-use Laminas\Diactoros\UploadedFileFactory;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,8 +14,8 @@ use SimpleSAML\Module;
 use SimpleSAML\Module\oauth2\AuthRequestSerializer;
 use SimpleSAML\Module\oauth2\Form\AuthorizeForm;
 use SimpleSAML\Module\oauth2\Services\AuthenticationService;
+use SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder;
 use SimpleSAML\Module\oauth2\Utils\Template;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 
 class AuthorizeRequestHandler implements RequestHandlerInterface
 {
@@ -28,17 +24,20 @@ class AuthorizeRequestHandler implements RequestHandlerInterface
     private $authorizationServer;
     private $authRequestSerializer;
     private $authenticationService;
+    private $templatedResponseBuilder;
 
     public function __construct(
             UserRepositoryInterface $userRepository,
             AuthorizationServer $authorizationServer,
             AuthRequestSerializer $authRequestSerializer,
-            AuthenticationService $authenticationService)
+            AuthenticationService $authenticationService,
+            TemplatedResponseBuilder $templatedResponseBuilder)
     {
         $this->userRepository = $userRepository;
         $this->authorizationServer = $authorizationServer;
         $this->authenticationService = $authenticationService;
         $this->authRequestSerializer = $authRequestSerializer;
+        $this->templatedResponseBuilder = $templatedResponseBuilder;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -54,18 +53,9 @@ class AuthorizeRequestHandler implements RequestHandlerInterface
         $form->setDefaults(['authRequest' => $serializedRequest]);
         $form->setAction(Module::getModuleURL('oauth2/authorize_choice.php'));
 
-        $config = Configuration::getInstance();
-        $template = new Template($config, 'oauth2:authorize');
-        $template->data['authRequest'] = $authRequest;
-        $template->data['form'] = $form;
-
-        $psrHttpFactory = new PsrHttpFactory(
-            new ServerRequestFactory(),
-            new StreamFactory(),
-            new UploadedFileFactory(),
-            new ResponseFactory());
-
-        return $psrHttpFactory->createResponse($template);
+        return $this->templatedResponseBuilder->buildResponse('oauth2:authorize', [
+            'authRequest' => $authRequest,
+            'form' => $form,
+        ]);
     }
-
 }

@@ -8,6 +8,9 @@ use Laminas\Di\Injector;
 use Laminas\Di\Config as DIConfig;
 use Laminas\Di\Resolver\TypeInjection;
 use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\StreamFactory;
+use Laminas\Diactoros\UploadedFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use League\OAuth2\Server\AuthorizationServer;
@@ -21,6 +24,9 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
 use SimpleSAML\Configuration;
 use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
@@ -38,13 +44,17 @@ class InjectorFactory
         return new Injector(new DIConfig([
             'preferences' => [
                 EmitterInterface::class => SapiEmitter::class,
-                ResponseFactoryInterface::class => ResponseFactory::class,
                 ClientRepositoryInterface::class => ClientRepository::class,
                 UserRepositoryInterface::class => UserRepository::class,
                 ScopeRepositoryInterface::class => ScopeRepository::class,
                 AccessTokenRepositoryInterface::class => AccessTokenRepository::class,
                 AuthCodeRepositoryInterface::class => AuthCodeRepository::class,
                 RefreshTokenRepositoryInterface::class => RefreshTokenRepository::class,
+                // PSR
+                ServerRequestFactoryInterface::class => ServerRequestFactory::class,
+                StreamFactoryInterface::class => StreamFactory::class,
+                UploadedFileFactoryInterface::class => UploadedFileFactory::class,
+                ResponseFactoryInterface::class => ResponseFactory::class,
             ],
             'types' => [
                 AuthorizationServerConfigurator::class => [

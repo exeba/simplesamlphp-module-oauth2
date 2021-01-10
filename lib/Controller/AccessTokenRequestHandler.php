@@ -19,7 +19,6 @@ class AccessTokenRequestHandler implements RequestHandlerInterface
     {
         $this->tokenServer = $tokenServer;
         $this->responseFactory = $responseFactory;
-
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
