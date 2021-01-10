@@ -57,7 +57,7 @@ class AuthCodeRepository extends AbstractDBALRepository implements AuthCodeRepos
      */
     public function revokeAuthCode($codeId)
     {
-        $this->conn->update($this->getTableName(), ['is_revoked' => true], ['id' => $codeId]);
+        $this->conn->update($this->getTableName(), ['is_revoked' => true], ['id' => $codeId], ['boolean']);
     }
 
     /**
@@ -65,7 +65,9 @@ class AuthCodeRepository extends AbstractDBALRepository implements AuthCodeRepos
      */
     public function isAuthCodeRevoked($codeId)
     {
-        return $this->conn->fetchOne('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$codeId]);
+        $res = $this->conn->fetchFirstColumn('SELECT COUNT(*) FROM '.$this->getTableName().' WHERE is_revoked AND id = ?', [$codeId]);
+
+        return $res[0] > 0;
     }
 
     public function removeExpiredAuthCodes()
