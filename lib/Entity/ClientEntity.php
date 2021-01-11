@@ -28,6 +28,12 @@ class ClientEntity implements ClientEntityInterface
      */
     private $authSource;
 
+    /**
+     * @var string
+     */
+    private $description;
+
+
     public function __construct()
     {
         $this->isConfidential = true;
@@ -79,5 +85,18 @@ class ClientEntity implements ClientEntityInterface
     public function setAuthSource($authSource)
     {
         $this->authSource = $authSource;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

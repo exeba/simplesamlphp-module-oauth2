@@ -46,7 +46,10 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
      */
     public function revokeRefreshToken($tokenId)
     {
-        $this->conn->update($this->getTableName(), ['is_revoked' => true], ['id' => $tokenId]);
+        $this->conn->update($this->getTableName(),
+            ['is_revoked' => true],
+            ['id' => $tokenId],
+            [ 'boolean' ]);
     }
 
     /**
@@ -55,6 +58,12 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
     public function isRefreshTokenRevoked($tokenId)
     {
         return $this->conn->fetchOne('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$tokenId]);
+    }
+
+    public function getRefreshTokenFromAccessToken($accessTokenId)
+    {
+        return $this->conn->fetchAssociative('SELECT * FROM '.$this->getTableName().' WHERE accesstoken_id = ?',
+            [$accessTokenId]);
     }
 
     public function removeExpiredRefreshTokens()

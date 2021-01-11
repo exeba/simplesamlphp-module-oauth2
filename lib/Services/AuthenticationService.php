@@ -34,7 +34,8 @@ class AuthenticationService
 
     public function getUserEntity(ServerRequestInterface $request): UserEntity
     {
-        $auth = new Simple($this->getAuthenticationSourceId($request));
+        //$auth = new Simple($this->getAuthenticationSourceId($request));
+        $auth = new Simple('sql');
         $auth->requireAuth();
 
         return $this->buildUserFromAttributes($auth->getAttributes());

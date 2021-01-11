@@ -1,42 +1,20 @@
 <?php
-/*
- * This file is part of the simplesamlphp-module-oauth2.
- *
- * (c) Sergio Gómez <sergio@uco.es>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
-use SimpleSAML\Configuration;
-use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
-use SimpleSAML\Session;
-use SimpleSAML\Utils\Auth;
-use SimpleSAML\Utils\HTTP;
-use SimpleSAML\XHTML\Template;
+use SimpleSAML\Module\oauth2\App;
+use SimpleSAML\Module\oauth2\Controller\RegistryIndexHandler;
+use SimpleSAML\Module\oauth2\InjectorFactory;
+use SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware;
+use SimpleSAML\Module\oauth2\Middleware\MiddlewareStack;
+use SimpleSAML\Module\oauth2\Middleware\RequestExceptionMiddleware;
 
-$config = Configuration::getInstance();
-$session = Session::getSessionFromRequest();
-$oauthconfig = Configuration::getOptionalConfig('module_oauth2.php');
+$injector = InjectorFactory::getInjector();
 
-Auth::requireAdmin();
+$middleware = new MiddlewareStack();
+$middleware->addMiddleware($injector->create(RequestExceptionMiddleware::class));
+$middleware->addMiddleware($injector->create(AuthenticatedAdminMiddleware::class));
 
-$clientRepository = new ClientRepository();
+$injector->create(App::class, [
+    'middleware' => $middleware,
+    'handler' => $injector->create(RegistryIndexHandler::class)
+])->run();
 
-if (isset($_REQUEST['delete'])) {
-    $clientRepository->delete($_REQUEST['delete']);
-
-    HTTP::redirectTrustedURL('index.php');
-}
-
-if (isset($_REQUEST['restore'])) {
-    $clientRepository->restoreSecret($_REQUEST['restore']);
-
-    HTTP::redirectTrustedURL('index.php');
-}
-
-$clients = $clientRepository->findAll();
-
-$template = new Template($config, 'oauth2:registry/index');
-$template->data['clients'] = $clients;
-$template->send();

@@ -33,7 +33,7 @@ class AuthenticatedOwnerMiddleware implements MiddlewareInterface
         $auth = new Simple($this->getAuthenticationSourceId($request));
         $auth->requireAuth();
 
-        $handler->handle($request);
+        return $handler->handle($request);
     }
 
     private function getAuthenticationSourceId(ServerRequestInterface $request): string

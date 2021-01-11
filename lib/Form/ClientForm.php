@@ -16,6 +16,9 @@ use SimpleSAML\Module;
 
 class ClientForm extends Form
 {
+
+    private $clientEntity;
+
     /**
      * {@inheritdoc}
      */
@@ -62,27 +65,43 @@ class ClientForm extends Form
     /**
      * {@inheritdoc}
      */
-    public function getValues($asArray = false)
+    public function getClientEntity()
     {
         $values = parent::getValues(true);
 
-        // Sanitize Redirect URIs
-        $redirect_uris = preg_split("/[\t\r\n]+/", $values['redirect_uri']);
-        $redirect_uris = array_filter($redirect_uris, function ($redirect_uri) {
+        $entity = new Module\oauth2\Entity\ClientEntity();
+
+        if ($this->clientEntity) {
+            $entity->setIdentifier($this->clientEntity->getIdentifier());
+            $entity->setSecret($this->clientEntity->getSecret());
+        }
+        $entity->setName($values['name']);
+        $entity->setDescription($values['description']);
+        $entity->setAuthSource($values['auth_source']);
+        $entity->setRedirectUri($this->splitRedirectUris($values['redirect_uri']));
+
+        return $entity;
+    }
+
+    private function splitRedirectUris($uris)
+    {
+        $redirect_uris = preg_split("/[\t\r\n]+/", $uris);
+        return array_filter($redirect_uris, function ($redirect_uri) {
             return !empty(trim($redirect_uri));
         });
-        $values['redirect_uri'] = $redirect_uris;
-
-        return $values;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaults($values, $erase = false)
+    public function setClientEntity(Module\oauth2\Entity\ClientEntity $entity)
     {
-        $values['redirect_uri'] = implode("\n", $values['redirect_uri']);
-
-        return parent::setDefaults($values, $erase);
+        $this->clientEntity = $entity;
+        return $this->setDefaults([
+            'name' => $entity->getName(),
+            'description' => $entity->getDescription(),
+            'auth_source' => $entity->getAuthSource(),
+            'redirect_uri' => implode("\n", $entity->getRedirectUri())
+        ]);
     }
 }

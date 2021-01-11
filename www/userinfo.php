@@ -12,8 +12,8 @@ $injector = InjectorFactory::getInjector();
 $injector->create(AuthorizationServerConfigurator::class);
 
 $middleware = new MiddlewareStack();
-$middleware->addMiddleware($injector->create(ResourceRequestMiddleware::class));
 $middleware->addMiddleware($injector->create(RequestExceptionMiddleware::class));
+$middleware->addMiddleware($injector->create(ResourceRequestMiddleware::class));
 
 $injector->create(App::class, [
     'middleware' => $middleware,

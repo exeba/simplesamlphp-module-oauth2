@@ -12,11 +12,30 @@ namespace SimpleSAML\Module\oauth2\Repositories;
 
 use InvalidArgumentException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use mysql_xdevapi\Exception;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Utils\Random;
 
 class ClientRepository extends AbstractDBALRepository implements ClientRepositoryInterface
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateClient($clientIdentifier, $clientSecret, $grantType): bool
+    {
+        $entity = $this->getClientEntity($clientIdentifier);
+
+        if (!$entity) {
+            return false;
+        }
+        if ($clientSecret && $clientSecret !== $entity->getSecret()) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -28,33 +47,39 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
             return null;
         }
 
+        return $this->mapToClass($entity);
+    }
+
+    private function find($clientIdentifier)
+    {
+        return $this->conn->fetchAssociative(
+            'SELECT * FROM '.$this->getTableName().' WHERE id = ?',
+            [ $clientIdentifier ], [ 'string' ]);
+    }
+
+    private function mapToClass($entityRow): ClientEntity
+    {
         $client = new ClientEntity();
-        $client->setIdentifier($clientIdentifier);
-        $client->setName($entity['name']);
-        $client->setRedirectUri($entity['redirect_uri']);
-        $client->setSecret($entity['secret']);
-        $client->setAuthSource($entity['auth_source']);
+        $client->setIdentifier($entityRow['id']);
+        $client->setName($entityRow['name']);
+        $client->setDescription($entityRow['description']);
+        $client->setRedirectUri($this->conn->convertToPHPValue($entityRow['redirect_uri'], 'json_array'));
+        //$client['scopes'] = $this->conn->convertToPHPValue($client['scopes'], 'json_array');
+        $client->setSecret($entityRow['secret']);
+        $client->setAuthSource($entityRow['auth_source']);
 
         return $client;
     }
 
-    public function persistNewClient($id, $secret, $name, $description, $authSource, $redirectUri)
+    public function persistNewClient(ClientEntity $client)
     {
-        if (false === is_array($redirectUri)) {
-            if (is_string($redirectUri)) {
-                $redirectUri = [$redirectUri];
-            } else {
-                throw new InvalidArgumentException('Client redirect URI must be a string or an array.');
-            }
-        }
-
         $this->conn->insert($this->getTableName(), [
-            'id' => $id,
-            'secret' => $secret,
-            'name' => $name,
-            'description' => $description,
-            'auth_source' => $authSource,
-            'redirect_uri' => $redirectUri,
+            'id' => $client->getIdentifier(),
+            'secret' => $client->getSecret(),
+            'name' => $client->getName(),
+            'description' => $client->getDescription(),
+            'auth_source' => $client->getAuthSource(),
+            'redirect_uri' => $client->getRedirectUri(),
             'scopes' => ['basic'],
         ], [
             'string',
@@ -67,16 +92,16 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
         ]);
     }
 
-    public function updateClient($id, $name, $description, $authSource, $redirectUri)
+    public function updateClient(ClientEntity $client)
     {
         $this->conn->update($this->getTableName(), [
-            'name' => $name,
-            'description' => $description,
-            'auth_source' => $authSource,
-            'redirect_uri' => $redirectUri,
+            'name' => $client->getName(),
+            'description' => $client->getDescription(),
+            'auth_source' => $client->getAuthSource(),
+            'redirect_uri' => $client->getRedirectUri(),
             'scopes' => ['basic'],
         ], [
-            'id' => $id,
+            'id' => $client->getIdentifier(),
         ], [
             'string',
             'string',
@@ -88,34 +113,9 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
 
     public function delete($clientIdentifier)
     {
-        $conn = $this->store->getConnection();
-        $conn->delete($this->getTableName(), [
+        $this->conn->delete($this->getTableName(), [
             'id' => $clientIdentifier,
-        ]);
-    }
-
-    /**
-     * @param $clientIdentifier
-     *
-     * @return array
-     */
-    private function find($clientIdentifier)
-    {
-        $client = $this->conn->fetchAssociative(
-            'SELECT * FROM '.$this->getTableName().' WHERE id = ?',
-            [
-                $clientIdentifier,
-            ], [
-                'string',
-            ]
-        );
-
-        if ($client) {
-            $client['redirect_uri'] = $this->conn->convertToPHPValue($client['redirect_uri'], 'json_array');
-            $client['scopes'] = $this->conn->convertToPHPValue($client['scopes'], 'json_array');
-        }
-
-        return $client;
+        ], [ 'string' ]);
     }
 
     /**
@@ -127,12 +127,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
             'SELECT * FROM '.$this->getTableName()
         );
 
-        foreach ($clients as &$client) {
-            $client['redirect_uri'] = $this->conn->convertToPHPValue($client['redirect_uri'], 'json_array');
-            $client['scopes'] = $this->conn->convertToPHPValue($client['scopes'], 'json_array');
-        }
-
-        return $clients;
+        return array_map([$this, 'mapToClass'], $clients);
     }
 
     public function getTableName()
@@ -150,19 +145,5 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
         ], [
             'string',
         ]);
-    }
-
-    public function validateClient($clientIdentifier, $clientSecret, $grantType)
-    {
-        $entity = $this->find($clientIdentifier);
-
-        if (!$entity) {
-            return false;
-        }
-        if ($clientSecret && $clientSecret !== $entity['secret']) {
-            return false;
-        }
-
-        return true;
     }
 }

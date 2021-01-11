@@ -61,16 +61,6 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
         );
     }
 
-    public function getUserId($tokenId)
-    {
-        $userId = $this->conn->fetchOne(
-            'SELECT user_id FROM '.$this->getTableName().' WHERE id = ?',
-            [$tokenId]
-        );
-
-        return $this->conn->convertToPHPValue($userId, 'string');
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -88,6 +78,16 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
             'SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?',
             [$tokenId]
         );
+    }
+    
+    public function getActiveTokensForUser($userId)
+    {
+        $accessTokens = $this->conn->fetchAllAssociative(
+            'SELECT * FROM '.$this->getTableName().' WHERE user_id = ? AND expires_at > ?',
+            [ $userId, new \DateTime() ],
+            [ 'string', 'datetime' ]);
+
+        return $accessTokens;
     }
 
     public function removeExpiredAccessTokens()

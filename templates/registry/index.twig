@@ -24,11 +24,11 @@
             </tr>
             <tr>
                 <th class="desc">Client ID</td>
-                <td class="data">{{ client.id }}</td>
+                <td class="data">{{ client.identifier }}</td>
             </tr>
             <tr>
-                <th class="desc">Client ID</td>
-                <td class="data">{{ client.auth_source }}</td>
+                <th class="desc">Authentication Source</td>
+                <td class="data">{{ client.authSource }}</td>
             </tr>
             <tr>
                 <th class="desc">Client Secret</td>
@@ -38,7 +38,7 @@
                 <th class="desc">Redirect URIs</td>
                 <td class="data">
                     <ul>
-                        {% for uri in client.redirect_uri %}
+                        {% for uri in client.redirectUri %}
                             <li>{{ uri }}</li>
                         {% endfor %}
                     </ul>
@@ -46,9 +46,9 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="{{ moduleurlpath }}registry/edit.php?id={{ client.id }}" class="button">Edit config</a>
-                    <a href="{{ moduleurlpath }}registry/?restore={{ client.id }}" class="button">Restore secret</a>
-                    <a href="{{ moduleurlpath }}registry/?delete={{ client.id }}" class="button">Delete</a>
+                    <a href="{{ moduleurlpath }}registry/edit.php?id={{ client.identifier }}" class="button">Edit config</a>
+                    <a href="{{ moduleurlpath }}registry/?restore={{ client.identifier }}" class="button">Restore secret</a>
+                    <a href="{{ moduleurlpath }}registry/?delete={{ client.identifier }}" class="button">Delete</a>
                 </td>
             </tr>
         </table>
