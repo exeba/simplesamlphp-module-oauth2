@@ -48,7 +48,7 @@ class AuthCodeRepository extends BaseTokenRepository implements AuthCodeReposito
      */
     public function isAuthCodeRevoked($codeId)
     {
-        $this->isTokenRevoked($codeId);
+        return $this->isTokenRevoked($codeId);
     }
 
     public function getActiveTokensForUser($userId)

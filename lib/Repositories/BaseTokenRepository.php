@@ -19,7 +19,7 @@ class BaseTokenRepository extends BaseRepository
     {
         $token = $this->findByIdentifier($tokenId);
 
-        return $token ? false : $token->isRevoked();
+        return $token ? $token->isRevoked() : false;
     }
 
     public function revokeToken($tokenId)
