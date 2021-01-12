@@ -18,4 +18,6 @@ use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 class AccessTokenEntity implements AccessTokenEntityInterface
 {
     use AccessTokenTrait, TokenEntityTrait, EntityTrait;
+
+    Use RevocableTrait;
 }

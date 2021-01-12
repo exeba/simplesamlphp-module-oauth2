@@ -18,4 +18,6 @@ use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 class AuthCodeEntity implements AuthCodeEntityInterface
 {
     use EntityTrait, TokenEntityTrait, AuthCodeTrait;
+
+    Use RevocableTrait;
 }

@@ -33,11 +33,7 @@ class ClientEntity implements ClientEntityInterface
      */
     private $description;
 
-
-    public function __construct()
-    {
-        $this->isConfidential = true;
-    }
+    private $scopes = ['base'];
 
     /**
      * @param string $name
@@ -98,5 +94,20 @@ class ClientEntity implements ClientEntityInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function setScopes($scopes)
+    {
+        $this->scopes = $scopes;
+    }
+
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
+
+    public function isConfidential()
+    {
+        return !is_null($this->getSecret());
     }
 }

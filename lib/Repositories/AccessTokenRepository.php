@@ -14,10 +14,21 @@ use DateTime;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use SimpleSAML\Error\Exception;
 use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
+use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
-class AccessTokenRepository extends AbstractDBALRepository implements AccessTokenRepositoryInterface
+class AccessTokenRepository extends BaseTokenRepository implements AccessTokenRepositoryInterface
 {
+
+    public function __construct()
+    {
+        $entityManager = EntityManagerProvider::getEntityManager();
+        parent::__construct(
+            $entityManager,
+            $entityManager->getRepository(AccessTokenEntity::class));
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,27 +49,8 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        $scopes = [];
-        foreach ($accessTokenEntity->getScopes() as $scope) {
-            $scopes[] = $scope->getIdentifier();
-        }
-
-        $this->conn->insert(
-            $this->getTableName(),
-            [
-                'id' => $accessTokenEntity->getIdentifier(),
-                'scopes' => $scopes,
-                'expires_at' => $accessTokenEntity->getExpiryDateTime(),
-                'user_id' => $accessTokenEntity->getUserIdentifier(),
-                'client_id' => $accessTokenEntity->getClient()->getIdentifier(),
-            ], [
-                'string',
-                'json_array',
-                'datetime',
-                'string',
-                'string',
-            ]
-        );
+        $this->entityManager->persist($accessTokenEntity);
+        $this->entityManager->flush();
     }
 
     /**
@@ -66,7 +58,7 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
      */
     public function revokeAccessToken($tokenId)
     {
-        $this->conn->update($this->getTableName(), ['is_revoked' => true], ['id' => $tokenId]);
+        $this->revokeToken($tokenId);
     }
 
     /**
@@ -74,33 +66,17 @@ class AccessTokenRepository extends AbstractDBALRepository implements AccessToke
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        return $this->conn->fetchOne(
-            'SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?',
-            [$tokenId]
-        );
+        return $this->isTokenRevoked($tokenId);
     }
-    
+
     public function getActiveTokensForUser($userId)
     {
-        $accessTokens = $this->conn->fetchAllAssociative(
-            'SELECT * FROM '.$this->getTableName().' WHERE user_id = ? AND expires_at > ?',
-            [ $userId, new \DateTime() ],
-            [ 'string', 'datetime' ]);
-
-        return $accessTokens;
+        return $this->objectRepository->createQueryBuilder('token')
+            ->where('token.userIdentifier = :userId')
+            ->andWhere('token.expiryDateTime > :now')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()->getResult();
     }
 
-    public function removeExpiredAccessTokens()
-    {
-        $this->conn->executeStatement(
-            'DELETE FROM '.$this->getTableName().' WHERE expires_at < ?',
-            [new DateTime()],
-            ['datetime']
-        );
-    }
-
-    public function getTableName()
-    {
-        return $this->applyPrefix('oauth2_accesstoken');
-    }
 }

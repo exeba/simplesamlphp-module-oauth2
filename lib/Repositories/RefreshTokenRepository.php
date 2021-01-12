@@ -1,12 +1,4 @@
 <?php
-/*
- * This file is part of the simplesamlphp-module-oauth2.
- *
- * (c) Sergio Gómez <sergio@uco.es>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
@@ -15,8 +7,17 @@ use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
-class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTokenRepositoryInterface
+class RefreshTokenRepository extends BaseTokenRepository implements RefreshTokenRepositoryInterface
 {
+
+    public function __construct()
+    {
+        $entityManager = EntityManagerProvider::getEntityManager();
+        parent::__construct(
+            $entityManager,
+            $entityManager->getRepository(RefreshTokenEntity::class));
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -30,15 +31,8 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        $this->conn->insert($this->getTableName(), [
-            'id' => $refreshTokenEntity->getIdentifier(),
-            'expires_at' => $refreshTokenEntity->getExpiryDateTime(),
-            'accesstoken_id' => $refreshTokenEntity->getAccessToken()->getIdentifier(),
-        ], [
-            'string',
-            'datetime',
-            'string',
-        ]);
+        $this->entityManager->persist($refreshTokenEntity);
+        $this->entityManager->flush();
     }
 
     /**
@@ -46,10 +40,7 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
      */
     public function revokeRefreshToken($tokenId)
     {
-        $this->conn->update($this->getTableName(),
-            ['is_revoked' => true],
-            ['id' => $tokenId],
-            [ 'boolean' ]);
+        $this->revokeToken($tokenId);
     }
 
     /**
@@ -57,32 +48,13 @@ class RefreshTokenRepository extends AbstractDBALRepository implements RefreshTo
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        return $this->conn->fetchOne('SELECT is_revoked FROM '.$this->getTableName().' WHERE id = ?', [$tokenId]);
+        return $this->isTokenRevoked($tokenId);
     }
 
     public function getRefreshTokenFromAccessToken($accessTokenId)
     {
-        return $this->conn->fetchAssociative('SELECT * FROM '.$this->getTableName().' WHERE accesstoken_id = ?',
-            [$accessTokenId]);
-    }
-
-    public function removeExpiredRefreshTokens()
-    {
-        $this->conn->executeStatement('
-                DELETE FROM '.$this->getTableName().'
-                WHERE expires_at < ?
-            ',
-            [
-                new DateTime(),
-            ],
-            [
-                'datetime',
-            ]
-        );
-    }
-
-    public function getTableName()
-    {
-        return $this->applyPrefix('oauth2_refreshtoken');
+        return $this->objectRepository->findOneBy([
+            'accessToken' => $accessTokenId
+            ]);
     }
 }

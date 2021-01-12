@@ -10,14 +10,21 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
-use InvalidArgumentException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use mysql_xdevapi\Exception;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Utils\Random;
 
-class ClientRepository extends AbstractDBALRepository implements ClientRepositoryInterface
+class ClientRepository implements ClientRepositoryInterface
 {
+
+    private $entityManager;
+    private $objectManager;
+
+    public function __construct()
+    {
+        $this->entityManager = EntityManagerProvider::getEntityManager();
+        $this->objectManager = $this->entityManager->getRepository(ClientEntity::class);
+    }
 
     /**
      * {@inheritdoc}
@@ -29,6 +36,7 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
         if (!$entity) {
             return false;
         }
+        return true;
         if ($clientSecret && $clientSecret !== $entity->getSecret()) {
             return false;
         }
@@ -41,81 +49,31 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
      */
     public function getClientEntity($clientIdentifier)
     {
-        /** @var ClientEntity $entity */
-        $entity = $this->find($clientIdentifier);
-        if (!$entity) {
-            return null;
-        }
-
-        return $this->mapToClass($entity);
-    }
-
-    private function find($clientIdentifier)
-    {
-        return $this->conn->fetchAssociative(
-            'SELECT * FROM '.$this->getTableName().' WHERE id = ?',
-            [ $clientIdentifier ], [ 'string' ]);
-    }
-
-    private function mapToClass($entityRow): ClientEntity
-    {
-        $client = new ClientEntity();
-        $client->setIdentifier($entityRow['id']);
-        $client->setName($entityRow['name']);
-        $client->setDescription($entityRow['description']);
-        $client->setRedirectUri($this->conn->convertToPHPValue($entityRow['redirect_uri'], 'json_array'));
-        //$client['scopes'] = $this->conn->convertToPHPValue($client['scopes'], 'json_array');
-        $client->setSecret($entityRow['secret']);
-        $client->setAuthSource($entityRow['auth_source']);
-
-        return $client;
+        return $this->objectManager->find($clientIdentifier);
     }
 
     public function persistNewClient(ClientEntity $client)
     {
-        $this->conn->insert($this->getTableName(), [
-            'id' => $client->getIdentifier(),
-            'secret' => $client->getSecret(),
-            'name' => $client->getName(),
-            'description' => $client->getDescription(),
-            'auth_source' => $client->getAuthSource(),
-            'redirect_uri' => $client->getRedirectUri(),
-            'scopes' => ['basic'],
-        ], [
-            'string',
-            'string',
-            'string',
-            'string',
-            'string',
-            'json_array',
-            'json_array',
-        ]);
+        $this->entityManager->persist($client);
+        $this->entityManager->flush($client);
     }
 
     public function updateClient(ClientEntity $client)
     {
-        $this->conn->update($this->getTableName(), [
-            'name' => $client->getName(),
-            'description' => $client->getDescription(),
-            'auth_source' => $client->getAuthSource(),
-            'redirect_uri' => $client->getRedirectUri(),
-            'scopes' => ['basic'],
-        ], [
-            'id' => $client->getIdentifier(),
-        ], [
-            'string',
-            'string',
-            'string',
-            'json_array',
-            'json_array',
-        ]);
+        $oldClient = $this->getClientEntity($client->getIdentifier());
+        $oldClient->setName($client->getName());
+        $oldClient->setDescription($client->getDescription());
+        $oldClient->setAuthSource($client->getAuthSource());
+        $oldClient->setRedirectUri($client->getRedirectUri());
+        $oldClient->setScopes($client->getScopes());
+        $this->entityManager->flush();
     }
 
     public function delete($clientIdentifier)
     {
-        $this->conn->delete($this->getTableName(), [
-            'id' => $clientIdentifier,
-        ], [ 'string' ]);
+        $client = $this->getClientEntity($clientIdentifier);
+        $this->entityManager->remove($client);
+        $this->entityManager->flush();
     }
 
     /**
@@ -123,27 +81,13 @@ class ClientRepository extends AbstractDBALRepository implements ClientRepositor
      */
     public function findAll()
     {
-        $clients = $this->conn->fetchAllAssociative(
-            'SELECT * FROM '.$this->getTableName()
-        );
-
-        return array_map([$this, 'mapToClass'], $clients);
-    }
-
-    public function getTableName()
-    {
-        return $this->applyPrefix('oauth2_client');
+        return $this->objectManager->findAll();
     }
 
     public function restoreSecret($clientIdentifier)
     {
-        $secret = Random::generateID();
-        $this->conn->update($this->getTableName(), [
-            'secret' => $secret,
-        ], [
-            'id' => $clientIdentifier,
-        ], [
-            'string',
-        ]);
+        $client = $this->getClientEntity($clientIdentifier);
+        $client->setSecret(Random::generateID());
+        $this->entityManager->flush();
     }
 }

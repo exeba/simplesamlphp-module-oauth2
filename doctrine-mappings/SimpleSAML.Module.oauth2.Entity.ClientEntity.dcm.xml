@@ -1,0 +1,11 @@
+<doctrine-mapping>
+  <entity name="SimpleSAML\Module\oauth2\Entity\ClientEntity" table="SimpleSAMLphp_oauth2_client">
+    <id name="identifier" column="id" type="string" />
+    <field name="name" type="string" />
+    <field name="description" type="string" />
+    <field name="authSource" column="auth_source" type="string" />
+    <field name="secret" type="string" />
+    <field name="redirectUri" column="redirect_uri" type="json_array" />
+    <field name="scopes" column="scopes" type="json_array" />
+  </entity>
+</doctrine-mapping>

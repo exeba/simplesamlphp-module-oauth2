@@ -32,7 +32,7 @@ class UserInfoRequestHandler implements RequestHandlerInterface
 
     private function getUserAttributes(ServerRequestInterface $request): array {
         $userId = $request->getAttributes()[self::USER_ID_ATTRIBUTE_NAME];
-        $attributes = $this->userRepository->getAttributes($userId);
+        $attributes = $this->userRepository->getUser($userId)->getAttributes();
 
         // TODO: store already sanitized attributes
         $attributes = array_map(function($attributeArray) {
