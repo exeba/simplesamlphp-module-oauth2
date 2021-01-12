@@ -2,7 +2,9 @@
   <entity name="SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity" table="SimpleSAMLphp_oauth2_refreshtoken">
     <id name="identifier" column="id" type="string" />
     <field name="expiryDateTime" column="expires_at" type="datetime_immutable" />
-    <many-to-one field="accessToken" target-entity="AccessTokenEntity" />
+    <many-to-one field="accessToken" target-entity="AccessTokenEntity">
+        <join-column name="accesstoken_id" nullable="false" />
+    </many-to-one>
     <field name="isRevoked" column="is_revoked" type="boolean" />
   </entity>
 </doctrine-mapping>

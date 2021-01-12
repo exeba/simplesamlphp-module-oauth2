@@ -1,9 +1,15 @@
 <doctrine-mapping>
   <entity name="SimpleSAML\Module\oauth2\Entity\AccessTokenEntity" table="SimpleSAMLphp_oauth2_accesstoken">
+    <indexes>
+        <!-- This become useless once assiciations are used -->
+        <index columns="user_id"/>
+    </indexes>
     <id name="identifier" column="id" type="string" />
     <field name="expiryDateTime" column="expires_at" type="datetime_immutable" />
-    <field name="userIdentifier" column="user_id" type="string" />
-    <many-to-one field="client" target-entity="ClientEntity" />
+    <field name="userIdentifier" column="user_id" type="string" nullable="true" />
+    <many-to-one field="client" target-entity="ClientEntity">
+        <join-column name="client_id" nullable="false" />
+    </many-to-one>
     <field name="scopes" column="scopes" type="json_array" />
     <field name="isRevoked" column="is_revoked" type="boolean" />
   </entity>
