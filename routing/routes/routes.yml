@@ -15,7 +15,7 @@ userinfo:
   controller: 'UserInfoRequestHandler:symfonyHandle'
 
 registry-index:
-  path:       /registry/index
+  path:       /registry
   controller: 'RegistryIndexHandler:symfonyHandle'
 
 edit-client:
