@@ -40,7 +40,7 @@
         "doctrine/orm": "^2.8"
     },
     "require-dev": {
-        "simplesamlphp/simplesamlphp"               : "~1.18",
+        "simplesamlphp/simplesamlphp"               : "~1.19",
         "phpunit/phpunit": "^8.0"
     }
 }
