@@ -1,5 +1,5 @@
 <doctrine-mapping>
-  <entity name="SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity" table="SimpleSAMLphp_oauth2_refreshtoken">
+  <entity name="SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity" table="oauth2_refreshtoken">
     <id name="identifier" column="id" type="string" />
     <field name="expiryDateTime" column="expires_at" type="datetime_immutable" />
     <many-to-one field="accessToken" target-entity="AccessTokenEntity">

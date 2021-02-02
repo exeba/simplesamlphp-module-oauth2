@@ -1,5 +1,5 @@
 <doctrine-mapping>
-  <entity name="SimpleSAML\Module\oauth2\Entity\AccessTokenEntity" table="SimpleSAMLphp_oauth2_accesstoken">
+  <entity name="SimpleSAML\Module\oauth2\Entity\AccessTokenEntity" table="oauth2_accesstoken">
     <indexes>
         <!-- This become useless once assiciations are used -->
         <index columns="user_id"/>

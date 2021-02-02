@@ -1,0 +1,208 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    public: true
+    autowire: true
+
+  moduleConfig:
+    class: 'SimpleSAML\Configuration'
+    factory: [ 'SimpleSAML\Configuration', 'getConfig' ]
+    arguments: [ 'module_oauth2.php' ]
+
+  oauth2.userIdAttribute:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'useridattr' ]
+
+  oauth2.defaultAuthSource:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'auth' ]
+
+  oauth2.privateKeyPath:
+    class: 'string'
+    factory: [ 'SimpleSAML\Utils\Config', 'getCertPath' ]
+    arguments: [ 'oauth2_module.pem' ]
+
+  oauth2.privateKeyPassPhrase:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'pass_phrase', null ]
+
+  oauth2.privateKey:
+    class: 'League\OAuth2\Server\CryptKey'
+    arguments:
+      $keyPath: '@oauth2.privateKeyPath'
+      $passPhrase: '@oauth2.privateKeyPassPhrase'
+
+  oauth2.encryptionKey:
+    class: 'string'
+    factory: [ 'SimpleSAML\Utils\Config', 'getSecretSalt' ]
+
+  oauth2.publicKeyPath:
+    class: 'string'
+    factory: [ 'SimpleSAML\Utils\Config', 'getCertPath' ]
+    arguments: [ 'oauth2_module.crt' ]
+
+  oauth2.publicKey:
+    class: 'League\OAuth2\Server\CryptKey'
+    arguments:
+      $keyPath: '@oauth2.publicKeyPath'
+
+  oauth2.authCodeDurationDef:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'authCodeDuration' ]
+  oauth2.authCodeDuration:
+    class: 'DateInterval'
+    arguments: [ '@oauth2.authCodeDurationDef' ]
+
+  oauth2.accessTokenDurationDef:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'accessTokenDuration' ]
+  oauth2.accessTokenDuration:
+      class: 'DateInterval'
+      arguments: [ '@oauth2.accessTokenDurationDef' ]
+
+  oauth2.refreshTokenDurationDef:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'refreshTokenDuration' ]
+  oauth2.refreshTokenDuration:
+    class: 'DateInterval'
+    arguments: [ '@oauth2.refreshTokenDurationDef' ]
+
+  oauth2.unconfiguredAuthorizaztonServer:
+    class: 'League\OAuth2\Server\AuthorizationServer'
+    arguments:
+      $privateKey: '@oauth2.privateKey'
+      $encryptionKey: '@oauth2.encryptionKey'
+
+  SimpleSAML\Module\oauth2\AuthorizationServerConfigurator:
+    arguments:
+      League\OAuth2\Server\AuthorizationServer: '@oauth2.unconfiguredAuthorizaztonServer'
+      $refreshTokenDuration: '@oauth2.refreshTokenDuration'
+      $accessTokenDuration: '@oauth2.accessTokenDuration'
+
+  League\OAuth2\Server\Grant\AuthCodeGrant:
+    arguments:
+      DateInterval: '@oauth2.authCodeDuration'
+
+  League\OAuth2\Server\Grant\RefreshTokenGrant: ~
+
+  League\OAuth2\Server\Grant\ClientCredentialsGrant: ~
+
+  League\OAuth2\Server\AuthorizationServer:
+    factory: [ '@SimpleSAML\Module\oauth2\AuthorizationServerConfigurator', 'getConfiguredAuthorizationServer' ]
+
+  League\OAuth2\Server\ResourceServer:
+    arguments:
+      $publicKey: '@oauth2.publicKey'
+
+  SimpleSAML\Module\oauth2\AuthRequestSerializer:
+    arguments:
+      $encryptionKey: '@oauth2.encryptionKey'
+
+  SimpleSAML\Module\oauth2\Repositories\UserRepository: ~
+  League\OAuth2\Server\Repositories\UserRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\UserRepository'
+
+  SimpleSAML\Module\oauth2\Repositories\ClientRepository: ~
+  League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ClientRepository'
+
+  SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository: ~
+  League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository'
+
+  SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository: ~
+  League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository'
+
+  SimpleSAML\Module\oauth2\Repositories\ScopeRepository: ~
+  League\OAuth2\Server\Repositories\ScopeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ScopeRepository'
+
+  SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~
+  League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository'
+
+  SimpleSAML\Module\oauth2\Services\AuthenticationService:
+    arguments:
+      'SimpleSAML\Configuration': '@moduleConfig'
+      $userIdAttribute: '@oauth2.userIdAttribute'
+      $defaultAuthenticationSource: '@oauth2.defaultAuthSource'
+
+  SimpleSAML\Module\oauth2\Services\RevokerService: ~
+
+  Psr\Http\Message\ServerRequestFactoryInterface:
+    class: 'Laminas\Diactoros\ServerRequestFactory'
+
+  Psr\Http\Message\StreamFactoryInterface:
+    class: 'Laminas\Diactoros\StreamFactory'
+
+  Psr\Http\Message\UploadedFileFactoryInterface:
+    class: 'Laminas\Diactoros\UploadedFileFactory'
+
+  Psr\Http\Message\ResponseFactoryInterface:
+    class: 'Laminas\Diactoros\ResponseFactory'
+
+  Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory: ~
+
+  Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory: ~
+
+  SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder: ~
+
+  SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware: ~
+
+  SimpleSAML\Module\oauth2\Middleware\AuthenticatedOwnerMiddleware:
+    arguments:
+      'SimpleSAML\Configuration': '@moduleConfig'
+
+  SimpleSAML\Module\oauth2\Middleware\ResourceRequestMiddleware: ~
+
+  AccessTokenRequestHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\AccessTokenRequestHandler'
+
+  AuthorizeRequestHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\AuthorizeRequestHandler'
+
+  AuthorizeChoiceHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\AuthorizeChoiceHandler'
+
+  UserInfoRequestHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\UserInfoRequestHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\ResourceRequestMiddleware'
+
+  RegistryIndexHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\RegistryIndexHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware'
+
+  EditClientHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\EditClientHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware'
+
+  NewClientHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\NewClientHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware'
+
+  ShowActiveTokensHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\ShowActiveTokensHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedOwnerMiddleware'
+
+  RevokeTokensHandler:
+    class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
+    arguments:
+      $handler: '@SimpleSAML\Module\oauth2\Controller\RevokeTokensHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedOwnerMiddleware'

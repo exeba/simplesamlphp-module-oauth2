@@ -12,6 +12,8 @@ use League\OAuth2\Server\Grant\RefreshTokenGrant;
 class AuthorizationServerConfigurator
 {
 
+    private $authorizationServer;
+
     public function __construct(
         AuthorizationServer $authorizationServer,
         AuthCodeGrant $authCodeGrant,
@@ -27,5 +29,12 @@ class AuthorizationServerConfigurator
         $authorizationServer->enableGrantType($refreshTokenGrant, $accessTokenDuration);
 
         $authorizationServer->enableGrantType($clientCredentialsGrant, $accessTokenDuration);
+
+        $this->authorizationServer = $authorizationServer;
+    }
+
+    public function getConfiguredAuthorizationServer(): AuthorizationServer
+    {
+        return $this->authorizationServer;
     }
 }

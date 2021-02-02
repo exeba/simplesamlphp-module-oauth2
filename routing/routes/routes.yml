@@ -1,0 +1,43 @@
+access-token:
+  path:       /access_token
+  controller: 'AccessTokenRequestHandler:symfonyHandle'
+
+authorize:
+  path:       /authorize
+  controller: 'AuthorizeRequestHandler:symfonyHandle'
+
+authorize-choice:
+  path:       /authorize_choice
+  controller: 'AuthorizeChoiceHandler:symfonyHandle'
+
+userinfo:
+  path:       /userinfo
+  controller: 'UserInfoRequestHandler:symfonyHandle'
+
+registry-index:
+  path:       /registry/index
+  controller: 'RegistryIndexHandler:symfonyHandle'
+
+edit-client:
+  path:       /registry/edit
+  controller: 'EditClientHandler:symfonyHandle'
+
+new-client:
+  path:       /registry/new
+  controller: 'NewClientHandler:symfonyHandle'
+
+show-grants-default:
+  path:       /owner/show-grants
+  controller: 'ShowActiveTokensHandler:symfonyHandle'
+
+show-grants:
+  path:       /owner/show-grants/{authSource}
+  controller: 'ShowActiveTokensHandler:symfonyHandle'
+
+revoke-token-default:
+  path:       /owner/revoke-token
+  controller: 'RevokeTokensHandler:symfonyHandle'
+
+revoke-token:
+  path:       /owner/revoke-token/{authSource}
+  controller: 'RevokeTokensHandler:symfonyHandle'

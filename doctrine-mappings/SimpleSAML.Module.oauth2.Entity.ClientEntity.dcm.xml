@@ -1,5 +1,5 @@
 <doctrine-mapping>
-  <entity name="SimpleSAML\Module\oauth2\Entity\ClientEntity" table="SimpleSAMLphp_oauth2_client">
+  <entity name="SimpleSAML\Module\oauth2\Entity\ClientEntity" table="oauth2_client">
     <id name="identifier" column="id" type="string" />
     <field name="name" type="string" />
     <field name="description" type="text" nullable="true" />

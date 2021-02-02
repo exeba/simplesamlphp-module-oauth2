@@ -51,7 +51,7 @@ class AuthorizeRequestHandler implements RequestHandlerInterface
         $serializedRequest = $this->authRequestSerializer->serialize($authRequest);
         $form = new AuthorizeForm('authorize');
         $form->setDefaults(['authRequest' => $serializedRequest]);
-        $form->setAction(Module::getModuleURL('oauth2/authorize_choice.php'));
+        $form->setAction(Module::getModuleURL('oauth2/authorize_choice'));
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:authorize', [
             'authRequest' => $authRequest,

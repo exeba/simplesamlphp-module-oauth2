@@ -19,26 +19,33 @@ class AuthenticationService
 {
 
     private $clientRepository;
+    private $oauth2config;
     private $userIdAttribute;
     private $defaultAuthenticationSource;
 
     public function __construct(
             ClientRepository $clientRepository,
+            Configuration $oauth2config,
             $userIdAttribute,
             $defaultAuthenticationSource)
     {
         $this->clientRepository = $clientRepository;
+        $this->oauth2config = $oauth2config;
         $this->userIdAttribute = $userIdAttribute;
         $this->defaultAuthenticationSource = $defaultAuthenticationSource;
     }
 
     public function getUserEntity(ServerRequestInterface $request): UserEntity
     {
-        //$auth = new Simple($this->getAuthenticationSourceId($request));
-        $auth = new Simple('sql');
+        $auth = new Simple($this->getAuthenticationSourceId($request));
         $auth->requireAuth();
 
         return $this->buildUserFromAttributes($auth->getAttributes());
+    }
+
+    private function getAuthenticationSourceId(ServerRequestInterface $request): string
+    {
+        return $request->getAttributes()['authSource'] ?? $this->oauth2config->getString('auth');
     }
 
     private function buildUserFromAttributes($attributes): UserEntity
@@ -53,14 +60,14 @@ class AuthenticationService
 
         return $user;
     }
-
+/*
     private function getAuthenticationSourceId(ServerRequestInterface $request): string
     {
         $clientEntity = $this->getClientEntityOrThrow($request);
 
         return $clientEntity->getAuthSource() ?? $this->defaultAuthenticationSource;
     }
-
+*/
     private function getClientEntityOrThrow(ServerRequestInterface $request): ClientEntityInterface
     {
         $clientId = $this->getClientIdOrThrow($request);

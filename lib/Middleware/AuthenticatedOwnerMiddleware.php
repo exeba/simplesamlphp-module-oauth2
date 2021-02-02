@@ -38,29 +38,7 @@ class AuthenticatedOwnerMiddleware implements MiddlewareInterface
 
     private function getAuthenticationSourceId(ServerRequestInterface $request): string
     {
-        $clientEntity = $this->getClientEntityOrThrow($request);
-
-        return $clientEntity->getAuthSource() ?? $this->oauth2config->getString('auth');;
+        return $request->getAttributes()['authSource'] ?? $this->oauth2config->getString('auth');
     }
 
-    private function getClientEntityOrThrow(ServerRequestInterface $request): ClientEntityInterface
-    {
-        $clientId = $this->getClientIdOrThrow($request);
-        $clientEntity = $this->clientRepository->getClientEntity($clientId);
-        if (is_null($clientEntity)) {
-            throw new BadRequest("Client does not exist");
-        }
-
-        return $clientEntity;
-    }
-    private function getClientIdOrThrow(ServerRequestInterface $request): string
-    {
-        $parameters = $request->getQueryParams();
-        $clientId = $parameters['client_id'] ?? null;
-        if (is_null($clientId)) {
-            throw new BadRequest("Missing 'client_id' query param");
-        }
-
-        return $clientId;
-    }
 }

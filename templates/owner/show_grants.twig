@@ -1,0 +1,34 @@
+{% extends "base.twig" %}
+
+{% block preload %}
+    <link rel="stylesheet" type="text/css" href="/{{ baseurlpath }}module.php/oauth2/resources/style.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Currently active auhtorizations</h1>
+
+        {% for refreshToken in refreshTokens %}
+        {{ refreshToken.isRevoked }} {{ refreshToken.expiryDateTime.format('Y-m-d H:i:s') }}
+            <form method="post" action="/{{ baseurlpath }}module.php/oauth2/owner/revoke-token">
+                <input type="hidden" name="tokenType" value="refresh"/>
+                <input type="hidden" name="tokenIdentifier" value="{{ refreshToken.identifier }}" />
+                <button class="button">Revoke</button>
+            </form>
+        <hr>
+                <ul>
+                    <li>{{ refreshToken.accessToken.isRevoked }}
+                        {{ refreshToken.accessToken.client.name }}
+                        {{ refreshToken.accessToken.scopes | json_encode }}
+                        {{ refreshToken.accessToken.expiryDateTime.format('Y-m-d H:i:s') }}
+                        <form method="post" action="/{{ baseurlpath }}module.php/oauth2/owner/revoke-token">
+                            <input type="hidden" name="tokenType" value="access"/>
+                            <input type="hidden" name="tokenIdentifier" value="{{ refreshToken.accessToken.identifier }}" />
+                            <button class="button">Revoke</button>
+                        </form>
+                    </li>
+                </ul>
+        {% endfor %}
+{% endblock %}
+
+
+

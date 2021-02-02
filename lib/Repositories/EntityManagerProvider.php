@@ -2,9 +2,13 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use SimpleSAML\Configuration;
+use SimpleSAML\Database;
+use SimpleSAML\Module\oauth2\DoctrineExtensions\TablePrefix;
 
 abstract class EntityManagerProvider
 {
@@ -22,6 +26,11 @@ abstract class EntityManagerProvider
 
     private static function buildEntityManager()
     {
+        $prefix = Database::getInstance()->applyPrefix("");
+        $tablePrefix = new TablePrefix($prefix);
+
+        $evm = new EventManager();
+        $evm->addEventListener(Events::loadClassMetadata, $tablePrefix);
 
         $config = Configuration::getOptionalConfig('module_oauth2.php');
         $dbParams = array(
@@ -32,7 +41,7 @@ abstract class EntityManagerProvider
         $isDevMode = true;
 
         $config = Setup::createXMLMetadataConfiguration($paths, $isDevMode);
-        return EntityManager::create($dbParams, $config);
+        return EntityManager::create($dbParams, $config, $evm);
     }
 
 }
