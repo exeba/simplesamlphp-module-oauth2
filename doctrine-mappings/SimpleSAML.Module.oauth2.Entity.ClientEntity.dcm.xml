@@ -1,5 +1,8 @@
 <doctrine-mapping>
   <entity name="SimpleSAML\Module\oauth2\Entity\ClientEntity" table="oauth2_client">
+    <unique-constraints>
+      <unique-constraint columns="name" name="unique_name" />
+    </unique-constraints>
     <id name="identifier" column="id" type="string" />
     <field name="name" type="string" />
     <field name="description" type="text" nullable="true" />
