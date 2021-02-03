@@ -38,7 +38,7 @@ class EditClientHandler implements RequestHandlerInterface
             $client = $form->getClientEntity();
             $this->clientRepository->updateClient($client);
 
-            HTTP::redirectTrustedURL('index.php');
+            HTTP::redirectTrustedURL('');
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/new.twig', [

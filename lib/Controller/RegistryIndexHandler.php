@@ -30,13 +30,13 @@ class RegistryIndexHandler implements RequestHandlerInterface
         if (isset($_REQUEST['delete'])) {
             $this->clientRepository->delete($_REQUEST['delete']);
 
-            HTTP::redirectTrustedURL('index.php');
+            HTTP::redirectTrustedURL('registry');
         }
 
         if (isset($_REQUEST['restore'])) {
             $this->clientRepository->restoreSecret($_REQUEST['restore']);
 
-            HTTP::redirectTrustedURL('index.php');
+            HTTP::redirectTrustedURL('registry');
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/index.twig', [

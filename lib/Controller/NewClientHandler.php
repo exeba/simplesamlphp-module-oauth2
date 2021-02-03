@@ -38,7 +38,7 @@ class NewClientHandler implements RequestHandlerInterface
 
             $this->clientRepository->persistNewClient($client);
 
-            HTTP::redirectTrustedURL('index.php');
+            HTTP::redirectTrustedURL('');
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/new.twig', [
