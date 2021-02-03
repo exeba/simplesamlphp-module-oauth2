@@ -39,6 +39,9 @@ class ClientForm extends Form
         $this->addTextArea('redirect_uri', 'Static/enforcing callback-url (one per line)', null, 5)
             ->setRequired('Write one redirect URI at least')
         ;
+
+        $this->addCheckbox('is_confidential', 'Private client');
+
         $this->addSelect('auth_source', 'Authorization source:')
             ->setItems(Source::getSources(), false)
             ->setPrompt('Pick an AuthSource or blank for default')
@@ -75,10 +78,12 @@ class ClientForm extends Form
             $entity->setIdentifier($this->clientEntity->getIdentifier());
             $entity->setSecret($this->clientEntity->getSecret());
         }
+
         $entity->setName($values['name']);
         $entity->setDescription($values['description']);
         $entity->setAuthSource($values['auth_source']);
         $entity->setRedirectUri($this->splitRedirectUris($values['redirect_uri']));
+        $entity->setConfidential($values['is_confidential']);
 
         return $entity;
     }
@@ -101,7 +106,8 @@ class ClientForm extends Form
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
             'auth_source' => $entity->getAuthSource(),
-            'redirect_uri' => implode("\n", $entity->getRedirectUri())
+            'redirect_uri' => implode("\n", $entity->getRedirectUri()),
+            'is_confidential' => $entity->isConfidential(),
         ]);
     }
 }

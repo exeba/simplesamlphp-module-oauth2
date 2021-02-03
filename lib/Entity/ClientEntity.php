@@ -106,8 +106,13 @@ class ClientEntity implements ClientEntityInterface
         return $this->scopes;
     }
 
-    public function isConfidential()
+    public function isConfidential(): bool
     {
-        return !is_null($this->getSecret());
+        return $this->isConfidential;
+    }
+
+    public function setConfidential(bool $confidential)
+    {
+        $this->isConfidential = $confidential;
     }
 }

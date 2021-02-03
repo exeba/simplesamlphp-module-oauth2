@@ -58,6 +58,7 @@ class ClientRepository implements ClientRepositoryInterface
         $oldClient->setAuthSource($client->getAuthSource());
         $oldClient->setRedirectUri($client->getRedirectUri());
         $oldClient->setScopes($client->getScopes());
+        $oldClient->setConfidential($client->isConfidential());
         $this->entityManager->flush();
     }
 
