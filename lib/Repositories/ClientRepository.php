@@ -33,15 +33,7 @@ class ClientRepository implements ClientRepositoryInterface
     {
         $entity = $this->getClientEntity($clientIdentifier);
 
-        if (!$entity) {
-            return false;
-        }
-        return true;
-        if ($clientSecret && $clientSecret !== $entity->getSecret()) {
-            return false;
-        }
-
-        return true;
+        return $entity && $clientSecret === $entity->getSecret();
     }
 
     /**
