@@ -1,19 +1,9 @@
 <?php
-/*
- * This file is part of the simplesamlphp-module-oauth2.
- *
- * (c) Sergio Gómez <sergio@uco.es>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
-use SimpleSAML\Configuration;
-use SimpleSAML\Module\dbal\Store\DBAL;
-use SimpleSAML\Modules\OAuth2\Repositories\AccessTokenRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\AuthCodeRepository;
-use SimpleSAML\Modules\OAuth2\Repositories\RefreshTokenRepository;
-use SimpleSAML\Store;
+use SimpleSAML\Configuration;;
+use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
+use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
+use SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository;
 
 function oauth2_hook_cron(&$croninfo)
 {
@@ -31,20 +21,14 @@ function oauth2_hook_cron(&$croninfo)
     }
 
     try {
-        $store = Store::getInstance();
-
-        if (!$store instanceof DBAL) {
-            throw new \SimpleSAML\Error\Exception('OAuth2 module: Only DBAL Store is supported');
-        }
-
         $accessTokenRepository = new AccessTokenRepository();
-        $accessTokenRepository->removeExpiredAccessTokens();
+        $accessTokenRepository->removeExpiredTokens();
 
         $authTokenRepository = new AuthCodeRepository();
-        $authTokenRepository->removeExpiredAuthCodes();
+        $authTokenRepository->removeExpiredTokens();
 
         $refreshTokenRepository = new RefreshTokenRepository();
-        $refreshTokenRepository->removeExpiredRefreshTokens();
+        $refreshTokenRepository->removeExpiredTokens();
 
         $croninfo['summary'][] = 'OAuth2 clean up. Removed expired entries from OAuth2 storage.';
     } catch (Exception $e) {
