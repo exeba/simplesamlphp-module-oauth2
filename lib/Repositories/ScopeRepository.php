@@ -11,8 +11,10 @@
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use SimpleSAML\Configuration;
+use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Entity\ScopeEntity;
 
 class ScopeRepository implements ScopeRepositoryInterface
@@ -48,6 +50,14 @@ class ScopeRepository implements ScopeRepositoryInterface
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
-        return $scopes;
+        return $this->commonScopes($scopes, $clientEntity);
     }
+
+    private function commonScopes($requestedScopes, ClientEntity $clientEntity)
+    {
+        return array_filter($requestedScopes, function ($scope) use (&$clientEntity) {
+            return (false !== array_search($scope->getIdentifier(), $clientEntity->getScopes()));
+        });
+    }
+
 }

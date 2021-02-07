@@ -35,7 +35,14 @@ class ClientForm extends Form
             ->setMaxLength(255)
             ->setRequired('Set a name')
         ;
+
         $this->addTextArea('description', 'Description of client:', null, 5);
+
+        $this->addText('scopes', 'Space separated list of scopes:')
+            ->setMaxLength(255)
+            ->setRequired('Set at least one scope')
+        ;
+
         $this->addTextArea('redirect_uri', 'Static/enforcing callback-url (one per line)', null, 5)
             ->setRequired('Write one redirect URI at least')
         ;
@@ -82,15 +89,16 @@ class ClientForm extends Form
         $entity->setName($values['name']);
         $entity->setDescription($values['description']);
         $entity->setAuthSource($values['auth_source']);
-        $entity->setRedirectUri($this->splitRedirectUris($values['redirect_uri']));
+        $entity->setScopes($this->splitWhitespaces($values['scopes']));
+        $entity->setRedirectUri($this->splitWhitespaces($values['redirect_uri']));
         $entity->setConfidential($values['is_confidential']);
 
         return $entity;
     }
 
-    private function splitRedirectUris($uris)
+    private function splitWhitespaces($string)
     {
-        $redirect_uris = preg_split("/[\t\r\n]+/", $uris);
+        $redirect_uris = preg_split("/[\t\r\n ]+/", $string);
         return array_filter($redirect_uris, function ($redirect_uri) {
             return !empty(trim($redirect_uri));
         });
@@ -105,6 +113,7 @@ class ClientForm extends Form
         return $this->setDefaults([
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
+            'scopes' => implode(" ", $entity->getScopes()),
             'auth_source' => $entity->getAuthSource(),
             'redirect_uri' => implode("\n", $entity->getRedirectUri()),
             'is_confidential' => $entity->isConfidential(),

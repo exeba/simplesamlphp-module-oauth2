@@ -27,6 +27,16 @@
                 <td class="data">{{ client.identifier }}</td>
             </tr>
             <tr>
+                <th class="desc">Scopes</td>
+                <td class="data">
+                    <ul>
+                        {% for scope in client.scopes %}
+                            <li>{{ scope }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
                 <th class="desc">Authentication Source</td>
                 <td class="data">{{ client.authSource }}</td>
             </tr>
@@ -50,9 +60,11 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="{{ moduleurlpath }}registry/edit?id={{ client.identifier }}" class="button">Edit config</a>
-                    <a href="{{ moduleurlpath }}registry?restore={{ client.identifier }}" class="button">Restore secret</a>
-                    <a href="{{ moduleurlpath }}registry?delete={{ client.identifier }}" class="button">Delete</a>
+                    <a href="{{ moduleurlpath }}registry/edit?id={{ client.identifier }}" class="pure-button">Edit config</a>
+                    &nbsp;
+                    <a href="{{ moduleurlpath }}registry?restore={{ client.identifier }}" class="pure-button">Restore secret</a>
+                    &nbsp;
+                    <a href="{{ moduleurlpath }}registry?delete={{ client.identifier }}" class="pure-button pure-button-red">Delete</a>
                 </td>
             </tr>
         </table>
@@ -65,7 +77,7 @@
         </table>
     {% endfor %}
 
-    <a href="{{ moduleurlpath }}registry/new" class="button">Add new client</a>
+    <a href="{{ moduleurlpath }}registry/new" class="pure-button">Add new client</a>
 {% endblock %}
 
 
