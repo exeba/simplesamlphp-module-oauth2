@@ -26,12 +26,12 @@ class UserEntity implements UserEntityInterface
     private $attributes;
 
     /**
-     * @var DateTime
+     * @var \DateTimeImmutable
      */
     private $createdAt;
 
     /**
-     * @var DateTime
+     * @var \DateTimeImmutable
      */
     private $updatedAt;
 
@@ -41,7 +41,7 @@ class UserEntity implements UserEntityInterface
     public function __construct($identifier)
     {
         $this->identifier = $identifier;
-        $this->createdAt = new DateTime();
+        $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = $this->createdAt;
     }
 
@@ -78,7 +78,7 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTimeImmutable
      */
     public function getCreatedAt()
     {
@@ -86,15 +86,15 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @param DateTime $createdAt
+     * @param \DateTimeImmutable $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTimeImmutable $createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
     /**
-     * @return DateTime
+     * @return \DateTimeImmutable
      */
     public function getUpdatedAt()
     {
@@ -102,9 +102,9 @@ class UserEntity implements UserEntityInterface
     }
 
     /**
-     * @param DateTime $updatedAt
+     * @param \DateTimeImmutable  $updatedAt
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt)
     {
         $this->updatedAt = $updatedAt;
     }
