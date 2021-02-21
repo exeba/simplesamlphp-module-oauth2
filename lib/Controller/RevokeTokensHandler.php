@@ -13,21 +13,16 @@ use SimpleSAML\Module\oauth2\Services\RevokerService;
 
 class RevokeTokensHandler implements RequestHandlerInterface
 {
-    private $authenticantionService;
     private $revokerService;
 
-    public function __construct(
-        AuthenticationService $authenticationService,
-        RevokerService $revokerService
-    )
+    public function __construct(RevokerService $revokerService)
     {
-        $this->authenticantionService = $authenticationService;
         $this->revokerService = $revokerService;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->authenticantionService->getUserEntity($request);
+        $user = $request->getAttribute('user');
         $revokeRequest = $request->getParsedBody();
         $tokenType = $revokeRequest['tokenType'];
         $tokenIdentifier = $revokeRequest['tokenIdentifier'];

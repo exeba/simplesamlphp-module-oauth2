@@ -26,8 +26,7 @@ class ShowActiveTokensHandler implements RequestHandlerInterface
         RefreshTokenRepository $refreshTokenRepository,
         AuthCodeRepository $authCodeRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
-    )
-    {
+    ) {
         $this->authenticantionService = $authenticationService;
         $this->authCodeRepository = $authCodeRepository;
         $this->accessTokenRepository = $accessTokenRepository;
@@ -41,7 +40,7 @@ class ShowActiveTokensHandler implements RequestHandlerInterface
         $this->accessTokenRepository->removeExpiredTokens();
         $this->authCodeRepository->removeExpiredTokens();
 
-        $user = $this->authenticantionService->getUserEntity($request);
+        $user = $request->getAttribute('user');
         $accessTokens = $this->accessTokenRepository->getActiveTokensForUser($user->getIdentifier());
 
         $refreshTokens = [];
@@ -53,6 +52,7 @@ class ShowActiveTokensHandler implements RequestHandlerInterface
         return $this->templatedResponseBuilder->buildResponse('oauth2:owner/show_grants.twig', [
             'accessTokens' => $accessTokens,
             'refreshTokens' => $refreshTokens,
+            'authSource' => $request->getAttribute('authSource'),
         ]);
     }
 }

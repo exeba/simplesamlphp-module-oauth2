@@ -19,8 +19,7 @@ class AuthenticationService
         ClientRepository $clientRepository,
         $userIdAttribute,
         $defaultAuthenticationSource
-    )
-    {
+    ) {
         $this->clientRepository = $clientRepository;
         $this->userIdAttribute = $userIdAttribute;
         $this->defaultAuthenticationSource = $defaultAuthenticationSource;
@@ -36,7 +35,7 @@ class AuthenticationService
 
     public function getUserForRequest(RequestInterface $request)
     {
-        $authSource = $this->getAuthSourceIdFromAuthnRequest($request);
+        $authSource = $this->getAuthSourceIdFromRequest($request);
         $auth = $this->requireAuthentication($authSource);
 
         return $this->buildUserFromAttributes($auth->getAttributes());
