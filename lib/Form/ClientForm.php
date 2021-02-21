@@ -16,7 +16,6 @@ use SimpleSAML\Module;
 
 class ClientForm extends Form
 {
-
     private $clientEntity;
 
     /**

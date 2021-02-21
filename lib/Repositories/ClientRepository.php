@@ -16,7 +16,6 @@ use SimpleSAML\Utils\Random;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-
     private $entityManager;
     private $objectManager;
 

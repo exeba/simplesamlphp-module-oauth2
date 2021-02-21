@@ -3,49 +3,61 @@
 
 namespace SimpleSAML\Module\oauth2\Services;
 
-
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\UserEntityInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use Psr\Http\Message\RequestInterface;
 use SimpleSAML\Auth\Simple;
-use SimpleSAML\Configuration;
-use SimpleSAML\Error\BadRequest;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 
 class AuthenticationService
 {
-
     private $clientRepository;
-    private $oauth2config;
     private $userIdAttribute;
     private $defaultAuthenticationSource;
 
     public function __construct(
-            ClientRepository $clientRepository,
-            Configuration $oauth2config,
-            $userIdAttribute,
-            $defaultAuthenticationSource)
+        ClientRepository $clientRepository,
+        $userIdAttribute,
+        $defaultAuthenticationSource
+    )
     {
         $this->clientRepository = $clientRepository;
-        $this->oauth2config = $oauth2config;
         $this->userIdAttribute = $userIdAttribute;
         $this->defaultAuthenticationSource = $defaultAuthenticationSource;
     }
 
-    public function getUserEntity(ServerRequestInterface $request): UserEntity
+    public function getUserForAuthnRequest(AuthorizationRequest $authnRequest)
     {
-        $auth = new Simple($this->getAuthenticationSourceId($request));
-        $auth->requireAuth();
+        $authSource = $this->getAuthSourceIdFromAuthnRequest($authnRequest);
+        $auth = $this->requireAuthentication($authSource);
 
         return $this->buildUserFromAttributes($auth->getAttributes());
     }
 
-    private function getAuthenticationSourceId(ServerRequestInterface $request): string
+    public function getUserForRequest(RequestInterface $request)
     {
-        return $request->getAttributes()['authSource'] ?? $this->oauth2config->getString('auth');
+        $authSource = $this->getAuthSourceIdFromAuthnRequest($request);
+        $auth = $this->requireAuthentication($authSource);
+
+        return $this->buildUserFromAttributes($auth->getAttributes());
+    }
+
+    private function requireAuthentication(string $authenticationSource)
+    {
+        $auth = new Simple($authenticationSource);
+        $auth->requireAuth();
+
+        return $auth;
+    }
+
+    private function getAuthSourceIdFromAuthnRequest(AuthorizationRequest $authRequest)
+    {
+        return $authRequest->getClient()->getAuthSource() ?? $this->defaultAuthenticationSource;
+    }
+
+    private function getAuthSourceIdFromRequest(RequestInterface $request)
+    {
+        return $request->getAttributes()['authSource'] ?? $this->defaultAuthenticationSource;
     }
 
     private function buildUserFromAttributes($attributes): UserEntity
@@ -60,33 +72,4 @@ class AuthenticationService
 
         return $user;
     }
-/*
-    private function getAuthenticationSourceId(ServerRequestInterface $request): string
-    {
-        $clientEntity = $this->getClientEntityOrThrow($request);
-
-        return $clientEntity->getAuthSource() ?? $this->defaultAuthenticationSource;
-    }
-*/
-    private function getClientEntityOrThrow(ServerRequestInterface $request): ClientEntityInterface
-    {
-        $clientId = $this->getClientIdOrThrow($request);
-        $clientEntity = $this->clientRepository->getClientEntity($clientId);
-        if (is_null($clientEntity)) {
-            throw new BadRequest("Client does not exist");
-        }
-
-        return $clientEntity;
-    }
-    private function getClientIdOrThrow(ServerRequestInterface $request): string
-    {
-        $parameters = $request->getQueryParams();
-        $clientId = $parameters['client_id'] ?? null;
-        if (is_null($clientId)) {
-            throw new BadRequest("Missing 'client_id' query param");
-        }
-
-        return $clientId;
-    }
-
 }

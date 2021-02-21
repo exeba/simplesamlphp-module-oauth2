@@ -10,23 +10,20 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
-use DateTime;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use SimpleSAML\Error\Exception;
 use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
-use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
 class AccessTokenRepository extends BaseTokenRepository implements AccessTokenRepositoryInterface
 {
-
     public function __construct()
     {
         $entityManager = EntityManagerProvider::getEntityManager();
         parent::__construct(
             $entityManager,
-            $entityManager->getRepository(AccessTokenEntity::class));
+            $entityManager->getRepository(AccessTokenEntity::class)
+        );
     }
 
     /**
@@ -78,5 +75,4 @@ class AccessTokenRepository extends BaseTokenRepository implements AccessTokenRe
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()->getResult();
     }
-
 }

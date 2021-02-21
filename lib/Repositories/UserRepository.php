@@ -2,21 +2,21 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
-
 use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use SimpleSAML\Error\User;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-
     public function __construct()
     {
         $entityManager = EntityManagerProvider::getEntityManager();
         parent::__construct(
             $entityManager,
-            $entityManager->getRepository(UserEntity::class));
+            $entityManager->getRepository(UserEntity::class)
+        );
     }
 
     public function getUserEntityByUserCredentials(
@@ -28,7 +28,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         throw new Exception('Not supported');
     }
 
-    public function getUser($userIdentifier)
+    public function getUser($userIdentifier): UserEntity
     {
         return $this->findByIdentifier($userIdentifier);
     }
@@ -52,5 +52,4 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         $this->entityManager->flush();
     }
-
 }

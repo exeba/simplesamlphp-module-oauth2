@@ -3,10 +3,8 @@
 
 namespace SimpleSAML\Module\oauth2\Entity;
 
-
 trait RevocableTrait
 {
-
     private $isRevoked = false;
 
     public function setRevoked($isRevoked)
@@ -18,5 +16,4 @@ trait RevocableTrait
     {
         return $this->isRevoked;
     }
-
 }

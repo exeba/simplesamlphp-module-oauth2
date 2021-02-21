@@ -2,20 +2,19 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
-
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\AuthCodeEntity;
 
 class AuthCodeRepository extends BaseTokenRepository implements AuthCodeRepositoryInterface
 {
-
     public function __construct()
     {
         $entityManager = EntityManagerProvider::getEntityManager();
         parent::__construct(
             $entityManager,
-            $entityManager->getRepository(AuthCodeEntity::class));
+            $entityManager->getRepository(AuthCodeEntity::class)
+        );
     }
 
     /**

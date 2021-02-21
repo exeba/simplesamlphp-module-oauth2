@@ -3,7 +3,6 @@
 
 namespace SimpleSAML\Module\oauth2\Controller;
 
-
 use League\OAuth2\Server\AuthorizationServer;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,8 +15,9 @@ class AccessTokenRequestHandler implements RequestHandlerInterface
     private $responseFactory;
 
     public function __construct(
-            AuthorizationServer $tokenServer,
-            ResponseFactoryInterface $responseFactory)
+        AuthorizationServer $tokenServer,
+        ResponseFactoryInterface $responseFactory
+    )
     {
         $this->tokenServer = $tokenServer;
         $this->responseFactory = $responseFactory;
@@ -28,7 +28,8 @@ class AccessTokenRequestHandler implements RequestHandlerInterface
         return $this->tokenServer->respondToAccessTokenRequest($request, $this->newResponse());
     }
 
-    private function newResponse() {
+    private function newResponse()
+    {
         return $this->responseFactory->createResponse();
     }
 }

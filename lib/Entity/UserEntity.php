@@ -10,7 +10,6 @@
 
 namespace SimpleSAML\Module\oauth2\Entity;
 
-use DateTime;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
 class UserEntity implements UserEntityInterface

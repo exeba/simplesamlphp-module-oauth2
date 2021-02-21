@@ -2,7 +2,6 @@
 
 namespace SimpleSAML\Module\oauth2;
 
-
 use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -22,10 +21,11 @@ class AuthRequestSerializer
     private $userRepository;
 
     public function __construct(
-            ClientRepositoryInterface $clientRepository,
-            ScopeRepositoryInterface $scopeRepository,
-            UserRepositoryInterface $userRepository,
-            $encryptionKey)
+        ClientRepositoryInterface $clientRepository,
+        ScopeRepositoryInterface $scopeRepository,
+        UserRepositoryInterface $userRepository,
+        $encryptionKey
+    )
     {
         $this->clientRepository = $clientRepository;
         $this->scopeRepository = $scopeRepository;
@@ -72,18 +72,20 @@ class AuthRequestSerializer
 
     private function getScopeIdsArray(AuthorizationRequest $authorizationRequest)
     {
-        return array_map(function(ScopeEntityInterface $scope) {
-                return $scope->getIdentifier();
-            },
-            $authorizationRequest->getScopes());
+        return array_map(
+            function (ScopeEntityInterface $scope) {
+            return $scope->getIdentifier();
+        },
+            $authorizationRequest->getScopes()
+        );
     }
 
-    private function getScopeEntities(array $scopeIds) {
+    private function getScopeEntities(array $scopeIds)
+    {
         $scopeRepository = $this->scopeRepository;
 
         return array_values(array_filter(array_map(function ($scopeId) use ($scopeRepository) {
             return $scopeRepository->getScopeEntityByIdentifier($scopeId);
         }, $scopeIds)));
     }
-
 }

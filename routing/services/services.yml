@@ -122,9 +122,12 @@ services:
   SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~
   League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository'
 
+  SimpleSAML\Module\oauth2\Services\AttributesUpdater:
+    arguments:
+      $defaultAuthenticationSource: '@oauth2.defaultAuthSource'
+
   SimpleSAML\Module\oauth2\Services\AuthenticationService:
     arguments:
-      'SimpleSAML\Configuration': '@moduleConfig'
       $userIdAttribute: '@oauth2.userIdAttribute'
       $defaultAuthenticationSource: '@oauth2.defaultAuthSource'
 
@@ -150,9 +153,9 @@ services:
 
   SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware: ~
 
-  SimpleSAML\Module\oauth2\Middleware\AuthenticatedOwnerMiddleware:
-    arguments:
-      'SimpleSAML\Configuration': '@moduleConfig'
+  SimpleSAML\Module\oauth2\Middleware\AuthenticatedOwnerMiddleware: ~
+
+  SimpleSAML\Module\oauth2\Middleware\AuthorizationRequestMiddleware: ~
 
   SimpleSAML\Module\oauth2\Middleware\ResourceRequestMiddleware: ~
 
@@ -165,6 +168,7 @@ services:
     class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
     arguments:
       $handler: '@SimpleSAML\Module\oauth2\Controller\AuthorizeRequestHandler'
+      $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthorizationRequestMiddleware'
 
   AuthorizeChoiceHandler:
     class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'

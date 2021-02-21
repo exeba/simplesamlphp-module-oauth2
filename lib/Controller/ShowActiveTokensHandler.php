@@ -3,7 +3,6 @@
 
 namespace SimpleSAML\Module\oauth2\Controller;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -13,7 +12,7 @@ use SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository;
 use SimpleSAML\Module\oauth2\Services\AuthenticationService;
 use SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder;
 
-class ShowActiveTokensHandler  implements RequestHandlerInterface
+class ShowActiveTokensHandler implements RequestHandlerInterface
 {
     private $authenticantionService;
     private $authCodeRepository;
@@ -26,7 +25,8 @@ class ShowActiveTokensHandler  implements RequestHandlerInterface
         AccessTokenRepository $accessTokenRepository,
         RefreshTokenRepository $refreshTokenRepository,
         AuthCodeRepository $authCodeRepository,
-        TemplatedResponseBuilder $templatedResponseBuilder)
+        TemplatedResponseBuilder $templatedResponseBuilder
+    )
     {
         $this->authenticantionService = $authenticationService;
         $this->authCodeRepository = $authCodeRepository;

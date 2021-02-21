@@ -18,5 +18,5 @@ class RefreshTokenEntity implements RefreshTokenEntityInterface
 {
     use RefreshTokenTrait, EntityTrait;
 
-    Use RevocableTrait;
+    use RevocableTrait;
 }

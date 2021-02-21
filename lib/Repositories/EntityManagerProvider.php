@@ -12,7 +12,6 @@ use SimpleSAML\Module\oauth2\DoctrineExtensions\TablePrefix;
 
 abstract class EntityManagerProvider
 {
-
     private static $em;
 
     public static function getEntityManager()
@@ -43,5 +42,4 @@ abstract class EntityManagerProvider
         $config = Setup::createXMLMetadataConfiguration($paths, $isDevMode);
         return EntityManager::create($dbParams, $config, $evm);
     }
-
 }

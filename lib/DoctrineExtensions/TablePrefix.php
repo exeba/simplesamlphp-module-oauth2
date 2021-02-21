@@ -3,7 +3,6 @@
 
 namespace SimpleSAML\Module\oauth2\DoctrineExtensions;
 
-
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 class TablePrefix

@@ -3,13 +3,11 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 
 class BaseRepository
 {
-
     protected $entityManager;
     protected $objectRepository;
 

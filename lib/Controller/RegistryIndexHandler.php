@@ -3,7 +3,6 @@
 
 namespace SimpleSAML\Module\oauth2\Controller;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -13,13 +12,13 @@ use SimpleSAML\Utils\HTTP;
 
 class RegistryIndexHandler implements RequestHandlerInterface
 {
-
     private $clientRepository;
     private $templatedResponseBuilder;
 
     public function __construct(
         ClientRepository $clientRepository,
-        TemplatedResponseBuilder $templatedResponseBuilder)
+        TemplatedResponseBuilder $templatedResponseBuilder
+    )
     {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;

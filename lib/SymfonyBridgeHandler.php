@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SymfonyBridgeHandler implements MiddlewareInterface
 {
-
     private $httpFoundationFactory;
     private $psrHttpFactory;
     private $handler;
@@ -25,7 +24,8 @@ class SymfonyBridgeHandler implements MiddlewareInterface
         HttpFoundationFactory $httpFoundationFactory,
         PsrHttpFactory $psrHttpFactory,
         RequestHandlerInterface $handler,
-        MiddlewareInterface $middleware = null)
+        MiddlewareInterface $middleware = null
+    )
     {
         $this->httpFoundationFactory = $httpFoundationFactory;
         $this->psrHttpFactory = $psrHttpFactory;

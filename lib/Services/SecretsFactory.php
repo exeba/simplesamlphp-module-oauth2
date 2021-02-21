@@ -3,10 +3,9 @@
 
 namespace SimpleSAML\Module\oauth2\Services;
 
-
 class SecretsFactory
 {
-
-    public static function getEncryptionKey() {
-       }
+    public static function getEncryptionKey()
+    {
+    }
 }

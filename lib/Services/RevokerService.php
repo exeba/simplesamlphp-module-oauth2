@@ -3,14 +3,12 @@
 
 namespace SimpleSAML\Module\oauth2\Services;
 
-
 use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
 use SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository;
 
 class RevokerService
 {
-
     public $accessTokenRepository;
     public $authCodeRepository;
     public $refreshTokenRepository;
@@ -18,7 +16,8 @@ class RevokerService
     public function __construct(
         AccessTokenRepository $accessTokenRepository,
         AuthCodeRepository $authCodeRepository,
-        RefreshTokenRepository $refreshTokenRepository)
+        RefreshTokenRepository $refreshTokenRepository
+    )
     {
         $this->accessTokenRepository = $accessTokenRepository;
         $this->authCodeRepository = $authCodeRepository;

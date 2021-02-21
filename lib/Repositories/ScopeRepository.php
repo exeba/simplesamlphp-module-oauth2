@@ -59,5 +59,4 @@ class ScopeRepository implements ScopeRepositoryInterface
             return (false !== array_search($scope->getIdentifier(), $clientEntity->getScopes()));
         });
     }
-
 }

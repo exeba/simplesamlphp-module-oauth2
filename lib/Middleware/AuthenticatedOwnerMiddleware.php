@@ -3,42 +3,25 @@
 
 namespace SimpleSAML\Module\oauth2\Middleware;
 
-
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use SimpleSAML\Auth\Simple;
-use SimpleSAML\Configuration;
-use SimpleSAML\Error\BadRequest;
-use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
-
+use SimpleSAML\Module\oauth2\Services\AuthenticationService;
 
 class AuthenticatedOwnerMiddleware implements MiddlewareInterface
 {
+    private $authenticationService;
 
-    private $clientRepository;
-    private $oauth2config;
-
-    public function __construct(ClientRepository $clientRepository, Configuration $oauth2config)
+    public function __construct(AuthenticationService $authenticationService)
     {
-        $this->clientRepository = $clientRepository;
-        $this->oauth2config = $oauth2config;
+        $this->authenticationService = $authenticationService;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $auth = new Simple($this->getAuthenticationSourceId($request));
-        $auth->requireAuth();
+        $user = $this->authenticationService->getUserForRequest($request);
 
-        return $handler->handle($request);
+        return $handler->handle($request->withAttribute('user', $user));
     }
-
-    private function getAuthenticationSourceId(ServerRequestInterface $request): string
-    {
-        return $request->getAttributes()['authSource'] ?? $this->oauth2config->getString('auth');
-    }
-
 }

@@ -3,13 +3,11 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 
 class BaseTokenRepository extends BaseRepository
 {
-
     public function __construct(EntityManagerInterface $entityManager, ObjectRepository $repository)
     {
         parent::__construct($entityManager, $repository);
@@ -34,7 +32,8 @@ class BaseTokenRepository extends BaseRepository
     public function removeExpiredTokens()
     {
         $query = $this->entityManager->createQuery(
-            "delete from {$this->objectRepository->getClassName()} m where m.expiryDateTime < :now");
+            "delete from {$this->objectRepository->getClassName()} m where m.expiryDateTime < :now"
+        );
 
         return $query->execute([ 'now' => new \DateTimeImmutable() ]);
     }

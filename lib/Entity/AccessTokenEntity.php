@@ -19,5 +19,5 @@ class AccessTokenEntity implements AccessTokenEntityInterface
 {
     use AccessTokenTrait, TokenEntityTrait, EntityTrait;
 
-    Use RevocableTrait;
+    use RevocableTrait;
 }

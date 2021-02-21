@@ -3,11 +3,9 @@
 
 namespace SimpleSAML\Module\oauth2\Controller;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Form\ClientForm;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 use SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder;
@@ -16,13 +14,13 @@ use SimpleSAML\Utils\Random;
 
 class NewClientHandler implements RequestHandlerInterface
 {
-
     private $clientRepository;
     private $templatedResponseBuilder;
 
     public function __construct(
         ClientRepository $clientRepository,
-        TemplatedResponseBuilder $templatedResponseBuilder)
+        TemplatedResponseBuilder $templatedResponseBuilder
+    )
     {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;

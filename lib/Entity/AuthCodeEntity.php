@@ -19,5 +19,5 @@ class AuthCodeEntity implements AuthCodeEntityInterface
 {
     use EntityTrait, TokenEntityTrait, AuthCodeTrait;
 
-    Use RevocableTrait;
+    use RevocableTrait;
 }

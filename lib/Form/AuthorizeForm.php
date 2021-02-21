@@ -15,7 +15,6 @@ use Nette\Forms\Form;
 
 class AuthorizeForm extends Form
 {
-
     private $pressedButton;
 
     /**
@@ -40,7 +39,8 @@ class AuthorizeForm extends Form
         $this->pressedButton = $submit;
     }
 
-    public function hasPressed($buttonName) {
+    public function hasPressed($buttonName)
+    {
         return $buttonName === $this->pressedButton->getName();
     }
 }

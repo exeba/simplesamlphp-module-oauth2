@@ -3,7 +3,6 @@
 
 namespace SimpleSAML\Module\oauth2\Utils;
 
-
 use Psr\Http\Message\ResponseInterface;
 use SimpleSAML\Configuration;
 
