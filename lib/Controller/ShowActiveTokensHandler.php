@@ -43,14 +43,12 @@ class ShowActiveTokensHandler implements RequestHandlerInterface
         $user = $request->getAttribute('user');
         $accessTokens = $this->accessTokenRepository->getActiveTokensForUser($user->getIdentifier());
 
-        $refreshTokens = [];
-        foreach ($accessTokens as $accessToken) {
-            $refreshToken = $this->refreshTokenRepository->getRefreshTokenFromAccessToken($accessToken->getIdentifier());
-            $refreshTokens[] = $refreshToken;
-        }
+        $refreshTokens = array_map(function($accessToken) {
+            return $this->refreshTokenRepository->getRefreshTokenFromAccessToken($accessToken->getIdentifier());
+
+        }, $accessTokens);
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:owner/show_grants.twig', [
-            'accessTokens' => $accessTokens,
             'refreshTokens' => $refreshTokens,
             'authSource' => $request->getAttribute('authSource'),
         ]);

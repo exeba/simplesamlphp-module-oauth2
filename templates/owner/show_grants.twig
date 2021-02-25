@@ -5,30 +5,50 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Currently active auhtorizations</h1>
-
+    <h1>Currently active tokens</h1>
+    <dl>
         {% for refreshToken in refreshTokens %}
-        {{ refreshToken.isRevoked }} {{ refreshToken.expiryDateTime.format('Y-m-d H:i:s') }}
-            <form method="post" action="/{{ baseurlpath }}module.php/oauth2/owner/revoke-token/{{ authSource }}">
-                <input type="hidden" name="tokenType" value="refresh"/>
-                <input type="hidden" name="tokenIdentifier" value="{{ refreshToken.identifier }}" />
-                <button class="button">Revoke</button>
-            </form>
-        <hr>
-                <ul>
-                    <li>{{ refreshToken.accessToken.isRevoked }}
-                        {{ refreshToken.accessToken.client.name }}
-                        {{ refreshToken.accessToken.scopes | json_encode }}
-                        {{ refreshToken.accessToken.expiryDateTime.format('Y-m-d H:i:s') }}
-                        <form method="post" action="/{{ baseurlpath }}module.php/oauth2/owner/revoke-token/{{ authSource }}">
-                            <input type="hidden" name="tokenType" value="access"/>
-                            <input type="hidden" name="tokenIdentifier" value="{{ refreshToken.accessToken.identifier }}" />
-                            <button class="button">Revoke</button>
-                        </form>
-                    </li>
-                </ul>
+        {% set accessToken = refreshToken.accessToken %}
+        <dt>Client: {{ accessToken.client.name }}</dt>
+        <dd>
+            <p>
+                Refresh token expires at: {{ refreshToken.expiryDateTime.format('Y-m-d H:i:s') }}
+                {% if refreshToken.isRevoked %}
+                    [revoked]
+                {% else %}
+                    [ <a onclick="revokeRefreshToken('{{ refreshToken.identifier }}')" href="#">Revoke</a> ]
+                {% endif %}<br>
+                Access token expires at: {{ accessToken.expiryDateTime.format('Y-m-d H:i:s') }}
+                {% if refreshToken.accessToken.isRevoked %}
+                    [revoked]
+                {% else %}
+                    [ <a onclick="revokeAccessToken('{{ accessToken.identifier }}')" href="#">Revoke</a> ]
+                {% endif %}<br>
+                Access token scopes: <code>{{ accessToken.scopes | json_encode }}</code><br>
+            </p>
+        </dd>
         {% endfor %}
+    </dl>
+    <form id="revokeForm" method="post" action="/{{ baseurlpath }}module.php/oauth2/owner/revoke-token/{{ authSource }}">
+        <input type="hidden" id="tokenType" name="tokenType" value="" />
+        <input type="hidden" id="tokenIdentifier" name="tokenIdentifier" value="" />
+    </form>
 {% endblock %}
 
+{% block postload %}
+    <script type="application/javascript">
+        function revokeRefreshToken(identifier) {
+            revokeToken('refresh', identifier);
+        }
 
+        function revokeAccessToken(identifier) {
+            revokeToken('access', identifier);
+        }
 
+        function revokeToken(type, identifier) {
+            document.getElementById('tokenType').value = type;
+            document.getElementById('tokenIdentifier').value = identifier;
+            document.forms.namedItem("revokeForm").submit();
+        }
+    </script>
+{% endblock %}
