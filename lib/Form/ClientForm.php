@@ -54,9 +54,12 @@ class ClientForm extends Form
             ->setRequired(false)
         ;
 
-        $this->addSubmit('submit', 'Submit');
+        $this->addSubmit('submit', 'Submit')
+            ->setHtmlAttribute('class', 'pure-button')
+        ;
         $this->addButton('return', 'Return')
-            ->setAttribute('onClick', 'parent.location = \''.Module::getModuleURL('oauth2/registry/').'\'')
+            ->setHtmlAttribute('class', 'pure-button')
+            ->setHtmlAttribute('onClick', 'parent.location = \''.Module::getModuleURL('oauth2/registry/').'\'')
         ;
     }
 

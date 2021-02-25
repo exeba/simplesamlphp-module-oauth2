@@ -15,19 +15,19 @@
     {% for client in clients %}
         <table class="metalist">
             <tr>
-                <th class="desc">Name</td>
+                <th class="desc">Name</th>
                 <td class="data">{{ client.name }}</td>
             </tr>
             <tr>
-                <th class="desc">Description</td>
+                <th class="desc">Description</th>
                 <td class="data">{{ client.description }}</td>
             </tr>
             <tr>
-                <th class="desc">Client ID</td>
+                <th class="desc">Client ID</th>
                 <td class="data">{{ client.identifier }}</td>
             </tr>
             <tr>
-                <th class="desc">Scopes</td>
+                <th class="desc">Scopes</th>
                 <td class="data">
                     <ul>
                         {% for scope in client.scopes %}
@@ -37,19 +37,19 @@
                 </td>
             </tr>
             <tr>
-                <th class="desc">Authentication Source</td>
+                <th class="desc">Authentication Source</th>
                 <td class="data">{{ client.authSource }}</td>
             </tr>
             <tr>
-                <th class="desc">Client Secret</td>
+                <th class="desc">Client Secret</th>
                 <td class="data">{{ client.secret }}</td>
             </tr>
             <tr>
-                <th class="desc">Private Client</td>
+                <th class="desc">Private Client</th>
                 <td class="data">{{ client.isConfidential }}</td>
             </tr>
             <tr>
-                <th class="desc">Redirect URIs</td>
+                <th class="desc">Redirect URIs</th>
                 <td class="data">
                     <ul>
                         {% for uri in client.redirectUri %}
@@ -68,7 +68,6 @@
                 </td>
             </tr>
         </table>
-        <hr/>
     {% else %}
         <table class="metalist">
             <tr>
@@ -76,7 +75,6 @@
             </tr>
         </table>
     {% endfor %}
-
     <a href="{{ moduleurlpath }}registry/new" class="pure-button">Add new client</a>
 {% endblock %}
 

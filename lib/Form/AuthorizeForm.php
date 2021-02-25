@@ -29,9 +29,13 @@ class AuthorizeForm extends Form
 
         $this->addHidden('authRequest');
 
-        $this->addSubmit('allow', 'Allow')->onClick[] = [$this, 'formSubmittedBy'];
+        $this->addSubmit('allow', 'Allow')
+            ->setHtmlAttribute('class', 'pure-button')
+            ->onClick[] = [$this, 'formSubmittedBy'];
 
-        $this->addSubmit('deny', 'Deny')->onClick[] = [$this, 'formSubmittedBy'];
+        $this->addSubmit('deny', 'Deny')
+            ->setHtmlAttribute('class', 'pure-button pure-button-red')
+            ->onClick[] = [$this, 'formSubmittedBy'];
     }
 
     public function formSubmittedBy(SubmitButton $submit)
