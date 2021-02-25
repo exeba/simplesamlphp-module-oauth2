@@ -6,13 +6,14 @@
 
 {% block content %}
     <h1>Oauth2 Client Authorization</h1>
-    <p>Client <b>{{ authRequest.client.name }} [{{ authRequest.client.identifier }}]</b> is requesting authorization for the following scopes:</p>
-    <ul>
-        {% for scope in authRequest.scopes %}
-        <li><i>{{ scope.identifier }}</i></li>
-        {% endfor %}
-    </ul>
-
+    <p>
+        Client <b>{{ authRequest.client.name }} [{{ authRequest.client.identifier }}]</b> is requesting authorization for the following scopes:
+        <ul>
+            {% for scope in authRequest.scopes %}
+            <li><i>{{ scope.identifier }}</i></li>
+            {% endfor %}
+        </ul>
+    </p>
     {{ form | raw }}
 
 {% endblock %}
