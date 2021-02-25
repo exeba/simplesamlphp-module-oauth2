@@ -37,4 +37,13 @@ class BaseTokenRepository extends BaseRepository
 
         return $query->execute([ 'now' => new \DateTimeImmutable() ]);
     }
+
+    public function removeRevokedTokens()
+    {
+        $query = $this->entityManager->createQuery(
+            "delete from {$this->objectRepository->getClassName()} m where m.isRevoked = 1"
+        );
+
+        return $query->execute();
+    }
 }

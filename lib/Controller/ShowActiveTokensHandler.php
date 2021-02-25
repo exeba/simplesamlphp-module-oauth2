@@ -36,16 +36,11 @@ class ShowActiveTokensHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->refreshTokenRepository->removeExpiredTokens();
-        $this->accessTokenRepository->removeExpiredTokens();
-        $this->authCodeRepository->removeExpiredTokens();
-
         $user = $request->getAttribute('user');
         $accessTokens = $this->accessTokenRepository->getActiveTokensForUser($user->getIdentifier());
 
         $refreshTokens = array_map(function($accessToken) {
             return $this->refreshTokenRepository->getRefreshTokenFromAccessToken($accessToken->getIdentifier());
-
         }, $accessTokens);
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:owner/show_grants.twig', [
