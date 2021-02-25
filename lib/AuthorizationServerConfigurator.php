@@ -23,7 +23,7 @@ class AuthorizationServerConfigurator
         $authCodeGrant->setRefreshTokenTTL($refreshTokenDuration);
         $authorizationServer->enableGrantType($authCodeGrant, $accessTokenDuration);
 
-        $refreshTokenGrant->setRefreshTokenTTL($accessTokenDuration);
+        $refreshTokenGrant->setRefreshTokenTTL($refreshTokenDuration);
         $authorizationServer->enableGrantType($refreshTokenGrant, $accessTokenDuration);
 
         $authorizationServer->enableGrantType($clientCredentialsGrant, $accessTokenDuration);
