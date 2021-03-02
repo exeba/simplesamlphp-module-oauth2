@@ -5,21 +5,24 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Currently active tokens</h1>
+    <h1>Tokens</h1>
     <dl>
-        {% for refreshToken in refreshTokens %}
-        {% set accessToken = refreshToken.accessToken %}
+        {% for accessToken in accessTokens %}
         <dt>Client: {{ accessToken.client.name }}</dt>
         <dd>
             <p>
-                Refresh token expires at: {{ refreshToken.expiryDateTime.format('Y-m-d H:i:s') }}
-                {% if refreshToken.isRevoked %}
-                    [revoked]
-                {% else %}
-                    [ <a onclick="revokeRefreshToken('{{ refreshToken.identifier }}')" href="#">Revoke</a> ]
-                {% endif %}<br>
+                {% set refreshToken = accessToken.refreshToken %}
+                {% if refreshToken is not null %}
+                    Refresh token expires at: {{ refreshToken.expiryDateTime.format('Y-m-d H:i:s') }}
+                    {% if refreshToken.isRevoked %}
+                        [revoked]
+                    {% else %}
+                        [ <a onclick="revokeRefreshToken('{{ refreshToken.identifier }}')" href="#">Revoke</a> ]
+                    {% endif %}<br>
+                {% endif %}
+
                 Access token expires at: {{ accessToken.expiryDateTime.format('Y-m-d H:i:s') }}
-                {% if refreshToken.accessToken.isRevoked %}
+                {% if accessToken.isRevoked %}
                     [revoked]
                 {% else %}
                     [ <a onclick="revokeAccessToken('{{ accessToken.identifier }}')" href="#">Revoke</a> ]

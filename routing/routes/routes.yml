@@ -28,11 +28,11 @@ new-client:
 
 show-grants-default:
   path:       /owner/show-grants
-  controller: 'ShowActiveTokensHandler:symfonyHandle'
+  controller: 'ShowUserTokensHandler:symfonyHandle'
 
 show-grants:
   path:       /owner/show-grants/{authSource}
-  controller: 'ShowActiveTokensHandler:symfonyHandle'
+  controller: 'ShowUserTokensHandler:symfonyHandle'
 
 revoke-token-default:
   path:       /owner/revoke-token

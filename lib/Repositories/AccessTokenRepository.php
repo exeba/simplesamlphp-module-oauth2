@@ -66,13 +66,28 @@ class AccessTokenRepository extends BaseTokenRepository implements AccessTokenRe
         return $this->isTokenRevoked($tokenId);
     }
 
-    public function getActiveTokensForUser($userId)
+    public function getTokensForUser($userId)
     {
         return $this->objectRepository->createQueryBuilder('token')
             ->where('token.userIdentifier = :userId')
-            ->andWhere('token.expiryDateTime > :now')
             ->setParameter('userId', $userId)
-            ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()->getResult();
+    }
+
+    protected function revokedTokensIdsQueryBuilder()
+    {
+        return $this->withoutRefreshToken(parent::revokedTokensIdsQueryBuilder());
+    }
+
+    protected function expiredTokensIdsQueryBuilder()
+    {
+        return $this->withoutRefreshToken(parent::expiredTokensIdsQueryBuilder());
+    }
+
+    private function withoutRefreshToken($queryBuilder)
+    {
+        return $queryBuilder
+            ->leftJoin('t.refreshToken', 'r')
+            ->andWhere('r.identifier IS NULL');
     }
 }

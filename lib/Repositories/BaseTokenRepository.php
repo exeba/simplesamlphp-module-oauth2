@@ -31,19 +31,53 @@ class BaseTokenRepository extends BaseRepository
 
     public function removeExpiredTokens()
     {
-        $query = $this->entityManager->createQuery(
-            "delete from {$this->objectRepository->getClassName()} m where m.expiryDateTime < :now"
-        );
+        $expiredTokenIds = $this->getTokenIds($this->expiredTokensIdsQueryBuilder());
 
-        return $query->execute([ 'now' => new \DateTimeImmutable() ]);
+        return $this->removeTokens($expiredTokenIds);
     }
 
     public function removeRevokedTokens()
     {
-        $query = $this->entityManager->createQuery(
-            "delete from {$this->objectRepository->getClassName()} m where m.isRevoked = 1"
-        );
+        $expiredTokenIds = $this->getTokenIds($this->revokedTokensIdsQueryBuilder());
 
-        return $query->execute();
+        return $this->removeTokens($expiredTokenIds);
+    }
+
+    protected function getTokenIds($queryBuilder)
+    {
+        return array_column($queryBuilder->getQuery()->getScalarResult(), 'identifier');
+    }
+
+    protected function getActiveTokensForUser($userId)
+    {
+        return $this->objectRepository->createQueryBuilder('token')
+            ->where('token.userIdentifier = :userId')
+            ->andWhere('token.expiryDateTime > :now')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()->getResult();
+    }
+
+    protected function revokedTokensIdsQueryBuilder()
+    {
+        return $this->objectRepository->createQueryBuilder('t')
+            ->select('t.identifier')
+            ->where('t.isRevoked = 1');
+    }
+
+    protected function expiredTokensIdsQueryBuilder()
+    {
+        return $this->objectRepository->createQueryBuilder('t')
+            ->select('t.identifier')
+            ->where('t.expiryDateTime < :now')
+            ->setParameter('now', new \Datetime());
+    }
+
+    protected function removeTokens($tokenIds)
+    {
+        $query = $this->entityManager->createQuery(
+            "delete from {$this->objectRepository->getClassName()} t where t.identifier in (:removableIds)"
+        );
+        return $query->execute([ 'removableIds' => $tokenIds ]);
     }
 }

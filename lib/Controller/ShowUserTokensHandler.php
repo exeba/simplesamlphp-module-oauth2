@@ -8,43 +8,34 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
-use SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository;
-use SimpleSAML\Module\oauth2\Services\AuthenticationService;
 use SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder;
 
-class ShowActiveTokensHandler implements RequestHandlerInterface
+class ShowUserTokensHandler implements RequestHandlerInterface
 {
-    private $authenticantionService;
     private $authCodeRepository;
     private $accessTokenRepository;
-    private $refreshTokenRepository;
     private $templatedResponseBuilder;
 
     public function __construct(
-        AuthenticationService $authenticationService,
         AccessTokenRepository $accessTokenRepository,
-        RefreshTokenRepository $refreshTokenRepository,
         AuthCodeRepository $authCodeRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
     ) {
-        $this->authenticantionService = $authenticationService;
         $this->authCodeRepository = $authCodeRepository;
         $this->accessTokenRepository = $accessTokenRepository;
-        $this->refreshTokenRepository = $refreshTokenRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute('user');
-        $accessTokens = $this->accessTokenRepository->getActiveTokensForUser($user->getIdentifier());
 
-        $refreshTokens = array_map(function($accessToken) {
-            return $this->refreshTokenRepository->getRefreshTokenFromAccessToken($accessToken->getIdentifier());
-        }, $accessTokens);
+        $accessTokens = $this->accessTokenRepository->getTokensForUser($user->getIdentifier());
+        $authCodes = $this->authCodeRepository->getActiveTokensForUser($user->getIdentifier());
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:owner/show_grants.twig', [
-            'refreshTokens' => $refreshTokens,
+            'authCodes' => $authCodes,
+            'accessTokens' => $accessTokens,
             'authSource' => $request->getAttribute('authSource'),
         ]);
     }

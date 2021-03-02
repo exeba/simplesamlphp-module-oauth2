@@ -20,4 +20,16 @@ class AccessTokenEntity implements AccessTokenEntityInterface
     use AccessTokenTrait, TokenEntityTrait, EntityTrait;
 
     use RevocableTrait;
+
+    private $refreshToken;
+
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+
+    public function setRefreshToken($refreshToken)
+    {
+        $this->refreshToken = $refreshToken;
+    }
 }

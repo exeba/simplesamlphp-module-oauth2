@@ -199,10 +199,10 @@ services:
       $handler: '@SimpleSAML\Module\oauth2\Controller\NewClientHandler'
       $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware'
 
-  ShowActiveTokensHandler:
+  ShowUserTokensHandler:
     class: 'SimpleSAML\Module\oauth2\SymfonyBridgeHandler'
     arguments:
-      $handler: '@SimpleSAML\Module\oauth2\Controller\ShowActiveTokensHandler'
+      $handler: '@SimpleSAML\Module\oauth2\Controller\ShowUserTokensHandler'
       $middleware: '@SimpleSAML\Module\oauth2\Middleware\AuthenticatedOwnerMiddleware'
 
   RevokeTokensHandler:
