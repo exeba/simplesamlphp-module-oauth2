@@ -26,7 +26,7 @@ class EntityManagerFactory
         );
 
         $paths = array(__DIR__."/../../doctrine-mappings");
-        $isDevMode = true;
+        $isDevMode = !Configuration::getInstance()->getBoolean('production', true);
 
         $config = Setup::createXMLMetadataConfiguration($paths, $isDevMode);
         return EntityManager::create($dbParams, $config, $evm);
