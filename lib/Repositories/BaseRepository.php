@@ -21,4 +21,11 @@ class BaseRepository
     {
         return $this->objectRepository->find($identifier);
     }
+
+    public function delete($identifier)
+    {
+        $entity = $this->findByIdentifier($identifier);
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+    }
 }

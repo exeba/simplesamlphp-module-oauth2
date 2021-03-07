@@ -2,21 +2,17 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use SimpleSAML\Error\User;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
-        $entityManager = EntityManagerProvider::getEntityManager();
-        parent::__construct(
-            $entityManager,
-            $entityManager->getRepository(UserEntity::class)
-        );
+        parent::__construct($em, $em->getRepository(UserEntity::class));
     }
 
     public function getUserEntityByUserCredentials(
@@ -31,13 +27,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getUser($userIdentifier): UserEntity
     {
         return $this->findByIdentifier($userIdentifier);
-    }
-
-    public function delete($userIdentifier)
-    {
-        $this->conn->delete($this->getTableName(), [
-            'id' => $userIdentifier,
-        ]);
     }
 
     public function insertOrCreate(UserEntity $user)

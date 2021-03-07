@@ -2,19 +2,16 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
 class RefreshTokenRepository extends BaseTokenRepository implements RefreshTokenRepositoryInterface
 {
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
-        $entityManager = EntityManagerProvider::getEntityManager();
-        parent::__construct(
-            $entityManager,
-            $entityManager->getRepository(RefreshTokenEntity::class)
-        );
+        parent::__construct($em, $em->getRepository(RefreshTokenEntity::class));
     }
 
     /**

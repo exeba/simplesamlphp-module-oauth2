@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
@@ -17,13 +18,9 @@ use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
 
 class AccessTokenRepository extends BaseTokenRepository implements AccessTokenRepositoryInterface
 {
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
-        $entityManager = EntityManagerProvider::getEntityManager();
-        parent::__construct(
-            $entityManager,
-            $entityManager->getRepository(AccessTokenEntity::class)
-        );
+        parent::__construct($em, $em->getRepository(AccessTokenEntity::class));
     }
 
     /**

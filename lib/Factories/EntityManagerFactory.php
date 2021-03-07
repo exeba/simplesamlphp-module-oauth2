@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\oauth2\Repositories;
+namespace SimpleSAML\Module\oauth2\Factories;
 
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityManager;
@@ -10,20 +10,9 @@ use SimpleSAML\Configuration;
 use SimpleSAML\Database;
 use SimpleSAML\Module\oauth2\DoctrineExtensions\TablePrefix;
 
-abstract class EntityManagerProvider
+class EntityManagerFactory
 {
-    private static $em;
-
-    public static function getEntityManager()
-    {
-        if (!self::$em) {
-            self::$em = self::buildEntityManager();
-        }
-
-        return self::$em;
-    }
-
-    private static function buildEntityManager()
+    public function buildEntityManager()
     {
         $prefix = Database::getInstance()->applyPrefix("");
         $tablePrefix = new TablePrefix($prefix);

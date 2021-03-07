@@ -10,19 +10,16 @@
 
 namespace SimpleSAML\Module\oauth2\Repositories;
 
+use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Utils\Random;
 
-class ClientRepository implements ClientRepositoryInterface
+class ClientRepository extends BaseRepository implements ClientRepositoryInterface
 {
-    private $entityManager;
-    private $objectManager;
-
-    public function __construct()
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->entityManager = EntityManagerProvider::getEntityManager();
-        $this->objectManager = $this->entityManager->getRepository(ClientEntity::class);
+        parent::__construct($em, $em->getRepository(ClientEntity::class));
     }
 
     /**
@@ -40,7 +37,7 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function getClientEntity($clientIdentifier)
     {
-        return $this->objectManager->find($clientIdentifier);
+        return $this->findByIdentifier($clientIdentifier);
     }
 
     public function persistNewClient(ClientEntity $client)
@@ -61,19 +58,12 @@ class ClientRepository implements ClientRepositoryInterface
         $this->entityManager->flush();
     }
 
-    public function delete($clientIdentifier)
-    {
-        $client = $this->getClientEntity($clientIdentifier);
-        $this->entityManager->remove($client);
-        $this->entityManager->flush();
-    }
-
     /**
      * @return ClientEntity[]
      */
     public function findAll()
     {
-        return $this->objectManager->findAll();
+        return $this->objectRepository->findAll();
     }
 
     public function restoreSecret($clientIdentifier)

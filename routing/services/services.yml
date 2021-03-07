@@ -82,19 +82,30 @@ services:
   SimpleSAML\Module\oauth2\AuthorizationServerConfigurator:
     arguments:
       League\OAuth2\Server\AuthorizationServer: '@oauth2.unconfiguredAuthorizaztonServer'
-      $refreshTokenDuration: '@oauth2.refreshTokenDuration'
       $accessTokenDuration: '@oauth2.accessTokenDuration'
+      $grants:
+        - '@League\OAuth2\Server\Grant\ClientCredentialsGrant'
+        - '@League\OAuth2\Server\Grant\AuthCodeGrant'
+        - '@League\OAuth2\Server\Grant\RefreshTokenGrant'
 
-  League\OAuth2\Server\Grant\AuthCodeGrant:
+  SimpleSAML\Module\oauth2\Factories\AuthCodeGrantFactory:
     arguments:
       DateInterval: '@oauth2.authCodeDuration'
 
-  League\OAuth2\Server\Grant\RefreshTokenGrant: ~
+  League\OAuth2\Server\Grant\AuthCodeGrant:
+    factory: [ '@SimpleSAML\Module\oauth2\Factories\AuthCodeGrantFactory', 'buildAuthCodeGrant' ]
 
   League\OAuth2\Server\Grant\ClientCredentialsGrant: ~
 
+  SimpleSAML\Module\oauth2\Factories\RefreshTokenGrantFactory:
+    arguments:
+      $refreshTokenDuration: '@oauth2.refreshTokenDuration'
+
+  League\OAuth2\Server\Grant\RefreshTokenGrant:
+    factory: [ '@SimpleSAML\Module\oauth2\Factories\RefreshTokenGrantFactory', 'buildRefreshTokenGrant' ]
+
   League\OAuth2\Server\AuthorizationServer:
-    factory: [ '@SimpleSAML\Module\oauth2\AuthorizationServerConfigurator', 'getConfiguredAuthorizationServer' ]
+    factory: [ '@SimpleSAML\Module\oauth2\AuthorizationServerConfigurator', 'getAuthorizationServer' ]
 
   League\OAuth2\Server\ResourceServer:
     arguments:
@@ -103,6 +114,11 @@ services:
   SimpleSAML\Module\oauth2\AuthRequestSerializer:
     arguments:
       $encryptionKey: '@oauth2.encryptionKey'
+
+  SimpleSAML\Module\oauth2\Factories\EntityManagerFactory: ~
+
+  Doctrine\ORM\EntityManagerInterface:
+    factory: [  '@SimpleSAML\Module\oauth2\Factories\EntityManagerFactory', 'buildEntityManager' ]
 
   SimpleSAML\Module\oauth2\Repositories\UserRepository: ~
   League\OAuth2\Server\Repositories\UserRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\UserRepository'
