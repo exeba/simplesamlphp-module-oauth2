@@ -12,6 +12,9 @@ $config = [
     // The private key passphrase (optional)
     // 'pass_phrase' => 'secret',
 
+    'oauth2.dbal.url' => 'sqlite:////'.dirname(__DIR__).'/simplesamlphp.sqlite',
+    'oauth2.dbal.prefix' => 'SimpleSAMLphp_',
+
     // Tokens TTL
     'authCodeDuration' => 'PT10M', // 10 minutes
     'refreshTokenDuration' => 'P1M', // 1 month

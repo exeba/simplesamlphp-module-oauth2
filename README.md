@@ -1,12 +1,6 @@
 SimpleSAMLphp OAuth2 module
 ====================================
 
-## What is new?
-
-From versions 1.2.x and 2.2.x this modules supports diferents AuthSources by
-client, instead one for all. If you come from versions <1.2 and <2.2 you must
-update the schema. Please, see the _"Create or update the schema"_ section.
-
 ## Installation
 
 This package add support for the OAuth2 protocol through a SimpleSAMLphp module
@@ -14,23 +8,10 @@ installable through [Composer](https://getcomposer.org/). Installation can be as
 easy as executing:
 
 ```
-composer.phar require sgomez/simplesamlphp-module-oauth2 1.0.0 # for SSP < 1.14
-composer.phar require sgomez/simplesamlphp-module-oauth2 ~1.0 # for SSP >= 1.14
-composer.phar require sgomez/simplesamlphp-module-oauth2 ~2.0 # for SSP >= 2.0|master
+composer.phar require exeba/simplesamlphp-module-oauth2 ~3.0
 ```
 
 ## Configuration
-
-This module requires [sgomez/simplesamlphp-module-dbal](https://github.com/sgomez/simplesamlphp-module-dbal)
-module configured. It's installed as a dependency but you need to read the module info and configure it.
- 
-### Create or update the schema
- 
-You need to run this to create the schema using the DBAL store module:
- 
-```
-bash$ vendor/bin/dbalschema
-```
 
 ### Configure the module
 
@@ -42,6 +23,15 @@ cp modules/oauth2/config-template/module_oauth2.php config/
 
 and edit it. The options are self explained.
 
+### Create or the schema
+
+The schema is maintaned using doctrine command line tool  ```vendor/bin/doctrine```.
+Tou just need to copy the ```cli.config.php``` file into the main directory:
+
+```
+cp vendor/simplesamlphp/simplesamlphp/modules/oauth2/cli-config.php .
+```
+
 ## Create oauth2 clients
 
 To add and remove Oauth2 clients, you need to logon on simplesaml with an admin account. Open the _Federation_ tab
@@ -51,7 +41,12 @@ You can specify as many redirect address as you want.
 
 ## Using the module
 
-This module is based on [Oauth2 Server from the PHP League](https://oauth2.thephpleague.com/) and supports implicit and explicit tokens.
+This module is based on [Oauth2 Server from the PHP League](https://oauth2.thephpleague.com/)
+and supports the following grants:
+
+ - Authorization code grant
+ - Client credentials grant
+ - Refresh grant
 
 ### Create the oauth2 keys:
 
@@ -82,33 +77,8 @@ openssl rsa -in cert/oauth2_module.pem -passin pass:_passphrase_ -pubout -out ce
 
 If you use a passphrase remember to configure it in the _module_oauth2.php_ config file.
 
-### Explicit Token
+### Endpoints
 
-To ask an explicit token see the [Authorization Code Grant](https://oauth2.thephpleague.com/authorization-server/auth-code-grant/)
-help page to know the parameters than you need to send (see Part One).
-
-The address to the authorization server is: _{{baseurlpath}}/module.php/oauth2/authorize.php_
-
-Now you need to ask for an access token. See the [Part Two](https://oauth2.thephpleague.com/authorization-server/auth-code-grant/).
-
-The address to the access token server is: _{{baseurlpath}}/module.php/oauth2/access_token.php_
-
-### Implicit Token
-
-To ask an implicit token see the [Implicit Grant](https://oauth2.thephpleague.com/authorization-server/implicit-grant/)
-help page to know the parameters than you need to send.
-
-The address to the authorization server is: _{{baseurlpath}}/module.php/oauth2/authorize.php_
-
-### Take the attributes
-
-To recover the user attributes you need to send and `Authorization` header with the Access Token as
-a Bearer Token to the userinfo page: _{{baseurlpath}}/module.php/oauth2/userinfo.php_
-
-Example:
-
-```
-curl --request GET \
-  --url http://server.com/simplesaml/module.php/oauth2/userinfo.php \
-  --header 'authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1Ni...'
-```
+ - Authorization Endpoint:  {{baseurlpath}}/module.php/oauth2/authorize
+ - Token Endpoint:  {{baseurlpath}}/module.php/oauth2/access_token
+ - Token Introspection Endpoint: {{baseurlpath}}/module.php/oauth2/userinfo
