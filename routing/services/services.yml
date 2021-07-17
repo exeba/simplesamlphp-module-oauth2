@@ -78,6 +78,11 @@ services:
     factory: [ '@moduleConfig', 'getArray' ]
     arguments: [ 'scopes' ]
 
+  oauth2.singleValuedAttributes:
+    class: 'array'
+    factory: [ '@moduleConfig', 'getArray' ]
+    arguments: [ 'singleValuedAttributes' ]
+
   oauth2.unconfiguredAuthorizaztonServer:
     class: 'League\OAuth2\Server\AuthorizationServer'
     arguments:
@@ -139,7 +144,8 @@ services:
 
   SimpleSAML\Module\oauth2\Repositories\ScopeRepository: ~
     arguments:
-      $scopesConfig: '@oauth2.scopesConfig'
+    $scopesConfig: '@oauth2.scopesConfig'
+    $singleValuedAttributes: '@oauth2.singleValuedAttributes'
   League\OAuth2\Server\Repositories\ScopeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ScopeRepository'
 
   SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~

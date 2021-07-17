@@ -75,8 +75,11 @@ class UserInfoRequestHandler implements RequestHandlerInterface
     {
         $filteredAttributes = [];
         foreach ($scopeAttributes as $attribute) {
-            // TODO: store already sanitized attributes
-            $filteredAttributes[$attribute] = $userAttributes[$attribute];
+            if ($this->scopeRepository->isSingleValued($attribute)) {
+                $filteredAttributes[$attribute] = $userAttributes[$attribute][0];
+            } else {
+                $filteredAttributes[$attribute] = $userAttributes[$attribute];
+            }
         }
 
         return $filteredAttributes;
