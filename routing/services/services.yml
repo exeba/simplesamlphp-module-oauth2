@@ -73,6 +73,11 @@ services:
     class: 'DateInterval'
     arguments: [ '@oauth2.refreshTokenDurationDef' ]
 
+  oauth2.scopesConfig:
+    class: 'array'
+    factory: [ '@moduleConfig', 'getArray' ]
+    arguments: [ 'scopes' ]
+
   oauth2.unconfiguredAuthorizaztonServer:
     class: 'League\OAuth2\Server\AuthorizationServer'
     arguments:
@@ -133,6 +138,8 @@ services:
   League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository'
 
   SimpleSAML\Module\oauth2\Repositories\ScopeRepository: ~
+    arguments:
+      $scopesConfig: '@oauth2.scopesConfig'
   League\OAuth2\Server\Repositories\ScopeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ScopeRepository'
 
   SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~

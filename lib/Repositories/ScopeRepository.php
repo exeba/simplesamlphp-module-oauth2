@@ -11,32 +11,46 @@
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use SimpleSAML\Configuration;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Entity\ScopeEntity;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
+
+    private $scopesConfig;
+
+    public function __construct($scopesConfig)
+    {
+        $this->scopesConfig = $scopesConfig;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getScopeEntityByIdentifier($identifier)
     {
-        $oauth2config = Configuration::getConfig('module_oauth2.php');
-
-        $scopes = $oauth2config->getArray('scopes');
-
-        if (array_key_exists($identifier, $scopes) === false) {
-            return null;
+        if ($this->hasScope($identifier)) {
+            return $this->buildScopeEntity($identifier);
         }
 
+        return null;
+    }
+
+    private function hasScope($scope)
+    {
+        return false !== array_key_exists($scope, $this->scopesConfig);
+    }
+
+    private function buildScopeEntity($scope)
+    {
+        $scopeConfig = $this->scopesConfig[$scope];
+
         $scope = new ScopeEntity();
-        $scope->setIdentifier($identifier);
-        $scope->setIcon($scopes[$identifier]['icon']);
-        $scope->setDescription($scopes[$identifier]['description']);
-        $scope->setAttributes($scopes[$identifier]['attributes']);
+        $scope->setIdentifier($scope);
+        $scope->setIcon($scopeConfig['icon']);
+        $scope->setDescription($scopeConfig['description']);
+        $scope->setAttributes($scopeConfig['attributes']);
 
         return $scope;
     }
