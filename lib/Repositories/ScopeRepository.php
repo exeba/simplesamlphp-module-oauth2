@@ -46,13 +46,13 @@ class ScopeRepository implements ScopeRepositoryInterface
     {
         $scopeConfig = $this->scopesConfig[$scope];
 
-        $scope = new ScopeEntity();
-        $scope->setIdentifier($scope);
-        $scope->setIcon($scopeConfig['icon']);
-        $scope->setDescription($scopeConfig['description']);
-        $scope->setAttributes($scopeConfig['attributes']);
+        $scopeEntity = new ScopeEntity();
+        $scopeEntity->setIdentifier($scope);
+        $scopeEntity->setIcon($scopeConfig['icon']);
+        $scopeEntity->setDescription($scopeConfig['description']);
+        $scopeEntity->setAttributes($scopeConfig['attributes']);
 
-        return $scope;
+        return $scopeEntity;
     }
 
     /**
