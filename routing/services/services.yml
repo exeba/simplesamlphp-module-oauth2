@@ -144,8 +144,8 @@ services:
 
   SimpleSAML\Module\oauth2\Repositories\ScopeRepository: ~
     arguments:
-    $scopesConfig: '@oauth2.scopesConfig'
-    $singleValuedAttributes: '@oauth2.singleValuedAttributes'
+      $scopesConfig: '@oauth2.scopesConfig'
+      $singleValuedAttributes: '@oauth2.singleValuedAttributes'
   League\OAuth2\Server\Repositories\ScopeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ScopeRepository'
 
   SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~
