@@ -7,20 +7,16 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\RequestInterface;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
-use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 
 class AuthenticationService
 {
-    private $clientRepository;
     private $userIdAttribute;
     private $defaultAuthenticationSource;
 
     public function __construct(
-        ClientRepository $clientRepository,
         $userIdAttribute,
         $defaultAuthenticationSource
     ) {
-        $this->clientRepository = $clientRepository;
         $this->userIdAttribute = $userIdAttribute;
         $this->defaultAuthenticationSource = $defaultAuthenticationSource;
     }
