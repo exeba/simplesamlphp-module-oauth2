@@ -19,17 +19,10 @@ class ScopeRepository implements ScopeRepositoryInterface
 {
 
     private $scopesConfig;
-    private $singleValuedAttributes;
 
-    public function __construct($scopesConfig, $singleValuedAttributes = null)
+    public function __construct($scopesConfig)
     {
         $this->scopesConfig = $scopesConfig;
-        $this->singleValuedAttributes = $singleValuedAttributes ?? [];
-    }
-
-    public function isSingleValued($attribute)
-    {
-        return in_array($attribute, $this->singleValuedAttributes, true);
     }
 
     /**
