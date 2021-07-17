@@ -81,7 +81,7 @@ services:
   oauth2.singleValuedAttributes:
     class: 'array'
     factory: [ '@moduleConfig', 'getArray' ]
-    arguments: [ 'singleValuedAttributes' ]
+    arguments: [ 'singleValuedAttributes', null ]
 
   oauth2.unconfiguredAuthorizaztonServer:
     class: 'League\OAuth2\Server\AuthorizationServer'
