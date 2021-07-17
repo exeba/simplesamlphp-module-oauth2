@@ -14,24 +14,25 @@ class AttributesUpdater
 {
     private $userRepository;
     private $defaultAuthenticationSource;
-    private $singleValuedAttributes;
+    private $attributesProcessor;
 
     public function __construct(
         UserRepository $userRepository,
         $defaultAuthenticationSource,
-        $singleValuedAttributes
+        AttributesProcessor $attributesProcessor
     )
     {
         $this->userRepository = $userRepository;
         $this->defaultAuthenticationSource = $defaultAuthenticationSource;
-        $this->singleValuedAttributes = $singleValuedAttributes ?? [];
+        $this->attributesProcessor = $attributesProcessor;
     }
 
     public function updateAttributes(UserEntity $user, ClientEntity $client)
     {
         $authSource = $this->getAuthenticationSource($client);
         if ($authSource instanceof Attributes) {
-            $newAttributes = $this->processAttributes($authSource->getAttributes($user->getIdentifier()));
+            $newAttributes = $authSource->getAttributes($user->getIdentifier());
+            $newAttributes = $this->attributesProcessor->processAttributes($newAttributes);
             $user->setAttributes($newAttributes);
             $this->userRepository->insertOrCreate($user);
         }
@@ -45,20 +46,5 @@ class AttributesUpdater
     private function getAuthSourceName(ClientEntity $client)
     {
         return $client->getAuthSource() ?? $this->defaultAuthenticationSource;
-    }
-
-    private function processAttributes($attributes)
-    {
-        $processedAttributes = [];
-        foreach ($attributes as $name => $value) {
-            $processedAttributes[$name] = $this->isSingleValued($name) ? $value[0] : $value;
-        }
-
-        return $processedAttributes;
-    }
-
-    public function isSingleValued($attribute)
-    {
-        return in_array($attribute, $this->singleValuedAttributes, true);
     }
 }

@@ -150,10 +150,13 @@ services:
   SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~
   League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository'
 
+  SimpleSAML\Module\oauth2\Services\AttributesProcessor:
+    arguments:
+      $singleValuedAttributes: '@oauth2.singleValuedAttributes'
+
   SimpleSAML\Module\oauth2\Services\AttributesUpdater:
     arguments:
       $defaultAuthenticationSource: '@oauth2.defaultAuthSource'
-      $singleValuedAttributes: '@oauth2.singleValuedAttributes'
 
   SimpleSAML\Module\oauth2\Services\AuthenticationService:
     arguments:

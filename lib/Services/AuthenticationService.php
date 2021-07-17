@@ -12,13 +12,16 @@ class AuthenticationService
 {
     private $userIdAttribute;
     private $defaultAuthenticationSource;
+    private $attributesProcessor;
 
     public function __construct(
         $userIdAttribute,
-        $defaultAuthenticationSource
+        $defaultAuthenticationSource,
+        AttributesProcessor $attributesProcessor
     ) {
         $this->userIdAttribute = $userIdAttribute;
         $this->defaultAuthenticationSource = $defaultAuthenticationSource;
+        $this->attributesProcessor = $attributesProcessor;
     }
 
     public function getUserForAuthnRequest(AuthorizationRequest $authnRequest)
@@ -63,7 +66,7 @@ class AuthenticationService
         $userid = $attributes[$this->userIdAttribute][0];
 
         $user = new UserEntity($userid);
-        $user->setAttributes($attributes);
+        $user->setAttributes($this->attributesProcessor->processAttributes($attributes));
 
         return $user;
     }
