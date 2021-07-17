@@ -42,7 +42,10 @@ class UserInfoRequestHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse($this->getUserAttributes($request));
+        $tokenInfo =  $this->getUserAttributes($request);
+        $tokenInfo['scope'] = join(' ', $this->getScopes($request));
+
+        return new JsonResponse($tokenInfo);
     }
 
     private function getUserAttributes(ServerRequestInterface $request): array
