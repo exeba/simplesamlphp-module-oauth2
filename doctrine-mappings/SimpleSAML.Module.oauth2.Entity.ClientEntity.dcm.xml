@@ -8,7 +8,7 @@
     <field name="description" type="text" nullable="true" />
     <field name="authSource" column="auth_source" type="string" nullable="true" />
     <field name="secret" type="string" />
-    <field name="redirectUri" column="redirect_uri" type="json_array" />
+    <field name="redirectUri" column="redirect_uri" type="json" />
     <field name="scopes" column="scopes" type="json_array" />
     <field name="isConfidential" column="is_confidential" type="boolean" />
   </entity>

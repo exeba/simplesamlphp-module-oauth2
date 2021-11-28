@@ -10,7 +10,7 @@
     <many-to-one field="client" target-entity="ClientEntity">
         <join-column name="client_id" nullable="false" />
     </many-to-one>
-    <field name="scopes" column="scopes" type="json_array" />
+    <field name="scopes" column="scopes" type="json" />
     <field name="redirectUri" column="redirect_uri" type="text" />
     <field name="isRevoked" column="is_revoked" type="boolean" />
   </entity>

@@ -1,7 +1,7 @@
 <doctrine-mapping>
   <entity name="SimpleSAML\Module\oauth2\Entity\UserEntity" table="oauth2_user">
     <id name="identifier" column="id" type="string" />
-    <field name="attributes" column="attributes" type="json_array" />
+    <field name="attributes" column="attributes" type="json" />
     <field name="createdAt" column="created_at" type="datetime_immutable" />
     <field name="updatedAt" column="updated_at" type="datetime_immutable" />
   </entity>

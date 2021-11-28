@@ -11,7 +11,7 @@
         <join-column name="client_id" nullable="false" />
     </many-to-one>
     <one-to-one field="refreshToken" target-entity="RefreshTokenEntity" mapped-by="accessToken" />
-    <field name="scopes" column="scopes" type="json_array" />
+    <field name="scopes" column="scopes" type="json" />
     <field name="isRevoked" column="is_revoked" type="boolean" />
   </entity>
 </doctrine-mapping>
