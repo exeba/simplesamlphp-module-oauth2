@@ -3,7 +3,11 @@
 
 namespace SimpleSAML\Module\oauth2\Services;
 
-
+/**
+ * Before being stored, user attributes must be processed.
+ * At the moment the only operation is to convert single valued attributes
+ * from array of length 1 to their first element
+ */
 class AttributesProcessor
 {
     private $singleValuedAttributes;
@@ -23,7 +27,7 @@ class AttributesProcessor
         return $processedAttributes;
     }
 
-    public function isSingleValued($attribute)
+    private function isSingleValued($attribute)
     {
         return in_array($attribute, $this->singleValuedAttributes, true);
     }

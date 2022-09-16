@@ -39,5 +39,10 @@
     "require-dev": {
         "simplesamlphp/simplesamlphp"               : "~1.19",
         "phpunit/phpunit": "^8.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "simplesamlphp/composer-module-installer": true
+        }
     }
 }

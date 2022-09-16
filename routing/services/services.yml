@@ -19,10 +19,15 @@ services:
     factory: [ '@moduleConfig', 'getString' ]
     arguments: [ 'auth' ]
 
+  oauth2.privateKeyName:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'privateKey', 'oauth2_module.pem' ]
+
   oauth2.privateKeyPath:
     class: 'string'
     factory: [ 'SimpleSAML\Utils\Config', 'getCertPath' ]
-    arguments: [ 'oauth2_module.pem' ]
+    arguments: [ '@oauth2.privateKeyName' ]
 
   oauth2.privateKeyPassPhrase:
     class: 'string'
@@ -39,10 +44,15 @@ services:
     class: 'string'
     factory: [ 'SimpleSAML\Utils\Config', 'getSecretSalt' ]
 
+  oauth2.publicKeyName:
+    class: 'string'
+    factory: [ '@moduleConfig', 'getString' ]
+    arguments: [ 'certificate', 'oauth2_module.crt' ]
+
   oauth2.publicKeyPath:
     class: 'string'
     factory: [ 'SimpleSAML\Utils\Config', 'getCertPath' ]
-    arguments: [ 'oauth2_module.crt' ]
+    arguments: [ '@oauth2.publicKeyName' ]
 
   oauth2.publicKey:
     class: 'League\OAuth2\Server\CryptKey'
@@ -83,7 +93,7 @@ services:
     factory: [ '@moduleConfig', 'getArray' ]
     arguments: [ 'singleValuedAttributes', null ]
 
-  oauth2.unconfiguredAuthorizaztonServer:
+  oauth2.unconfiguredAuthorizationServer:
     class: 'League\OAuth2\Server\AuthorizationServer'
     arguments:
       $privateKey: '@oauth2.privateKey'
@@ -91,7 +101,7 @@ services:
 
   SimpleSAML\Module\oauth2\AuthorizationServerConfigurator:
     arguments:
-      League\OAuth2\Server\AuthorizationServer: '@oauth2.unconfiguredAuthorizaztonServer'
+      League\OAuth2\Server\AuthorizationServer: '@oauth2.unconfiguredAuthorizationServer'
       $accessTokenDuration: '@oauth2.accessTokenDuration'
       $grants:
         - '@League\OAuth2\Server\Grant\ClientCredentialsGrant'
@@ -154,14 +164,17 @@ services:
     arguments:
       $singleValuedAttributes: '@oauth2.singleValuedAttributes'
 
-  SimpleSAML\Module\oauth2\Services\AttributesUpdater:
+  SimpleSAML\Module\oauth2\Services\SimpleSamlFactory: ~
+
+  SimpleSAML\Module\oauth2\Services\AuthenticationSourceResolver:
     arguments:
-      $defaultAuthenticationSource: '@oauth2.defaultAuthSource'
+      $defaultAuthenticationSourceId: '@oauth2.defaultAuthSource'
+
+  SimpleSAML\Module\oauth2\Services\AttributesUpdater: ~
 
   SimpleSAML\Module\oauth2\Services\AuthenticationService:
     arguments:
       $userIdAttribute: '@oauth2.userIdAttribute'
-      $defaultAuthenticationSource: '@oauth2.defaultAuthSource'
 
   SimpleSAML\Module\oauth2\Services\RevokerService: ~
 

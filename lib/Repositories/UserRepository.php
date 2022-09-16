@@ -29,7 +29,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->findByIdentifier($userIdentifier);
     }
 
-    public function insertOrCreate(UserEntity $user)
+    public function insertOrUpdate(UserEntity $user)
     {
         $oldUser = $this->findByIdentifier($user->getIdentifier());
         if (is_null($oldUser)) {

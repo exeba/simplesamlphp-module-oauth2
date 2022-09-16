@@ -33,7 +33,7 @@ class AuthorizationRequestMiddleware implements MiddlewareInterface
         $authnRequest = $this->authorizationServer->validateAuthorizationRequest($request);
         $userEntity = $this->authenticationService->getUserForAuthnRequest($authnRequest);
 
-        $this->userRepository->insertOrCreate($userEntity);
+        $this->userRepository->insertOrUpdate($userEntity);
         $authnRequest->setUser($userEntity);
 
         return $handler->handle($request->withAttribute('authnRequest', $authnRequest));

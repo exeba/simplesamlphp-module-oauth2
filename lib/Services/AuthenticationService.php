@@ -6,56 +6,50 @@ namespace SimpleSAML\Module\oauth2\Services;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\RequestInterface;
 use SimpleSAML\Auth\Simple;
+use SimpleSAML\Auth\Source;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 
 class AuthenticationService
 {
     private $userIdAttribute;
-    private $defaultAuthenticationSource;
+    private $simpleSamlFactory;
+    private $authenticationSourceResolver;
     private $attributesProcessor;
 
     public function __construct(
         $userIdAttribute,
-        $defaultAuthenticationSource,
+        SimpleSamlFactory $simpleSamlFactory,
+        AuthenticationSourceResolver $authenticationSourceResolver,
         AttributesProcessor $attributesProcessor
     ) {
         $this->userIdAttribute = $userIdAttribute;
-        $this->defaultAuthenticationSource = $defaultAuthenticationSource;
+        $this->simpleSamlFactory = $simpleSamlFactory;
+        $this->authenticationSourceResolver = $authenticationSourceResolver;
         $this->attributesProcessor = $attributesProcessor;
     }
 
     public function getUserForAuthnRequest(AuthorizationRequest $authnRequest)
     {
-        $authSource = $this->getAuthSourceIdFromAuthnRequest($authnRequest);
-        $auth = $this->requireAuthentication($authSource);
+        $authSourceId = $this->authenticationSourceResolver->getAuthSourceIdFromClient($authnRequest->getClient());
+        $auth = $this->requireAuthentication($authSourceId);
 
         return $this->buildUserFromAttributes($auth->getAttributes());
     }
 
     public function getUserForRequest(RequestInterface $request)
     {
-        $authSource = $this->getAuthSourceIdFromRequest($request);
-        $auth = $this->requireAuthentication($authSource);
+        $authSourceId = $this->authenticationSourceResolver->getAuthSourceIdFromRequest($request);
+        $auth = $this->requireAuthentication($authSourceId);
 
         return $this->buildUserFromAttributes($auth->getAttributes());
     }
 
     private function requireAuthentication(string $authenticationSource)
     {
-        $auth = new Simple($authenticationSource);
+        $auth = $this->simpleSamlFactory->createSimple($authenticationSource);
         $auth->requireAuth();
 
         return $auth;
-    }
-
-    private function getAuthSourceIdFromAuthnRequest(AuthorizationRequest $authRequest)
-    {
-        return $authRequest->getClient()->getAuthSource() ?? $this->defaultAuthenticationSource;
-    }
-
-    private function getAuthSourceIdFromRequest(RequestInterface $request)
-    {
-        return $request->getAttributes()['authSource'] ?? $this->defaultAuthenticationSource;
     }
 
     private function buildUserFromAttributes($attributes): UserEntity
