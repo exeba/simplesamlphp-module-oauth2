@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Test\Module\oauth2\lib\Services;
+namespace SimpleSAML\Test\Module\oauth2\Services;
 
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use PHPUnit\Framework\TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\oauth2\lib;
+namespace SimpleSAML\Test\Module\oauth2;
 
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Configuration;
@@ -42,7 +42,7 @@ class DependencyInjectionTest extends TestCase
         $definition->setAutowired(true);
         $definition->setPublic(true);
 
-        $controllerDir = dirname(dirname(__DIR__)). '/lib/Controller';
+        $controllerDir = dirname(dirname(__DIR__)). '/src/Controller';
 
         $loader = new DirectoryLoader(
             $container,

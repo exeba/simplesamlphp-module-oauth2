@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Test\Module\oauth2\lib\Services;
+namespace SimpleSAML\Test\Module\oauth2\Services;
 
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Module\oauth2\Services\AttributesProcessor;

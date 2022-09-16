@@ -1,14 +1,11 @@
 <?php
 
-namespace SimpleSAML\Test\Module\oauth2\lib\Services;
+namespace SimpleSAML\Test\Module\oauth2\Services;
 
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Auth\Source;
-use SimpleSAML\Module\oauth2\Auth\Source\Attributes;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
-use SimpleSAML\Module\oauth2\lib\Services\SourceWithAttributes;
 use SimpleSAML\Module\oauth2\Repositories\UserRepository;
 use SimpleSAML\Module\oauth2\Services\AttributesProcessor;
 use SimpleSAML\Module\oauth2\Services\AttributesUpdater;
