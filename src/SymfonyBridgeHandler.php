@@ -53,6 +53,6 @@ class SymfonyBridgeHandler implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->middleware->process($request, $this->handler);
+        return $this->middleware->process($request, $handler);
     }
 }
