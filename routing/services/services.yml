@@ -9,6 +9,9 @@ services:
     factory: [ 'SimpleSAML\Configuration', 'getConfig' ]
     arguments: [ 'module_oauth2.php' ]
 
+  configUtils:
+    class: 'SimpleSAML\Utils\Config'
+
   oauth2.userIdAttribute:
     class: 'string'
     factory: [ '@moduleConfig', 'getString' ]
@@ -21,17 +24,17 @@ services:
 
   oauth2.privateKeyName:
     class: 'string'
-    factory: [ '@moduleConfig', 'getString' ]
+    factory: [ '@moduleConfig', 'getOptionalString' ]
     arguments: [ 'privateKey', 'oauth2_module.pem' ]
 
   oauth2.privateKeyPath:
     class: 'string'
-    factory: [ 'SimpleSAML\Utils\Config', 'getCertPath' ]
+    factory: [ '@configUtils', 'getCertPath' ]
     arguments: [ '@oauth2.privateKeyName' ]
 
   oauth2.privateKeyPassPhrase:
     class: 'string'
-    factory: [ '@moduleConfig', 'getString' ]
+    factory: [ '@moduleConfig', 'getOptionalString' ]
     arguments: [ 'pass_phrase', null ]
 
   oauth2.privateKey:
@@ -42,16 +45,16 @@ services:
 
   oauth2.encryptionKey:
     class: 'string'
-    factory: [ 'SimpleSAML\Utils\Config', 'getSecretSalt' ]
+    factory: [ '@configUtils', 'getSecretSalt' ]
 
   oauth2.publicKeyName:
     class: 'string'
-    factory: [ '@moduleConfig', 'getString' ]
+    factory: [ '@moduleConfig', 'getOptionalString' ]
     arguments: [ 'certificate', 'oauth2_module.crt' ]
 
   oauth2.publicKeyPath:
     class: 'string'
-    factory: [ 'SimpleSAML\Utils\Config', 'getCertPath' ]
+    factory: [ '@configUtils', 'getCertPath' ]
     arguments: [ '@oauth2.publicKeyName' ]
 
   oauth2.publicKey:
@@ -79,6 +82,7 @@ services:
     class: 'string'
     factory: [ '@moduleConfig', 'getString' ]
     arguments: [ 'refreshTokenDuration' ]
+
   oauth2.refreshTokenDuration:
     class: 'DateInterval'
     arguments: [ '@oauth2.refreshTokenDurationDef' ]
@@ -90,7 +94,7 @@ services:
 
   oauth2.singleValuedAttributes:
     class: 'array'
-    factory: [ '@moduleConfig', 'getArray' ]
+    factory: [ '@moduleConfig', 'getOptionalArray' ]
     arguments: [ 'singleValuedAttributes', null ]
 
   oauth2.unconfiguredAuthorizationServer:

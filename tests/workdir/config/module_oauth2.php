@@ -4,6 +4,7 @@ $config = [
     'auth' => 'default_auth_source',
 
     'oauth2.dbal.url' => 'sqlite://./test.sqlite',
+    'oauth2.dbal.prefix' => 'oauth2_',
 
     // Tokens TTL
     'authCodeDuration' => 'PT10M', // 10 minutes

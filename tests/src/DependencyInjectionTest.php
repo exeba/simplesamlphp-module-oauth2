@@ -19,46 +19,15 @@ class DependencyInjectionTest extends TestCase
 {
 
     private $container;
-    private $loader;
 
     protected function setUp(): void
     {
-        Configuration::setConfigDir(dirname(__DIR__).'/config');
-        $this->container = $this->initContainer();
-    }
+        Configuration::setConfigDir(dirname(__DIR__) . '/workdir/config');
 
-    private function initContainer() {
-        $container = new ContainerBuilder();
-        $this->registerModuleControllers($container);
-        $this->registerServices($container);
-        $container->compile();
+        $ken = new TestKernel('oauth2');
+        $ken->boot();
 
-        return $container;
-    }
-
-    private function registerModuleControllers(ContainerBuilder $container)
-    {
-        $definition = new Definition();
-        $definition->setAutowired(true);
-        $definition->setPublic(true);
-
-        $controllerDir = dirname(dirname(__DIR__)). '/src/Controller';
-
-        $loader = new DirectoryLoader(
-            $container,
-            new FileLocator($controllerDir . '/')
-        );
-        $loader->registerClasses(
-            $definition,
-            'SimpleSAML\\Module\\oauth2\\Controller\\',
-            $controllerDir . '/*'
-        );
-    }
-
-    private function registerServices(ContainerBuilder $container)
-    {
-        $loader = new YamlFileLoader($container, new FileLocator());
-        $loader->load(dirname(dirname(__DIR__)).'/routing/services/services.yml');
+        $this->container = $ken->getContainer();
     }
 
     public function testDI()

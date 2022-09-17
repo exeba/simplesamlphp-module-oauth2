@@ -37,7 +37,7 @@
         "doctrine/orm": "^2.10"
     },
     "require-dev": {
-        "simplesamlphp/simplesamlphp"               : ">1.19.1",
+        "simplesamlphp/simplesamlphp"               : ">=2.0.0-rc",
         "phpunit/phpunit": "^9.0"
     },
     "config": {
