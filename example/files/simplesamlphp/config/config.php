@@ -492,7 +492,11 @@ $config = [
      * ],
      *
      */
-
+    'module.enable' => [
+        'core' => true,
+        'oauth2' => true,
+        'exampleauth' => true,
+    ],
 
 
     /*************************

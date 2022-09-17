@@ -1,4 +1,4 @@
-FROM php:7.3-apache-bullseye
+FROM php:8.0-apache-bullseye
 
 RUN apt-get update
 
@@ -12,7 +12,11 @@ WORKDIR /opt/simplesamlphp
 
 RUN wget https://getcomposer.org/download/2.1.12/composer.phar
 RUN chmod +x composer.phar
-RUN ./composer.phar require "simplesamlphp/simplesamlphp:~1.19"
+
+RUN apt-get install libicu-dev -y
+RUN docker-php-ext-install intl
+
+RUN ./composer.phar require "simplesamlphp/simplesamlphp:~2.0.0-rc1"
 RUN ./composer.phar require "exeba/simplesamlphp-module-oauth2:dev-master"
 
 RUN touch vendor/simplesamlphp/simplesamlphp/modules/oauth2/enable
