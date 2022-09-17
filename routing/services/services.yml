@@ -12,6 +12,10 @@ services:
   configUtils:
     class: 'SimpleSAML\Utils\Config'
 
+  simplesamlConfig:
+    class: 'SimpleSAML\Configuration'
+    factory: [ 'SimpleSAML\Configuration', 'getInstance' ]
+
   oauth2.userIdAttribute:
     class: 'string'
     factory: [ '@moduleConfig', 'getString' ]
@@ -198,7 +202,9 @@ services:
 
   Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory: ~
 
-  SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder: ~
+  SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder:
+    arguments:
+      $configuration: '@simplesamlConfig'
 
   SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware: ~
 

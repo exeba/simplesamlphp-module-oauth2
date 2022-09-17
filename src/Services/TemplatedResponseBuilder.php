@@ -11,10 +11,14 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 class TemplatedResponseBuilder
 {
     private $psrHttpFactory;
+    private $configuration;
 
-    public function __construct(PsrHttpFactory $psrHttpFactory)
+    public function __construct(
+        PsrHttpFactory $psrHttpFactory,
+        Configuration $configuration)
     {
         $this->psrHttpFactory = $psrHttpFactory;
+        $this->configuration = $configuration;
     }
 
     public function buildResponse(string $template, $data): ResponseInterface
