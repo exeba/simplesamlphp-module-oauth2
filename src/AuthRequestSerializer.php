@@ -6,9 +6,9 @@ use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
-use SimpleSAML\Module\oauth2\Entity\UserEntity;
+use SimpleSAML\Error\Exception;
+use SimpleSAML\Module\oauth2\Repositories\UserRepository;
 
 class AuthRequestSerializer
 {
@@ -23,7 +23,7 @@ class AuthRequestSerializer
     public function __construct(
         ClientRepositoryInterface $clientRepository,
         ScopeRepositoryInterface $scopeRepository,
-        UserRepositoryInterface $userRepository,
+        UserRepository $userRepository,
         $encryptionKey
     )
     {
@@ -41,14 +41,15 @@ class AuthRequestSerializer
         $authRequest->setCodeChallenge($serializable['code_challenge']);
         $authRequest->setCodeChallengeMethod($serializable['code_challenge_method']);
         $authRequest->setGrantTypeId($serializable['grant_type_id']);
-        $authRequest->setAuthorizationApproved($serializable['grant_type_id']);
+        $authRequest->setAuthorizationApproved($serializable['is_approved']);
         $authRequest->setRedirectUri($serializable['redirect_uri']);
         $authRequest->setScopes($this->getScopeEntities($serializable['scope_ids']));
         $authRequest->setState($serializable['state']);
-        // FIXME: This is the only method available in UserRepsitoryInterface
-        //  maybe estend that with a findby?
-        //$authRequest->setUser($this->userRepository->getUserEntityByUserCredentials());
-        $authRequest->setUser(new UserEntity($serializable['user_id']));
+        $user = $this->userRepository->getUserEntity($serializable['user_id']);
+        if (!$user) {
+            throw new Exception("Unknown user identifier {$serializable['user_id']}");
+        }
+        $authRequest->setUser($user);
 
         return $authRequest;
     }
@@ -82,10 +83,8 @@ class AuthRequestSerializer
 
     private function getScopeEntities(array $scopeIds)
     {
-        $scopeRepository = $this->scopeRepository;
-
-        return array_values(array_filter(array_map(function ($scopeId) use ($scopeRepository) {
-            return $scopeRepository->getScopeEntityByIdentifier($scopeId);
+        return array_values(array_filter(array_map(function ($scopeId) {
+            return $this->scopeRepository->getScopeEntityByIdentifier($scopeId);
         }, $scopeIds)));
     }
 }

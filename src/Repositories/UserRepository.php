@@ -24,7 +24,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         throw new Exception('Not supported');
     }
 
-    public function getUser($userIdentifier): UserEntity
+    public function getUserEntity($userIdentifier): UserEntity
     {
         return $this->findByIdentifier($userIdentifier);
     }

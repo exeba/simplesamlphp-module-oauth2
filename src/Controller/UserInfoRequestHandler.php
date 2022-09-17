@@ -88,7 +88,7 @@ class UserInfoRequestHandler implements RequestHandlerInterface
     {
         $userId = $request->getAttributes()[self::USER_ID_ATTRIBUTE_NAME];
 
-        return $this->userRepository->getUser($userId);
+        return $this->userRepository->getUserEntity($userId);
     }
 
     private function getScopes(RequestInterface $request)
