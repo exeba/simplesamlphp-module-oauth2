@@ -38,7 +38,7 @@
     },
     "require-dev": {
         "simplesamlphp/simplesamlphp"               : ">1.19.1",
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^9.0"
     },
     "config": {
         "allow-plugins": {
