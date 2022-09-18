@@ -2,7 +2,9 @@
 
 namespace SimpleSAML\Module\oauth2\Controller;
 
+use Laminas\Diactoros\Response\RedirectResponse;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +40,22 @@ class AuthorizeChoiceHandler implements RequestHandlerInterface
         $authorizationRequest = $this->authRequestSerializer->deserialize($form->getValues()['authRequest']);
         $authorizationRequest->setAuthorizationApproved($form->hasPressed('allow'));
 
-        return $this->authorizationServer->completeAuthorizationRequest($authorizationRequest, $this->newResponse());
+        try {
+            return $this->authorizationServer->completeAuthorizationRequest($authorizationRequest, $this->newResponse());
+        } catch (OAuthServerException $e) {
+            return new RedirectResponse($this->buildErrorRedirectUri($e));
+        }
+    }
+
+    private function buildErrorRedirectUri(OAuthServerException $error)
+    {
+        $originalUri = $error->getRedirectUri();
+        $errorInfo = http_build_query($error->getPayload());
+        if (false === strpos($originalUri, '?')) {
+            return "{$originalUri}?{$errorInfo}";
+        } else {
+            return "{$originalUri}&{$errorInfo}";
+        }
     }
 
     private function newResponse()
