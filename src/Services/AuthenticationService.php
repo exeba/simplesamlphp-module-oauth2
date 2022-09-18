@@ -5,6 +5,7 @@ namespace SimpleSAML\Module\oauth2\Services;
 
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Auth\Source;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
@@ -36,7 +37,7 @@ class AuthenticationService
         return $this->buildUserFromAttributes($auth->getAttributes());
     }
 
-    public function getUserForRequest(RequestInterface $request)
+    public function getUserForRequest(ServerRequestInterface $request)
     {
         $authSourceId = $this->authenticationSourceResolver->getAuthSourceIdFromRequest($request);
         $auth = $this->requireAuthentication($authSourceId);

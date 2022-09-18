@@ -4,6 +4,7 @@ namespace SimpleSAML\Module\oauth2\Services;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use SimpleSAML\Auth\Source;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 
@@ -34,12 +35,12 @@ class AuthenticationSourceResolver
         return $this->defaultAuthenticationSourceId;
     }
 
-    public function getAuthSourceFromRequest(RequestInterface $request): Source
+    public function getAuthSourceFromRequest(ServerRequestInterface $request): Source
     {
         return $this->simpleSamlFactory->createSimple($this->getAuthSourceIdFromRequest($request))->getAuthSource();
     }
 
-    public function getAuthSourceIdFromRequest(RequestInterface $request)
+    public function getAuthSourceIdFromRequest(ServerRequestInterface $request)
     {
         return $request->getAttributes()['authSource'] ?? $this->defaultAuthenticationSourceId;
     }

@@ -5,6 +5,7 @@ namespace SimpleSAML\Test\Module\oauth2\Services;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Error\User;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
@@ -53,7 +54,7 @@ class AuthenticationServiceTest extends TestCase
             'processed' => 'attributes'
         ];
 
-        $requestMock = $this->createMock(RequestInterface::class);
+        $requestMock = $this->createMock(ServerRequestInterface::class);
         $this->resolverMock->method('getAuthSourceIdFromRequest')->with($requestMock)->willReturn($this->authSourceId);
         $this->processorMock->method('processAttributes')->with($originalAttributes)->willReturn($processedAttributes);
         $this->simpleMock->method('getAttributes')->willReturn($originalAttributes);
@@ -91,7 +92,7 @@ class AuthenticationServiceTest extends TestCase
         $originalAttributes = [
             'original' => 'attributes'
         ];
-        $requestMock = $this->createMock(RequestInterface::class);
+        $requestMock = $this->createMock(ServerRequestInterface::class);
         $this->resolverMock->method('getAuthSourceIdFromRequest')->with($requestMock)->willReturn($this->authSourceId);
         $this->simpleMock->method('getAttributes')->willReturn($originalAttributes);
 
