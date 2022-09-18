@@ -10,7 +10,6 @@ use SimpleSAML\Utils\Auth;
 
 class AuthenticatedAdminMiddleware implements MiddlewareInterface
 {
-
     private $auth;
 
     public function __construct(Auth $auth)

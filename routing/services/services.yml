@@ -9,9 +9,13 @@ services:
     factory: [ 'SimpleSAML\Configuration', 'getConfig' ]
     arguments: [ 'module_oauth2.php' ]
 
+  SimpleSAML\Utils\Auth: ~
+
   SimpleSAML\Utils\Config: ~
 
-  SimpleSAML\Utils\Auth: ~
+  SimpleSAML\Utils\HTTP: ~
+
+  SimpleSAML\Utils\Random: ~
 
   simplesamlConfig:
     class: 'SimpleSAML\Configuration'

@@ -15,13 +15,19 @@ class NewClientHandler implements RequestHandlerInterface
 {
     private $clientRepository;
     private $templatedResponseBuilder;
+    private $http;
+    private $random;
 
     public function __construct(
         ClientRepository $clientRepository,
-        TemplatedResponseBuilder $templatedResponseBuilder
+        TemplatedResponseBuilder $templatedResponseBuilder,
+        HTTP $http,
+        Random $random
     ) {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
+        $this->http = $http;
+        $this->random = $random;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -29,12 +35,12 @@ class NewClientHandler implements RequestHandlerInterface
         $form = new ClientForm('client');
         if ($form->isSubmitted() && $form->isSuccess()) {
             $client = $form->getClientEntity();
-            $client->setIdentifier(Random::generateID());
-            $client->setSecret(Random::generateID());
+            $client->setIdentifier($this->random->generateID());
+            $client->setSecret($this->random->generateID());
 
             $this->clientRepository->persistNewClient($client);
 
-            HTTP::redirectTrustedURL('');
+            $this->http->redirectTrustedURL('');
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/new.twig', [
