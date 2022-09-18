@@ -10,9 +10,17 @@ use SimpleSAML\Utils\Auth;
 
 class AuthenticatedAdminMiddleware implements MiddlewareInterface
 {
+
+    private $auth;
+
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        Auth::requireAdmin();
+        $this->auth->requireAdmin();
 
         return $handler->handle($request);
     }

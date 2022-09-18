@@ -9,8 +9,9 @@ services:
     factory: [ 'SimpleSAML\Configuration', 'getConfig' ]
     arguments: [ 'module_oauth2.php' ]
 
-  configUtils:
-    class: 'SimpleSAML\Utils\Config'
+  SimpleSAML\Utils\Config: ~
+
+  SimpleSAML\Utils\Auth: ~
 
   simplesamlConfig:
     class: 'SimpleSAML\Configuration'
@@ -33,7 +34,7 @@ services:
 
   oauth2.privateKeyPath:
     class: 'string'
-    factory: [ '@configUtils', 'getCertPath' ]
+    factory: [ '@SimpleSAML\Utils\Config', 'getCertPath' ]
     arguments: [ '@oauth2.privateKeyName' ]
 
   oauth2.privateKeyPassPhrase:
@@ -49,7 +50,7 @@ services:
 
   oauth2.encryptionKey:
     class: 'string'
-    factory: [ '@configUtils', 'getSecretSalt' ]
+    factory: [ '@SimpleSAML\Utils\Config', 'getSecretSalt' ]
 
   oauth2.publicKeyName:
     class: 'string'
@@ -58,7 +59,7 @@ services:
 
   oauth2.publicKeyPath:
     class: 'string'
-    factory: [ '@configUtils', 'getCertPath' ]
+    factory: [ '@SimpleSAML\Utils\Config', 'getCertPath' ]
     arguments: [ '@oauth2.publicKeyName' ]
 
   oauth2.publicKey:
