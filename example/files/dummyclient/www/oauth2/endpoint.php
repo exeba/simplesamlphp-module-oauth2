@@ -4,15 +4,21 @@ require '../utils.php';
 
 $provider = new DemoProvider($client, $server);
 
-$token = httpPost(
-        $provider->getAccessTokenEndpoint(),
-        $provider->authCodeGrantParams(urldecode($_GET['code']), $dummyVerifier));
-
-$userInfo = httpGet($provider->getUserInfoEndpoint(), $token->access_token);
-
-$refreshedToken = httpPost(
-        $provider->getAccessTokenEndpoint(),
-        $provider->refreshTokenGrantParams($token->refresh_token));
+if (array_key_exists('code', $_GET)) {
+    $token = httpPost(
+            $provider->getAccessTokenEndpoint(),
+            $provider->authCodeGrantParams(urldecode($_GET['code']), $dummyVerifier));
+    $userInfo = httpGet($provider->getUserInfoEndpoint(), $token->access_token);
+    $refreshedToken = httpPost(
+            $provider->getAccessTokenEndpoint(),
+            $provider->refreshTokenGrantParams($token->refresh_token));
+    $error = null;
+} else {
+    $token = null;
+    $userInfo = null;
+    $refreshedToken = null;
+    $error = $_GET['error'];
+}
 
 ?>
 <!DOCTYPE html>
@@ -23,12 +29,14 @@ $refreshedToken = httpPost(
     <body>
         <h2>Issued token:</h2>
         <pre><?= json_encode($token, JSON_PRETTY_PRINT) ?></pre>
-            <?= $token->access_token ?>
         <hr>
         <h2>User info:</h2>
         <pre><?= json_encode($userInfo, JSON_PRETTY_PRINT) ?></pre>
         <hr>
         <h2>Refreshed token:</h2>
         <pre><?= json_encode($refreshedToken, JSON_PRETTY_PRINT) ?></pre>
+        <hr>
+        <h2>Error:</h2>
+        <pre><?= json_encode($error, JSON_PRETTY_PRINT) ?></pre>
     </body>
 </html>
