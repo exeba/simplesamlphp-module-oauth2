@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Factories;
 
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -19,8 +18,7 @@ class AuthCodeGrantFactory
         RefreshTokenRepositoryInterface $refreshTokenRepository,
         \DateInterval $authCodeDuration,
         \DateInterval $refreshTokenDuration
-    )
-    {
+    ) {
         $this->authCodeRepository = $authCodeRepository;
         $this->refreshTokenRepository = $refreshTokenRepository;
         $this->authCodeDuration = $authCodeDuration;

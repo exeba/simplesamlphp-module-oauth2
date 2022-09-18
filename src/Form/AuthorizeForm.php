@@ -25,7 +25,7 @@ class AuthorizeForm extends Form
         parent::__construct($name);
 
         $this->setMethod('POST');
-        //$this->addProtection('Security token has expired, please submit the form again');
+        // $this->addProtection('Security token has expired, please submit the form again');
 
         $this->addHidden('authRequest');
 

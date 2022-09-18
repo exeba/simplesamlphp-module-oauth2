@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2;
 
 use League\OAuth2\Server\AuthorizationServer;

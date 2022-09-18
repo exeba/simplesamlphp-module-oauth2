@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -20,8 +19,7 @@ class NewClientHandler implements RequestHandlerInterface
     public function __construct(
         ClientRepository $clientRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
-    )
-    {
+    ) {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
     }

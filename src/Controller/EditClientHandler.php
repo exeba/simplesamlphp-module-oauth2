@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -20,8 +19,7 @@ class EditClientHandler implements RequestHandlerInterface
     public function __construct(
         ClientRepository $clientRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
-    )
-    {
+    ) {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
     }
@@ -47,7 +45,7 @@ class EditClientHandler implements RequestHandlerInterface
     {
         $client = $this->clientRepository->getClientEntity($request->getQueryParams()['id']);
         if (is_null($client)) {
-            throw new NotFound("Client not found");
+            throw new NotFound('Client not found');
         }
 
         return $client;

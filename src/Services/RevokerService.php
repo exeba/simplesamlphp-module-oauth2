@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Services;
 
 use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
@@ -17,8 +16,7 @@ class RevokerService
         AccessTokenRepository $accessTokenRepository,
         AuthCodeRepository $authCodeRepository,
         RefreshTokenRepository $refreshTokenRepository
-    )
-    {
+    ) {
         $this->accessTokenRepository = $accessTokenRepository;
         $this->authCodeRepository = $authCodeRepository;
         $this->refreshTokenRepository = $refreshTokenRepository;
@@ -63,7 +61,7 @@ class RevokerService
     private function throwIfNotMatching($userIdA, $userIdB)
     {
         if ($userIdA !== $userIdB) {
-            throw new \Exception("User not allowed");
+            throw new \Exception('User not allowed');
         }
     }
 }

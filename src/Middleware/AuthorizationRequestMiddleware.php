@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Middleware;
 
 use League\OAuth2\Server\AuthorizationServer;
@@ -21,8 +20,7 @@ class AuthorizationRequestMiddleware implements MiddlewareInterface
         UserRepositoryInterface $userRepository,
         AuthorizationServer $authorizationServer,
         AuthenticationService $authenticationService
-    )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->authorizationServer = $authorizationServer;
         $this->authenticationService = $authenticationService;

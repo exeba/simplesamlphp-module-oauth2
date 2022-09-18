@@ -14,14 +14,13 @@ use SimpleSAML\Test\Module\oauth2\Repositories\DummyScopeRepository;
 
 class AuthRequestSerializerTest extends TestCase
 {
-
     private $authRequest;
 
     private $serializer;
 
     protected function setUp(): void
     {
-        $scopes = [ $this->createScope('id'), $this->createScope('mail') ];
+        $scopes = [$this->createScope('id'), $this->createScope('mail')];
         $user = new UserEntity('user_id');
         $client = new ClientEntity();
         $client->setIdentifier('client_id');
@@ -29,7 +28,7 @@ class AuthRequestSerializerTest extends TestCase
         $clientRepoMock = $this->createClientRepoMock($client);
         $userRepoMock = $this->createUserRepoMock($user);
         $scopeRepoMock = new DummyScopeRepository(...$scopes);
-        $encryptionKey = "key";
+        $encryptionKey = 'key';
 
         $this->serializer = new AuthRequestSerializer(
             $clientRepoMock,
@@ -86,5 +85,4 @@ class AuthRequestSerializerTest extends TestCase
 
         $this->assertEquals($this->authRequest, $deserialized);
     }
-
 }

@@ -101,6 +101,7 @@ class ClientForm extends Form
     private function splitWhitespaces($string)
     {
         $redirect_uris = preg_split("/[\t\r\n ]+/", $string);
+
         return array_filter($redirect_uris, function ($redirect_uri) {
             return !empty(trim($redirect_uri));
         });
@@ -112,10 +113,11 @@ class ClientForm extends Form
     public function setClientEntity(Module\oauth2\Entity\ClientEntity $entity)
     {
         $this->clientEntity = $entity;
+
         return $this->setDefaults([
             'name' => $entity->getName(),
             'description' => $entity->getDescription(),
-            'scopes' => implode(" ", $entity->getScopes()),
+            'scopes' => implode(' ', $entity->getScopes()),
             'auth_source' => $entity->getAuthSource(),
             'redirect_uri' => implode("\n", $entity->getRedirectUri()),
             'is_confidential' => $entity->isConfidential(),

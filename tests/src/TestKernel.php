@@ -3,7 +3,6 @@
 namespace SimpleSAML\Test\Module\oauth2;
 
 use SimpleSAML\Configuration;
-use SimpleSAML\Error\Exception;
 use SimpleSAML\Kernel;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
@@ -24,10 +23,10 @@ class TestKernel extends Kernel
     {
         $configuration = Configuration::getInstance();
         $baseDir = $configuration->getBaseDir();
-        $loader->load($baseDir . '/routing/services/*' . self::CONFIG_EXTS, 'glob');
-        $confDir = $this->getModule() . '/routing/services';
+        $loader->load($baseDir.'/routing/services/*'.self::CONFIG_EXTS, 'glob');
+        $confDir = $this->getModule().'/routing/services';
         if (is_dir($confDir)) {
-            $loader->load($confDir . '/**/*' . self::CONFIG_EXTS, 'glob');
+            $loader->load($confDir.'/**/*'.self::CONFIG_EXTS, 'glob');
         }
 
         $container->loadFromExtension('framework', [
@@ -37,9 +36,6 @@ class TestKernel extends Kernel
         $this->registerModuleControllers($container);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     */
     private function registerModuleControllers(ContainerBuilder $container): void
     {
         try {
@@ -47,7 +43,7 @@ class TestKernel extends Kernel
             $definition->setAutowired(true);
             $definition->setPublic(true);
 
-            $controllerDir = $this->getModuleDir() . '/src/Controller';
+            $controllerDir = $this->getModuleDir().'/src/Controller';
 
             if (!is_dir($controllerDir)) {
                 return;
@@ -55,12 +51,12 @@ class TestKernel extends Kernel
 
             $loader = new DirectoryLoader(
                 $container,
-                new FileLocator($controllerDir . '/')
+                new FileLocator($controllerDir.'/')
             );
             $loader->registerClasses(
                 $definition,
-                'SimpleSAML\\Module\\' . $this->getModule() . '\\Controller\\',
-                $controllerDir . '/*'
+                'SimpleSAML\\Module\\'.$this->getModule().'\\Controller\\',
+                $controllerDir.'/*'
             );
         } catch (FileLocatorFileNotFoundException $e) {
         }
@@ -68,6 +64,6 @@ class TestKernel extends Kernel
 
     private function getModuleDir()
     {
-        return dirname(__DIR__,2);
+        return dirname(__DIR__, 2);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2;
 
 use Psr\Http\Message\ResponseInterface;
@@ -25,8 +24,7 @@ class SymfonyBridgeHandler implements MiddlewareInterface
         PsrHttpFactory $psrHttpFactory,
         RequestHandlerInterface $handler,
         MiddlewareInterface $middleware = null
-    )
-    {
+    ) {
         $this->httpFoundationFactory = $httpFoundationFactory;
         $this->psrHttpFactory = $psrHttpFactory;
         $this->handler = $handler;

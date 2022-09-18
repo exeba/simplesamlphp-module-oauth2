@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -8,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use SimpleSAML\Error\BadRequest;
-use SimpleSAML\Module\oauth2\Services\AuthenticationService;
 use SimpleSAML\Module\oauth2\Services\RevokerService;
 
 class RevokeTokensHandler implements RequestHandlerInterface

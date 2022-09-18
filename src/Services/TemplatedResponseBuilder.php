@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Services;
 
 use Psr\Http\Message\ResponseInterface;

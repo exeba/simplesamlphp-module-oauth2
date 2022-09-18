@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -70,7 +69,7 @@ class BaseTokenRepository extends BaseRepository
         return $this->objectRepository->createQueryBuilder('t')
             ->select('t.identifier')
             ->where('t.expiryDateTime < :now')
-            ->setParameter('now', new \Datetime());
+            ->setParameter('now', new \DateTime());
     }
 
     protected function removeTokens($tokenIds)
@@ -78,6 +77,7 @@ class BaseTokenRepository extends BaseRepository
         $query = $this->entityManager->createQuery(
             "delete from {$this->objectRepository->getClassName()} t where t.identifier in (:removableIds)"
         );
-        return $query->execute([ 'removableIds' => $tokenIds ]);
+
+        return $query->execute(['removableIds' => $tokenIds]);
     }
 }

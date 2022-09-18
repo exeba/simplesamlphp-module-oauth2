@@ -6,7 +6,7 @@ use SimpleSAML\Auth\Simple;
 
 class SimpleSamlFactory
 {
-    function createSimple($authSourceName)
+    public function createSimple($authSourceName)
     {
         return new Simple($authSourceName);
     }

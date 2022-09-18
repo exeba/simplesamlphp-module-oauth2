@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -18,8 +17,7 @@ class RegistryIndexHandler implements RequestHandlerInterface
     public function __construct(
         ClientRepository $clientRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
-    )
-    {
+    ) {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
     }
@@ -39,7 +37,7 @@ class RegistryIndexHandler implements RequestHandlerInterface
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/index.twig', [
-            'clients' => $this->clientRepository->findAll()
+            'clients' => $this->clientRepository->findAll(),
         ]);
     }
 }

@@ -50,7 +50,7 @@ class RefreshTokenRepository extends BaseTokenRepository implements RefreshToken
     public function getRefreshTokenFromAccessToken($accessTokenId)
     {
         return $this->objectRepository->findOneBy([
-            'accessToken' => $accessTokenId
+            'accessToken' => $accessTokenId,
             ]);
     }
 }

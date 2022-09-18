@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -19,8 +18,7 @@ class AuthorizeRequestHandler implements RequestHandlerInterface
     public function __construct(
         AuthRequestSerializer $authRequestSerializer,
         TemplatedResponseBuilder $templatedResponseBuilder
-    )
-    {
+    ) {
         $this->authRequestSerializer = $authRequestSerializer;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
     }

@@ -1,12 +1,11 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Services;
 
 /**
  * Before being stored, user attributes must be processed.
  * At the moment the only operation is to convert single valued attributes
- * from array of length 1 to their first element
+ * from array of length 1 to their first element.
  */
 class AttributesProcessor
 {

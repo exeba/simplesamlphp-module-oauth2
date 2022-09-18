@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use League\OAuth2\Server\AuthorizationServer;
@@ -17,8 +16,7 @@ class AccessTokenRequestHandler implements RequestHandlerInterface
     public function __construct(
         AuthorizationServer $tokenServer,
         ResponseFactoryInterface $responseFactory
-    )
-    {
+    ) {
         $this->tokenServer = $tokenServer;
         $this->responseFactory = $responseFactory;
     }

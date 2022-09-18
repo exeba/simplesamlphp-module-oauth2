@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;

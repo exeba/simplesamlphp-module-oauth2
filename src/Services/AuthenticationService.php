@@ -1,13 +1,9 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Services;
 
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use SimpleSAML\Auth\Simple;
-use SimpleSAML\Auth\Source;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 
 class AuthenticationService

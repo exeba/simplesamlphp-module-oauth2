@@ -13,7 +13,6 @@ use SimpleSAML\Module\oauth2\Services\AuthenticationSourceResolver;
 
 class AttributesUpdaterTest extends TestCase
 {
-
     private $processorMock;
     private $resolverMock;
     private $repositoryMock;
@@ -50,10 +49,10 @@ class AttributesUpdaterTest extends TestCase
     public function testUpdateAttributesWhenAvailable()
     {
         $originalAttributes = [
-            'original' => 'attribute'
+            'original' => 'attribute',
         ];
         $processedAttributes = [
-            'processed' => 'attribute'
+            'processed' => 'attribute',
         ];
 
         $dummySource = $this->createMock(SourceWithAttributes::class);
@@ -65,6 +64,6 @@ class AttributesUpdaterTest extends TestCase
         $this->updater->updateAttributes($this->userEntity, $this->clientEntity);
 
         $this->assertEquals($processedAttributes, $this->userEntity->getAttributes(),
-        'UserEntity attributes must be updated');
+            'UserEntity attributes must be updated');
     }
 }

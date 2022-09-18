@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Services;
 
 use SimpleSAML\Module\oauth2\Auth\Source\Attributes;
@@ -9,7 +8,7 @@ use SimpleSAML\Module\oauth2\Entity\UserEntity;
 use SimpleSAML\Module\oauth2\Repositories\UserRepository;
 
 /**
- * This class updates the user attributes if the corresponding authentication source provides them
+ * This class updates the user attributes if the corresponding authentication source provides them.
  */
 class AttributesUpdater
 {
@@ -21,8 +20,7 @@ class AttributesUpdater
         UserRepository $userRepository,
         AuthenticationSourceResolver $authenticationSourceResolver,
         AttributesProcessor $attributesProcessor
-    )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->authenticationSourceResolver = $authenticationSourceResolver;
         $this->attributesProcessor = $attributesProcessor;

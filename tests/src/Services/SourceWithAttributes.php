@@ -7,5 +7,4 @@ use SimpleSAML\Module\oauth2\Auth\Source\Attributes;
 
 abstract class SourceWithAttributes extends Source implements Attributes
 {
-
 }

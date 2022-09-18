@@ -17,7 +17,6 @@ use SimpleSAML\Module\oauth2\Entity\ScopeEntity;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
-
     private $scopesConfig;
 
     public function __construct($scopesConfig)
@@ -70,7 +69,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     private function commonScopes($requestedScopes, ClientEntity $clientEntity)
     {
         return array_filter($requestedScopes, function ($scope) use (&$clientEntity) {
-            return (false !== array_search($scope->getIdentifier(), $clientEntity->getScopes()));
+            return false !== array_search($scope->getIdentifier(), $clientEntity->getScopes());
         });
     }
 }

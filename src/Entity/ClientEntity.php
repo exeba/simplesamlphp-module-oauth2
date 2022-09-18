@@ -11,13 +11,13 @@
 namespace SimpleSAML\Module\oauth2\Entity;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
 class ClientEntity implements ClientEntityInterface
 {
-    use EntityTrait, ClientTrait;
+    use EntityTrait;
+    use ClientTrait;
 
     /**
      * @var string

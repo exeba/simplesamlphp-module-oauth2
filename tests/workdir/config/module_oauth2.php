@@ -1,4 +1,5 @@
 <?php
+
 $config = [
     'useridattr' => 'user_id_attribute',
     'auth' => 'default_auth_source',
@@ -19,7 +20,7 @@ $config = [
             'icon' => 'user',
             'description' => [
                 'en' => 'Your username.',
-                'es' => 'Su nombre de usuario.'
+                'es' => 'Su nombre de usuario.',
             ],
             'attributes' => ['uid'],
         ],
@@ -27,7 +28,7 @@ $config = [
             'icon' => 'user',
             'description' => [
                 'en' => 'Your username.',
-                'es' => 'Su nombre de usuario.'
+                'es' => 'Su nombre de usuario.',
             ],
             'attributes' => ['uid'],
         ],

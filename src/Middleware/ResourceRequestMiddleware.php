@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Middleware;
 
 use League\OAuth2\Server\Exception\OAuthServerException;

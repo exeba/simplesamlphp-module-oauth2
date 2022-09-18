@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Auth\Source;
 
 use Exception;
@@ -13,7 +12,6 @@ use SimpleSAML\Utils;
  *
  * This class is copied from SimpleSAMLphp exampleauth module and
  * adapted to implement Attributes interface
- *
  */
 class UserPassExample extends UserPassBase implements Attributes
 {
@@ -25,12 +23,11 @@ class UserPassExample extends UserPassBase implements Attributes
      */
     private $users;
 
-
     /**
      * Constructor for this authentication source.
      *
-     * @param array $info  Information about this authentication source.
-     * @param array $config  Configuration.
+     * @param array $info   information about this authentication source
+     * @param array $config configuration
      */
     public function __construct(array $info, array $config)
     {
@@ -42,16 +39,12 @@ class UserPassExample extends UserPassBase implements Attributes
         // Validate and parse our configuration
         foreach ($config as $userpass => $attributes) {
             if (!is_string($userpass)) {
-                throw new Exception(
-                    'Invalid <username>:<password> for authentication source ' . $this->authId . ': ' . $userpass
-                );
+                throw new Exception('Invalid <username>:<password> for authentication source '.$this->authId.': '.$userpass);
             }
 
             $userpass = explode(':', $userpass, 2);
-            if (count($userpass) !== 2) {
-                throw new Exception(
-                    'Invalid <username>:<password> for authentication source ' . $this->authId . ': ' . $userpass[0]
-                );
+            if (2 !== count($userpass)) {
+                throw new Exception('Invalid <username>:<password> for authentication source '.$this->authId.': '.$userpass[0]);
             }
             $username = $userpass[0];
             $password = $userpass[1];
@@ -59,13 +52,11 @@ class UserPassExample extends UserPassBase implements Attributes
             try {
                 $attributes = Utils\Attributes::normalizeAttributesArray($attributes);
             } catch (Exception $e) {
-                throw new Exception('Invalid attributes for user ' . $username .
-                    ' in authentication source ' . $this->authId . ': ' . $e->getMessage());
+                throw new Exception('Invalid attributes for user '.$username.' in authentication source '.$this->authId.': '.$e->getMessage());
             }
-            $this->users[$username . ':' . $password] = $attributes;
+            $this->users[$username.':'.$password] = $attributes;
         }
     }
-
 
     /**
      * Attempt to log in using the given username and password.
@@ -76,13 +67,14 @@ class UserPassExample extends UserPassBase implements Attributes
      *
      * Note that both the username and the password are UTF-8 encoded.
      *
-     * @param string $username  The username the user wrote.
-     * @param string $password  The password the user wrote.
-     * @return array  Associative array with the users attributes.
+     * @param string $username the username the user wrote
+     * @param string $password the password the user wrote
+     *
+     * @return array associative array with the users attributes
      */
     protected function login($username, $password): array
     {
-        $userpass = $username . ':' . $password;
+        $userpass = $username.':'.$password;
         if (!array_key_exists($userpass, $this->users)) {
             throw new Error\Error('WRONGUSERPASS');
         }

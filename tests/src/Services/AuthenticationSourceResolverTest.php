@@ -3,19 +3,15 @@
 namespace SimpleSAML\Module\oauth2\src\Services;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Auth\Source;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Services\AuthenticationSourceResolver;
 use SimpleSAML\Module\oauth2\Services\SimpleSamlFactory;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
-use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticationSourceResolverTest extends TestCase
 {
-
     private $defaultAuthenticationSourceId = 'default_id';
     private $factoryMock;
 

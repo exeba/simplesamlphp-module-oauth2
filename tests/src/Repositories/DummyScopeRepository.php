@@ -8,7 +8,6 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class DummyScopeRepository implements ScopeRepositoryInterface
 {
-
     private $scopesById;
 
     public function __construct(ScopeEntityInterface ...$scopes)

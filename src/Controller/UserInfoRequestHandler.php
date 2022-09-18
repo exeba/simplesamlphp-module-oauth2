@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use Laminas\Diactoros\Response\JsonResponse;
@@ -17,9 +16,9 @@ use SimpleSAML\Module\oauth2\Services\AttributesUpdater;
 
 class UserInfoRequestHandler implements RequestHandlerInterface
 {
-    const USER_ID_ATTRIBUTE_NAME = 'oauth_user_id';
-    const SCOPES_ATTRIBUTE_NAME = 'oauth_scopes';
-    const CLIENT_ID_ATTRIBUTE_NAME = 'oauth_client_id';
+    public const USER_ID_ATTRIBUTE_NAME = 'oauth_user_id';
+    public const SCOPES_ATTRIBUTE_NAME = 'oauth_scopes';
+    public const CLIENT_ID_ATTRIBUTE_NAME = 'oauth_client_id';
 
     private $userRepository;
     private $scopeRepository;
@@ -32,8 +31,7 @@ class UserInfoRequestHandler implements RequestHandlerInterface
         ScopeRepository $scopesRepository,
         ClientRepository $clientRepository,
         AttributesUpdater $attributesUpdater
-    )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->scopeRepository = $scopesRepository;
         $this->clientRepository = $clientRepository;
@@ -42,7 +40,7 @@ class UserInfoRequestHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $tokenInfo =  $this->getUserAttributes($request);
+        $tokenInfo = $this->getUserAttributes($request);
         $tokenInfo['scope'] = join(' ', $this->getScopes($request));
 
         return new JsonResponse($tokenInfo);

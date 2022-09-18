@@ -15,20 +15,21 @@ class EntityManagerFactory
     {
         $config = Configuration::getOptionalConfig('module_oauth2.php');
 
-        $prefix = $config->getString('oauth2.dbal.prefix','');
+        $prefix = $config->getString('oauth2.dbal.prefix', '');
         $tablePrefix = new TablePrefix($prefix);
 
         $evm = new EventManager();
         $evm->addEventListener(Events::loadClassMetadata, $tablePrefix);
 
-        $dbParams = array(
-            'url' => $config->getString('oauth2.dbal.url')
-        );
+        $dbParams = [
+            'url' => $config->getString('oauth2.dbal.url'),
+        ];
 
-        $paths = array(__DIR__."/../../doctrine-mappings");
+        $paths = [__DIR__.'/../../doctrine-mappings'];
         $isDevMode = !Configuration::getInstance()->getBoolean('production', true);
 
         $config = Setup::createXMLMetadataConfiguration($paths, $isDevMode);
+
         return EntityManager::create($dbParams, $config, $evm);
     }
 }

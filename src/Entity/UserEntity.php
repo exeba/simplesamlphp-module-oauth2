@@ -84,9 +84,6 @@ class UserEntity implements UserEntityInterface
         return $this->createdAt;
     }
 
-    /**
-     * @param \DateTimeImmutable $createdAt
-     */
     public function setCreatedAt(\DateTimeImmutable $createdAt)
     {
         $this->createdAt = $createdAt;
@@ -100,9 +97,6 @@ class UserEntity implements UserEntityInterface
         return $this->updatedAt;
     }
 
-    /**
-     * @param \DateTimeImmutable  $updatedAt
-     */
     public function setUpdatedAt(\DateTimeImmutable $updatedAt)
     {
         $this->updatedAt = $updatedAt;

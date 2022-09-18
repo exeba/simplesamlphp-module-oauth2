@@ -4,12 +4,9 @@ namespace SimpleSAML\Test\Module\oauth2\Services;
 
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SimpleSAML\Auth\Simple;
-use SimpleSAML\Error\User;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
-use SimpleSAML\Module\oauth2\Entity\UserEntity;
 use SimpleSAML\Module\oauth2\Services\AttributesProcessor;
 use SimpleSAML\Module\oauth2\Services\AuthenticationService;
 use SimpleSAML\Module\oauth2\Services\AuthenticationSourceResolver;
@@ -17,7 +14,6 @@ use SimpleSAML\Module\oauth2\Services\SimpleSamlFactory;
 
 class AuthenticationServiceTest extends TestCase
 {
-
     private $userIdAttribute = 'user_id_attribute';
     private $factoryMock;
     private $resolverMock;
@@ -48,10 +44,10 @@ class AuthenticationServiceTest extends TestCase
     public function testGetUserForRequest()
     {
         $originalAttributes = [
-            "$this->userIdAttribute" => [ 'user_id' ]
+            "$this->userIdAttribute" => ['user_id'],
         ];
         $processedAttributes = [
-            'processed' => 'attributes'
+            'processed' => 'attributes',
         ];
 
         $requestMock = $this->createMock(ServerRequestInterface::class);
@@ -67,10 +63,10 @@ class AuthenticationServiceTest extends TestCase
     public function testGetUserForAuthnRequest()
     {
         $originalAttributes = [
-            "$this->userIdAttribute" => [ 'user_id' ]
+            "$this->userIdAttribute" => ['user_id'],
         ];
         $processedAttributes = [
-            'processed' => 'attributes'
+            'processed' => 'attributes',
         ];
 
         $dummyClient = new ClientEntity();
@@ -90,7 +86,7 @@ class AuthenticationServiceTest extends TestCase
     public function testErrorOnMissingUserId()
     {
         $originalAttributes = [
-            'original' => 'attributes'
+            'original' => 'attributes',
         ];
         $requestMock = $this->createMock(ServerRequestInterface::class);
         $this->resolverMock->method('getAuthSourceIdFromRequest')->with($requestMock)->willReturn($this->authSourceId);

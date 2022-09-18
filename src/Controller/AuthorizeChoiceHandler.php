@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SimpleSAML\Module\oauth2\Controller;
 
 use League\OAuth2\Server\AuthorizationServer;
@@ -22,8 +21,7 @@ class AuthorizeChoiceHandler implements RequestHandlerInterface
         ResponseFactoryInterface $responseFactory,
         AuthorizationServer $authorizationServer,
         AuthRequestSerializer $authRequestSerializer
-    )
-    {
+    ) {
         $this->responseFactory = $responseFactory;
         $this->authorizationServer = $authorizationServer;
         $this->authRequestSerializer = $authRequestSerializer;

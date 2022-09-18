@@ -25,8 +25,7 @@ class AuthRequestSerializer
         ScopeRepositoryInterface $scopeRepository,
         UserRepository $userRepository,
         $encryptionKey
-    )
-    {
+    ) {
         $this->clientRepository = $clientRepository;
         $this->scopeRepository = $scopeRepository;
         $this->userRepository = $userRepository;
@@ -36,7 +35,7 @@ class AuthRequestSerializer
     public function deserialize($serializedAuthRequest)
     {
         $serializable = json_decode($this->decrypt($serializedAuthRequest), true);
-        $authRequest =  new AuthorizationRequest();
+        $authRequest = new AuthorizationRequest();
         $authRequest->setClient($this->clientRepository->getClientEntity($serializable['client_id']));
         $authRequest->setCodeChallenge($serializable['code_challenge']);
         $authRequest->setCodeChallengeMethod($serializable['code_challenge_method']);
@@ -75,8 +74,8 @@ class AuthRequestSerializer
     {
         return array_map(
             function (ScopeEntityInterface $scope) {
-            return $scope->getIdentifier();
-        },
+                return $scope->getIdentifier();
+            },
             $authorizationRequest->getScopes()
         );
     }
