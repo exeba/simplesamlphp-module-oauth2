@@ -5,3 +5,7 @@ composer.lock
 
 /report
 /tests/workdir/tmp/*
+
+/e2e-tests/*
+!*.robot
+!requirements.txt

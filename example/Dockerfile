@@ -1,11 +1,16 @@
 FROM php:8.0-apache-bullseye
 
 RUN apt-get update
-
 RUN apt-get install wget git zip unzip sqlite3 -y
+
+RUN apt-get install libicu-dev -y
+RUN docker-php-ext-install intl
 
 RUN apt-get install npm -y
 RUN npm i npm@latest -g
+
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN sed -i "$PHP_INI_DIR/php.ini" -e 's/^session.use_strict_mode.*/session.use_strict_mode = 1/'
 
 RUN mkdir /opt/simplesamlphp
 WORKDIR /opt/simplesamlphp
@@ -13,31 +18,24 @@ WORKDIR /opt/simplesamlphp
 RUN wget https://getcomposer.org/download/2.1.12/composer.phar
 RUN chmod +x composer.phar
 
-RUN apt-get install libicu-dev -y
-RUN docker-php-ext-install intl
-
 RUN ./composer.phar require "simplesamlphp/simplesamlphp:~2.0.0-rc1"
-RUN ./composer.phar require "exeba/simplesamlphp-module-oauth2:dev-master"
-
-RUN touch vendor/simplesamlphp/simplesamlphp/modules/oauth2/enable
-RUN touch vendor/simplesamlphp/simplesamlphp/modules/exampleauth/enable
-RUN cp vendor/simplesamlphp/simplesamlphp/modules/oauth2/cli-config.php .
-
 WORKDIR /opt/simplesamlphp/vendor/simplesamlphp/simplesamlphp
-RUN npm install
-RUN npm run build
-
 COPY files/simplesamlphp/config/* config/
 COPY files/simplesamlphp/metadata/* metadata/
 COPY files/simplesamlphp/cert/* cert/
 
+RUN npm install
+RUN npm run build
+
 WORKDIR /opt/simplesamlphp
+RUN ./composer.phar require "exeba/simplesamlphp-module-oauth2:dev-master"
+RUN touch vendor/simplesamlphp/simplesamlphp/modules/oauth2/enable
+RUN touch vendor/simplesamlphp/simplesamlphp/modules/exampleauth/enable
+RUN cp vendor/simplesamlphp/simplesamlphp/modules/oauth2/cli-config.php .
+
 RUN vendor/bin/doctrine orm:schema-tool:create
 RUN vendor/bin/doctrine orm:schema-tool:update --force
 RUN vendor/bin/doctrine orm:generate-proxies
-
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-RUN sed -i "$PHP_INI_DIR/php.ini" -e 's/^session.use_strict_mode.*/session.use_strict_mode = 1/'
 
 RUN chown www-data:www-data -R /opt/simplesamlphp
 

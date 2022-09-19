@@ -28,15 +28,15 @@ if (array_key_exists('code', $_GET)) {
     </head>
     <body>
         <h2>Issued token:</h2>
-        <pre><?= json_encode($token, JSON_PRETTY_PRINT) ?></pre>
+        <pre name="token"><?= json_encode($token, JSON_PRETTY_PRINT) ?></pre>
         <hr>
         <h2>User info:</h2>
-        <pre><?= json_encode($userInfo, JSON_PRETTY_PRINT) ?></pre>
+        <pre name="userInfo"><?= json_encode($userInfo, JSON_PRETTY_PRINT) ?></pre>
         <hr>
         <h2>Refreshed token:</h2>
-        <pre><?= json_encode($refreshedToken, JSON_PRETTY_PRINT) ?></pre>
+        <pre name="refreshedToken"><?= json_encode($refreshedToken, JSON_PRETTY_PRINT) ?></pre>
         <hr>
         <h2>Error:</h2>
-        <pre><?= json_encode($error, JSON_PRETTY_PRINT) ?></pre>
+        <pre name="error"><?= json_encode($error, JSON_PRETTY_PRINT) ?></pre>
     </body>
 </html>
