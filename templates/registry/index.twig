@@ -13,7 +13,7 @@
 <h2>Your clients</h2>
 
     {% for client in clients %}
-        <table class="metalist">
+        <table id="client_{{ client.name }}" class="metalist">
             <tr>
                 <th class="desc">Name</th>
                 <td class="data">{{ client.name }}</td>
