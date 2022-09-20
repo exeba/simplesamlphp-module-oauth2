@@ -41,8 +41,8 @@ Try To Add An Already Existing Client
     Navigate To New Client Page
     Fill Private Client Auth Default
     Submit Client Form
-    Log Location
     Location Should Be    ${NEW_CLIENT_URL}
+    Element Should Contain    css:ul.error    Client already defined
 
 Restore Client Secret
     Navigate To Clients Registry Page

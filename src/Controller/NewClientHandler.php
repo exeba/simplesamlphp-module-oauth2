@@ -2,6 +2,7 @@
 
 namespace SimpleSAML\Module\oauth2\Controller;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -38,9 +39,12 @@ class NewClientHandler implements RequestHandlerInterface
             $client->setIdentifier($this->random->generateID());
             $client->setSecret($this->random->generateID());
 
-            $this->clientRepository->persistNewClient($client);
-
-            $this->http->redirectTrustedURL('');
+            try {
+                $this->clientRepository->persistNewClient($client);
+                $this->http->redirectTrustedURL('');
+            } catch (UniqueConstraintViolationException $e) {
+                $form->addError('Client already defined');
+            }
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/new.twig', [

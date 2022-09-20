@@ -17,7 +17,6 @@ use SimpleSAML\Utils\Random;
 
 class ClientRepository extends BaseRepository implements ClientRepositoryInterface
 {
-
     private $random;
 
     public function __construct(
