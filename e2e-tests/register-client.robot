@@ -15,24 +15,35 @@ Valid Login
     Input Password    1234
     Submit Credentials
 
+Add A New Private Client With Default Auth Source
     Navigate To New Client Page
     Fill Private Client Auth Default
     Submit Client Form
     Log Location
-    Element Text Should Be    tag:td    demo_private
     Location Should Be    ${CLIENTS_REGISTRY_URL}
+    Element Should Contain    id:client_demo_private    demo_private
 
+Add A New Public Client With Default Auth Source
     Navigate To New Client Page
     Fill Public Client Auth Default
     Submit Client Form
     Location Should Be    ${CLIENTS_REGISTRY_URL}
+    Element Should Contain    id:client_demo_public    demo_public
 
+Add A New Private Client With Custom Auth Source
     Navigate To New Client Page
     Fill Private Client Custom Auth
     Submit Client Form
     Location Should Be    ${CLIENTS_REGISTRY_URL}
+    Element Should Contain    id:client_demo_private_custom    demo_private_custom
 
-    #Welcome Page Should Be Open
+Try To Add An Already Existing Client
+    Navigate To New Client Page
+    Fill Private Client Auth Default
+    Submit Client Form
+    Log Location
+    Location Should Be    ${NEW_CLIENT_URL}
+
     [Teardown]    Close Browser
 
 *** Keywords ***
