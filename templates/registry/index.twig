@@ -60,11 +60,11 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="{{ moduleurlpath }}registry/edit?id={{ client.identifier }}" class="pure-button">Edit config</a>
+                    <a href="{{ moduleurlpath }}registry/edit?id={{ client.identifier }}" id="edit_{{ client.name }}" class="pure-button">Edit config</a>
                     &nbsp;
-                    <a href="{{ moduleurlpath }}registry?restore={{ client.identifier }}" class="pure-button">Restore secret</a>
+                    <a href="{{ moduleurlpath }}registry?restore={{ client.identifier }}" id="restore_{{ client.name }}" class="pure-button">Restore secret</a>
                     &nbsp;
-                    <a href="{{ moduleurlpath }}registry?delete={{ client.identifier }}" class="pure-button pure-button-red">Delete</a>
+                    <a href="{{ moduleurlpath }}registry?delete={{ client.identifier }}" id="delete_{{ client.name }}" class="pure-button pure-button-red">Delete</a>
                 </td>
             </tr>
         </table>
