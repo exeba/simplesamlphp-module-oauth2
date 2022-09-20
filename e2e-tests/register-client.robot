@@ -44,13 +44,28 @@ Try To Add An Already Existing Client
     Log Location
     Location Should Be    ${NEW_CLIENT_URL}
 
+Restore Client Secret
+    Navigate To Clients Registry Page
+    Element Should Contain    id:client_demo1client    _cc39c61257c4fdbba6721185520d9f3ccb9747fb90
+    Click Restore Client Secret    demo1client
+    Location Should Be    ${CLIENTS_REGISTRY_URL}
+    Element Should Not Contain    id:client_demo1client    _cc39c61257c4fdbba6721185520d9f3ccb9747fb90
+
+Delete Client
+    Navigate To Clients Registry Page
+    Page Should Contain Element    id:client_demo1client
+    Click Delete Client    demo1client
+    Location Should Be    ${CLIENTS_REGISTRY_URL}
+    Page Should Not Contain Element    id:client_demo1client
+    
     [Teardown]    Close Browser
 
 *** Keywords ***
 Open Browser To Clients Registry Page
     Open Browser    ${CLIENTS_REGISTRY_URL}    ${BROWSER}
-    # Assert redirect to login page
-    #Title Should Be    Login Page
+
+Navigate To Clients Registry Page
+    Go To    ${CLIENTS_REGISTRY_URL}
 
 Navigate To New Client Page
     Go To    ${NEW_CLIENT_URL}
@@ -94,3 +109,10 @@ Fill Private Client Custom Auth
 Welcome Page Should Be Open
     Title Should Be    Welcome Page
 
+Click Delete Client
+    [Arguments]    ${clientName}
+    Click Link    delete_${clientName}
+
+Click Restore Client Secret
+    [Arguments]    ${clientName}
+    Click Link    restore_${clientName}
