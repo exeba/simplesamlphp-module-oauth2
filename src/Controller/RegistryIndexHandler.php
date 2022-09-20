@@ -13,13 +13,16 @@ class RegistryIndexHandler implements RequestHandlerInterface
 {
     private $clientRepository;
     private $templatedResponseBuilder;
+    private $http;
 
     public function __construct(
         ClientRepository $clientRepository,
-        TemplatedResponseBuilder $templatedResponseBuilder
+        TemplatedResponseBuilder $templatedResponseBuilder,
+        HTTP $http
     ) {
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
+        $this->http = $http;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -27,13 +30,13 @@ class RegistryIndexHandler implements RequestHandlerInterface
         if (isset($_REQUEST['delete'])) {
             $this->clientRepository->delete($_REQUEST['delete']);
 
-            HTTP::redirectTrustedURL('registry');
+            $this->http->redirectTrustedURL('registry');
         }
 
         if (isset($_REQUEST['restore'])) {
             $this->clientRepository->restoreSecret($_REQUEST['restore']);
 
-            HTTP::redirectTrustedURL('registry');
+            $this->http->redirectTrustedURL('registry');
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/index.twig', [
