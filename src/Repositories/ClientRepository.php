@@ -17,9 +17,15 @@ use SimpleSAML\Utils\Random;
 
 class ClientRepository extends BaseRepository implements ClientRepositoryInterface
 {
-    public function __construct(EntityManagerInterface $em)
+
+    private $random;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        Random $random)
     {
         parent::__construct($em, $em->getRepository(ClientEntity::class));
+        $this->random = $random;
     }
 
     /**
@@ -69,7 +75,7 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     public function restoreSecret($clientIdentifier)
     {
         $client = $this->getClientEntity($clientIdentifier);
-        $client->setSecret(Random::generateID());
+        $client->setSecret($this->random->generateID());
         $this->entityManager->flush();
     }
 }
