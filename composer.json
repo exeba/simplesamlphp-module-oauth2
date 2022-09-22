@@ -29,7 +29,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "simplesamlphp/composer-module-installer": "~1.0",
-        "league/oauth2-server": "~8.1",
+        "league/oauth2-server": "^8.1",
         "nette/forms": "~3.0",
         "laminas/laminas-diactoros": "^2.4",
         "symfony/psr-http-message-bridge": "^2.0",
