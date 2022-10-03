@@ -18,7 +18,7 @@ WORKDIR /opt/simplesamlphp
 RUN wget https://getcomposer.org/download/2.1.12/composer.phar
 RUN chmod +x composer.phar
 
-RUN ./composer.phar require "simplesamlphp/simplesamlphp:~2.0.0-rc1"
+RUN ./composer.phar require "simplesamlphp/simplesamlphp:~2.0.0-rc2"
 WORKDIR /opt/simplesamlphp/vendor/simplesamlphp/simplesamlphp
 COPY files/simplesamlphp/config/* config/
 COPY files/simplesamlphp/metadata/* metadata/
