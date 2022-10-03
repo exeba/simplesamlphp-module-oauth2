@@ -24,13 +24,13 @@ COPY files/simplesamlphp/config/* config/
 COPY files/simplesamlphp/metadata/* metadata/
 COPY files/simplesamlphp/cert/* cert/
 
+COPY files/theme-mod modules/theme-mod
+
 RUN npm install
 RUN npm run build
 
 WORKDIR /opt/simplesamlphp
 RUN ./composer.phar require "exeba/simplesamlphp-module-oauth2:dev-master"
-RUN touch vendor/simplesamlphp/simplesamlphp/modules/oauth2/enable
-RUN touch vendor/simplesamlphp/simplesamlphp/modules/exampleauth/enable
 RUN cp vendor/simplesamlphp/simplesamlphp/modules/oauth2/cli-config.php .
 
 RUN vendor/bin/doctrine orm:schema-tool:create

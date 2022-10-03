@@ -1,0 +1,82 @@
+{% extends "base.twig" %}
+
+{% set moduleurlpath = '/' ~  baseurlpath ~ 'module.php/oauth2/' %}
+
+{% block preload %}
+    <link rel="stylesheet" type="text/css" href="/{{ baseurlpath }}module.php/oauth2/resources/style.css">
+{% endblock %}
+
+{% block content %}
+<h1>Oauth2 Client Registry - CUSTOM THEME</h1>
+<p>Here you can register new OAuth2 Clients.</p>
+
+<h2>Your clients</h2>
+
+    {% for client in clients %}
+        <table id="client_{{ client.name }}" class="metalist">
+            <tr>
+                <th class="desc">Name</th>
+                <td class="data">{{ client.name }}</td>
+            </tr>
+            <tr>
+                <th class="desc">Description</th>
+                <td class="data">{{ client.description }}</td>
+            </tr>
+            <tr>
+                <th class="desc">Client ID</th>
+                <td class="data">{{ client.identifier }}</td>
+            </tr>
+            <tr>
+                <th class="desc">Scopes</th>
+                <td class="data">
+                    <ul>
+                        {% for scope in client.scopes %}
+                            <li>{{ scope }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th class="desc">Authentication Source</th>
+                <td class="data">{{ client.authSource }}</td>
+            </tr>
+            <tr>
+                <th class="desc">Client Secret</th>
+                <td class="data">{{ client.secret }}</td>
+            </tr>
+            <tr>
+                <th class="desc">Private Client</th>
+                <td class="data">{{ client.isConfidential ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th class="desc">Redirect URIs</th>
+                <td class="data">
+                    <ul>
+                        {% for uri in client.redirectUri %}
+                            <li>{{ uri }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a href="{{ moduleurlpath }}registry/edit?id={{ client.identifier }}" id="edit_{{ client.name }}" class="pure-button">Edit config</a>
+                    &nbsp;
+                    <a href="{{ moduleurlpath }}registry?restore={{ client.identifier }}" id="restore_{{ client.name }}" class="pure-button">Restore secret</a>
+                    &nbsp;
+                    <a href="{{ moduleurlpath }}registry?delete={{ client.identifier }}" id="delete_{{ client.name }}" class="pure-button pure-button-red">Delete</a>
+                </td>
+            </tr>
+        </table>
+    {% else %}
+        <table class="metalist">
+            <tr>
+                <td>No clients registered</td>
+            </tr>
+        </table>
+    {% endfor %}
+    <a href="{{ moduleurlpath }}registry/new" class="pure-button">Add new client</a>
+{% endblock %}
+
+
+

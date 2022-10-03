@@ -1,0 +1,57 @@
+{% extends "base.twig" %}
+
+{% block preload %}
+    <link rel="stylesheet" type="text/css" href="/{{ baseurlpath }}module.php/oauth2/resources/style.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Tokens - CUSTOM THEME</h1>
+    <dl>
+        {% for accessToken in accessTokens %}
+        <dt>Client: {{ accessToken.client.name }}</dt>
+        <dd>
+            <p>
+                {% set refreshToken = accessToken.refreshToken %}
+                {% if refreshToken is not null %}
+                    Refresh token expires at: {{ refreshToken.expiryDateTime.format('Y-m-d H:i:s') }}
+                    {% if refreshToken.isRevoked %}
+                        [revoked]
+                    {% else %}
+                        [ <a onclick="revokeRefreshToken('{{ refreshToken.identifier }}')" href="#">Revoke</a> ]
+                    {% endif %}<br>
+                {% endif %}
+
+                Access token expires at: {{ accessToken.expiryDateTime.format('Y-m-d H:i:s') }}
+                {% if accessToken.isRevoked %}
+                    [revoked]
+                {% else %}
+                    [ <a onclick="revokeAccessToken('{{ accessToken.identifier }}')" href="#">Revoke</a> ]
+                {% endif %}<br>
+                Access token scopes: <code>{{ accessToken.scopes | json_encode }}</code><br>
+            </p>
+        </dd>
+        {% endfor %}
+    </dl>
+    <form id="revokeForm" method="post" action="/{{ baseurlpath }}module.php/oauth2/owner/revoke-token/{{ authSource }}">
+        <input type="hidden" id="tokenType" name="tokenType" value="" />
+        <input type="hidden" id="tokenIdentifier" name="tokenIdentifier" value="" />
+    </form>
+{% endblock %}
+
+{% block postload %}
+    <script type="application/javascript">
+        function revokeRefreshToken(identifier) {
+            revokeToken('refresh', identifier);
+        }
+
+        function revokeAccessToken(identifier) {
+            revokeToken('access', identifier);
+        }
+
+        function revokeToken(type, identifier) {
+            document.getElementById('tokenType').value = type;
+            document.getElementById('tokenIdentifier').value = identifier;
+            document.forms.namedItem("revokeForm").submit();
+        }
+    </script>
+{% endblock %}

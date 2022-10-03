@@ -496,6 +496,7 @@ $config = [
         'core' => true,
         'oauth2' => true,
         'exampleauth' => true,
+        'theme-mod' => true,
     ],
 
 
@@ -850,7 +851,7 @@ $config = [
     /*
      * Which theme directory should be used?
      */
-    'theme.use' => 'default',
+    'theme.use' => 'theme-mod:custom-theme',
 
     'usenewui' => true,
 
