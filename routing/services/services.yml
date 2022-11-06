@@ -21,6 +21,11 @@ services:
     class: 'SimpleSAML\Configuration'
     factory: [ 'SimpleSAML\Configuration', 'getInstance' ]
 
+  isProductionMode:
+    class: 'bool'
+    factory: [ '@simplesamlConfig', 'getBoolean' ]
+    arguments: [ 'production' ]
+
   oauth2.userIdAttribute:
     class: 'string'
     factory: [ '@moduleConfig', 'getString' ]
@@ -148,7 +153,10 @@ services:
     arguments:
       $encryptionKey: '@oauth2.encryptionKey'
 
-  SimpleSAML\Module\oauth2\Factories\EntityManagerFactory: ~
+  SimpleSAML\Module\oauth2\Factories\EntityManagerFactory:
+    arguments:
+      $moduleConfig: '@moduleConfig'
+      $isProductionMode: '@isProductionMode'
 
   Doctrine\ORM\EntityManagerInterface:
     factory: [  '@SimpleSAML\Module\oauth2\Factories\EntityManagerFactory', 'buildEntityManager' ]
@@ -160,9 +168,11 @@ services:
   League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ClientRepository'
 
   SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository: ~
+  SimpleSAML\Module\oauth2\Repositories\ExtendedAccessTokenRepository: '@SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository'
   League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository'
 
   SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository: ~
+  SimpleSAML\Module\oauth2\Repositories\ExtendedRefreshTokenRepository: '@SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository'
   League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\RefreshTokenRepository'
 
   SimpleSAML\Module\oauth2\Repositories\ScopeRepository:
@@ -171,6 +181,7 @@ services:
   League\OAuth2\Server\Repositories\ScopeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ScopeRepository'
 
   SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository: ~
+  SimpleSAML\Module\oauth2\Repositories\ExtendedAuthCodeRepository: '@SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository'
   League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository'
 
   SimpleSAML\Module\oauth2\Services\AttributesProcessor:

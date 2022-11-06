@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+use SimpleSAML\Kernel;
+use SimpleSAML\Test\Module\oauth2\TestKernel;
+
+$simpleSamlAutoload = dirname(__DIR__,3).'/src/_autoload.php';
+$standaloneAutoload = dirname(__DIR__).'/vendor/autoload.php';
+
+if (file_exists($simpleSamlAutoload)) {
+    require_once $simpleSamlAutoload;
+
+    $kernel = new Kernel('oauth2');
+} else {
+    require_once $standaloneAutoload;
+
+    $kernel = new TestKernel();
+}
+
+$kernel->boot();
+
+$entityManager = $kernel->getContainer()->get(EntityManagerInterface::class);
+
+$commands = [
+    // If you want to add your own custom console commands,
+    // you can do so here.
+];
+
+ConsoleRunner::run(
+    new SingleManagerProvider($entityManager),
+    $commands
+);

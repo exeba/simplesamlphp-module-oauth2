@@ -13,7 +13,7 @@ class DependencyInjectionTest extends TestCase
     {
         Configuration::setConfigDir(dirname(__DIR__).'/workdir/config');
 
-        $ken = new TestKernel('oauth2');
+        $ken = new TestKernel();
         $ken->boot();
 
         $this->container = $ken->getContainer();

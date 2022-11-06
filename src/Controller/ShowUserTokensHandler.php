@@ -5,8 +5,7 @@ namespace SimpleSAML\Module\oauth2\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
-use SimpleSAML\Module\oauth2\Repositories\AuthCodeRepository;
+use SimpleSAML\Module\oauth2\Repositories\ExtendedAccessTokenRepository;
 use SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder;
 
 class ShowUserTokensHandler implements RequestHandlerInterface
@@ -16,8 +15,8 @@ class ShowUserTokensHandler implements RequestHandlerInterface
     private $templatedResponseBuilder;
 
     public function __construct(
-        AccessTokenRepository $accessTokenRepository,
-        AuthCodeRepository $authCodeRepository,
+        ExtendedAccessTokenRepository $accessTokenRepository,
+        ExtendedAccessTokenRepository $authCodeRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
     ) {
         $this->authCodeRepository = $authCodeRepository;

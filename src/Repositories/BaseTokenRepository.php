@@ -5,7 +5,7 @@ namespace SimpleSAML\Module\oauth2\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 
-class BaseTokenRepository extends BaseRepository
+class BaseTokenRepository extends BaseRepository implements ExtendedTokenRepository
 {
     public function __construct(EntityManagerInterface $entityManager, ObjectRepository $repository)
     {
@@ -47,7 +47,15 @@ class BaseTokenRepository extends BaseRepository
         return array_column($queryBuilder->getQuery()->getScalarResult(), 'identifier');
     }
 
-    protected function getActiveTokensForUser($userId)
+    public function getTokensForUser($userId)
+    {
+        return $this->objectRepository->createQueryBuilder('token')
+            ->where('token.userIdentifier = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()->getResult();
+    }
+
+    public function getActiveTokensForUser($userId)
     {
         return $this->objectRepository->createQueryBuilder('token')
             ->where('token.userIdentifier = :userId')

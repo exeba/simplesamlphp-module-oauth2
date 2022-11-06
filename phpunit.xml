@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <php>
+    <server name="KERNEL_CLASS" value="SimpleSAML\Test\Module\oauth2\TestKernel" />
+  </php>
   <coverage>
     <include>
       <directory suffix=".php">./src</directory>

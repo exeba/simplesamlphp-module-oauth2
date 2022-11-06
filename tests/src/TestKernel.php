@@ -13,13 +13,13 @@ use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
 
 class TestKernel extends Kernel
 {
-    public function __construct(string $module)
+    public function __construct()
     {
-        parent::__construct($module);
+        parent::__construct('oauth2');
         $this->debug = true;
     }
 
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $configuration = Configuration::getInstance();
         $baseDir = $configuration->getBaseDir();
