@@ -33,11 +33,12 @@ WORKDIR /opt/simplesamlphp
 RUN ./composer.phar require "exeba/simplesamlphp-module-oauth2:dev-master"
 RUN cp vendor/simplesamlphp/simplesamlphp/modules/oauth2/cli-config.php .
 
-RUN vendor/bin/doctrine orm:schema-tool:create
-RUN vendor/bin/doctrine orm:schema-tool:update --force
-RUN vendor/bin/doctrine orm:generate-proxies
+RUN vendor/simplesamlphp/simplesamlphp/modules/oauth2/bin/doctrine orm:schema-tool:create
+RUN vendor/simplesamlphp/simplesamlphp/modules/oauth2/bin/doctrine orm:schema-tool:update --force
+RUN vendor/simplesamlphp/simplesamlphp/modules/oauth2/bin/doctrine orm:generate-proxies
 
 RUN chown www-data:www-data -R /opt/simplesamlphp
+RUN chown www-data:www-data -R /tmp/simplesaml
 
 RUN mkdir /opt/dummyclient
 COPY files/dummyclient /opt/dummyclient

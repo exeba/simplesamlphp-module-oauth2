@@ -25,11 +25,10 @@ and edit it. The options are self explained.
 
 ### Create or the schema
 
-The schema is maintaned using doctrine command line tool  ```vendor/bin/doctrine```.
-Tou just need to copy the ```cli.config.php``` file into the main directory:
+The schema is maintaned using doctrine command line tool located at
 
 ```
-cp vendor/simplesamlphp/simplesamlphp/modules/oauth2/cli-config.php .
+path/to/simplesaml/modules/oauth2/bin/doctrine
 ```
 
 ## Create oauth2 clients
