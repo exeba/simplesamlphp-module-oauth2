@@ -7,5 +7,5 @@ use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
 interface ExtendedRefreshTokenRepository extends RefreshTokenRepositoryInterface
 {
-    public function findByIdentifier($identifier):? RefreshTokenEntity;
+    public function findByIdentifier($identifier): ?RefreshTokenEntity;
 }

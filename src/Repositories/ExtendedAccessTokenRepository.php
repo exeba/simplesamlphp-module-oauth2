@@ -7,5 +7,5 @@ use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
 
 interface ExtendedAccessTokenRepository extends AccessTokenRepositoryInterface
 {
-    public function findByIdentifier($identifier):? AccessTokenEntity;
+    public function findByIdentifier($identifier): ?AccessTokenEntity;
 }

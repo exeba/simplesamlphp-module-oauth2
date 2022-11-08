@@ -22,7 +22,7 @@ class AccessTokenRepository extends BaseTokenRepository implements ExtendedAcces
         parent::__construct($em, $em->getRepository(AccessTokenEntity::class));
     }
 
-    public function findByIdentifier($identifier):? AccessTokenEntity
+    public function findByIdentifier($identifier): ?AccessTokenEntity
     {
         return parent::findByIdentifier($identifier);
     }

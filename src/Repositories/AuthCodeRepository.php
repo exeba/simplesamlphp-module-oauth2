@@ -13,7 +13,7 @@ class AuthCodeRepository extends BaseTokenRepository implements ExtendedAuthCode
         parent::__construct($em, $em->getRepository(AuthCodeEntity::class));
     }
 
-    public function findByIdentifier($identifier):? AuthCodeEntity
+    public function findByIdentifier($identifier): ?AuthCodeEntity
     {
         return parent::findByIdentifier($identifier);
     }

@@ -13,7 +13,7 @@ class RefreshTokenRepository extends BaseTokenRepository implements ExtendedRefr
         parent::__construct($em, $em->getRepository(RefreshTokenEntity::class));
     }
 
-    public function findByIdentifier($identifier):? RefreshTokenEntity
+    public function findByIdentifier($identifier): ?RefreshTokenEntity
     {
         return parent::findByIdentifier($identifier);
     }

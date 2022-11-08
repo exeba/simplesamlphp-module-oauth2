@@ -7,5 +7,5 @@ use SimpleSAML\Module\oauth2\Entity\AuthCodeEntity;
 
 interface ExtendedAuthCodeRepository extends AuthCodeRepositoryInterface
 {
-    public function findByIdentifier($identifier):? AuthCodeEntity;
+    public function findByIdentifier($identifier): ?AuthCodeEntity;
 }
