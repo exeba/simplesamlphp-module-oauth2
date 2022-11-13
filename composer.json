@@ -38,7 +38,8 @@
     },
     "require-dev": {
         "simplesamlphp/simplesamlphp"               : ">=2.0.0-rc",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "dama/doctrine-test-bundle": "^7.1"
     },
     "config": {
         "allow-plugins": {
