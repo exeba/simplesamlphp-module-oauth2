@@ -6,9 +6,9 @@ use SimpleSAML\Configuration;
 
 class Template extends \SimpleSAML\XHTML\Template
 {
-    public function __construct(Configuration $configuration, $template, $defaultDictionary = null)
+    public function __construct(Configuration $configuration, $template)
     {
-        parent::__construct($configuration, $template, $defaultDictionary);
+        parent::__construct($configuration, $template);
     }
 
     public function getContent()

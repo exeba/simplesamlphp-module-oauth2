@@ -218,9 +218,11 @@ services:
 
   Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory: ~
 
-  SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder:
+  SimpleSAML\Module\oauth2\Services\TemplateFactory:
     arguments:
       $configuration: '@simplesamlConfig'
+
+  SimpleSAML\Module\oauth2\Services\TemplatedResponseBuilder: ~
 
   SimpleSAML\Module\oauth2\Middleware\AuthenticatedAdminMiddleware: ~
 
