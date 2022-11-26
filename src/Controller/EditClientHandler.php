@@ -13,27 +13,28 @@ use SimpleSAML\Utils\HTTP;
 
 class EditClientHandler implements RequestHandlerInterface
 {
+    private $http;
     private $clientRepository;
     private $templatedResponseBuilder;
 
     public function __construct(
+        Http $http,
         ClientRepository $clientRepository,
         TemplatedResponseBuilder $templatedResponseBuilder
     ) {
+        $this->http = $http;
         $this->clientRepository = $clientRepository;
         $this->templatedResponseBuilder = $templatedResponseBuilder;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $client = $this->getClientOrThrow($request);
-        $form = new ClientForm('client');
-        $form->setClientEntity($client);
+        $form = new ClientForm('client', $this->getClientOrThrow($request));
         if ($form->isSubmitted() && $form->isSuccess()) {
             $client = $form->getClientEntity();
-            $this->clientRepository->updateClient($client);
+            $this->clientRepository->persistNewClient($client);
 
-            HTTP::redirectTrustedURL('');
+            $this->http->redirectTrustedURL('');
         }
 
         return $this->templatedResponseBuilder->buildResponse('oauth2:registry/new.twig', [

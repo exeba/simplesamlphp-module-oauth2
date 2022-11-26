@@ -31,8 +31,7 @@ class AuthCodeRepository extends BaseTokenRepository implements ExtendedAuthCode
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        $this->entityManager->persist($authCodeEntity);
-        $this->entityManager->flush();
+        $this->persistToken($authCodeEntity);
     }
 
     /**
@@ -49,15 +48,5 @@ class AuthCodeRepository extends BaseTokenRepository implements ExtendedAuthCode
     public function isAuthCodeRevoked($codeId)
     {
         return $this->isTokenRevoked($codeId);
-    }
-
-    public function getActiveTokensForUser($userId)
-    {
-        return $this->objectRepository->createQueryBuilder('token')
-            ->where('token.userIdentifier = :userId')
-            ->andWhere('token.expiryDateTime > :now')
-            ->setParameter('userId', $userId)
-            ->setParameter('now', new \DateTimeImmutable())
-            ->getQuery()->getResult();
     }
 }

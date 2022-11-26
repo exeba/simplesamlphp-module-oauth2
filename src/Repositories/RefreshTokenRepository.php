@@ -31,8 +31,7 @@ class RefreshTokenRepository extends BaseTokenRepository implements ExtendedRefr
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        $this->entityManager->persist($refreshTokenEntity);
-        $this->entityManager->flush();
+        $this->persistToken($refreshTokenEntity);
     }
 
     /**
@@ -49,12 +48,5 @@ class RefreshTokenRepository extends BaseTokenRepository implements ExtendedRefr
     public function isRefreshTokenRevoked($tokenId)
     {
         return $this->isTokenRevoked($tokenId);
-    }
-
-    public function getRefreshTokenFromAccessToken($accessTokenId)
-    {
-        return $this->objectRepository->findOneBy([
-            'accessToken' => $accessTokenId,
-            ]);
     }
 }

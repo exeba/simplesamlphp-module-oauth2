@@ -60,6 +60,7 @@ class BaseTokenRepository extends BaseRepository implements ExtendedTokenReposit
         return $this->objectRepository->createQueryBuilder('token')
             ->where('token.userIdentifier = :userId')
             ->andWhere('token.expiryDateTime > :now')
+            ->andWhere('token.isRevoked = 0')
             ->setParameter('userId', $userId)
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()->getResult();

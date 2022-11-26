@@ -2,8 +2,8 @@
 
 namespace SimpleSAML\Module\oauth2\src\Repositories;
 
-use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
+use SimpleSAML\Test\Module\oauth2\Fixtures\Fixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ClientRepositoryTest extends KernelTestCase
@@ -23,15 +23,25 @@ class ClientRepositoryTest extends KernelTestCase
 
     public function testPersistNewClient()
     {
-        $clientEntity = new ClientEntity();
-        $clientEntity->setIdentifier('test-client');
-        $clientEntity->setName('Test Client');
-        $clientEntity->setSecret('test-client-secret');
-        $clientEntity->setScopes([]);
-        $clientEntity->setAuthSource('test-auth-source');
-        $clientEntity->setConfidential(true);
-        $clientEntity->setRedirectUri('http://localhost/redirct/uri');
-
+        $clientEntity = Fixtures::newClientEntity('new-client', true);
         $this->getRepository()->persistNewClient($clientEntity);
+
+        $retrievedClientEntity = $this->getRepository()->findByIdentifier('new-client');
+
+        $this->assertEquals($clientEntity, $retrievedClientEntity);
+    }
+
+    public function testRestoreSecret()
+    {
+        $clientEntity = Fixtures::newClientEntity('new-client', true);
+        $oldSecret = $clientEntity->getSecret();
+        $this->getRepository()->persistNewClient($clientEntity);
+
+        $this->getRepository()->restoreSecret('new-client');
+
+        $retrievedClientEntity = $this->getRepository()->findByIdentifier('new-client');
+        $newSecret = $retrievedClientEntity->getSecret();
+
+        $this->assertNotEquals($oldSecret, $newSecret);
     }
 }

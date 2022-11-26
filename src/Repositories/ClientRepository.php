@@ -48,18 +48,6 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     public function persistNewClient(ClientEntity $client)
     {
         $this->entityManager->persist($client);
-        $this->entityManager->flush($client);
-    }
-
-    public function updateClient(ClientEntity $client)
-    {
-        $oldClient = $this->getClientEntity($client->getIdentifier());
-        $oldClient->setName($client->getName());
-        $oldClient->setDescription($client->getDescription());
-        $oldClient->setAuthSource($client->getAuthSource());
-        $oldClient->setRedirectUri($client->getRedirectUri());
-        $oldClient->setScopes($client->getScopes());
-        $oldClient->setConfidential($client->isConfidential());
         $this->entityManager->flush();
     }
 

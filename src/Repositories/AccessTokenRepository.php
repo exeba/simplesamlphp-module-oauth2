@@ -47,8 +47,7 @@ class AccessTokenRepository extends BaseTokenRepository implements ExtendedAcces
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        $this->entityManager->persist($accessTokenEntity);
-        $this->entityManager->flush();
+        $this->persistToken($accessTokenEntity);
     }
 
     /**
@@ -65,30 +64,5 @@ class AccessTokenRepository extends BaseTokenRepository implements ExtendedAcces
     public function isAccessTokenRevoked($tokenId)
     {
         return $this->isTokenRevoked($tokenId);
-    }
-
-    public function getTokensForUser($userId)
-    {
-        return $this->objectRepository->createQueryBuilder('token')
-            ->where('token.userIdentifier = :userId')
-            ->setParameter('userId', $userId)
-            ->getQuery()->getResult();
-    }
-
-    protected function revokedTokensIdsQueryBuilder()
-    {
-        return $this->withoutRefreshToken(parent::revokedTokensIdsQueryBuilder());
-    }
-
-    protected function expiredTokensIdsQueryBuilder()
-    {
-        return $this->withoutRefreshToken(parent::expiredTokensIdsQueryBuilder());
-    }
-
-    private function withoutRefreshToken($queryBuilder)
-    {
-        return $queryBuilder
-            ->leftJoin('t.refreshToken', 'r')
-            ->andWhere('r.identifier IS NULL');
     }
 }

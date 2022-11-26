@@ -27,4 +27,10 @@ class BaseRepository
         $this->entityManager->remove($entity);
         $this->entityManager->flush();
     }
+
+    public function persistToken($token)
+    {
+        $this->entityManager->persist($token);
+        $this->entityManager->flush();
+    }
 }

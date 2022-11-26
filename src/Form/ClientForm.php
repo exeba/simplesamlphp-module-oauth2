@@ -10,6 +10,7 @@
 
 namespace SimpleSAML\Module\oauth2\Form;
 
+use DoctrineProxies\__CG__\SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use Nette\Forms\Form;
 use SimpleSAML\Auth\Source;
 use SimpleSAML\Module;
@@ -21,9 +22,15 @@ class ClientForm extends Form
     /**
      * {@inheritdoc}
      */
-    public function __construct($name)
+    public function __construct($name, ClientEntity $clientEntity = null)
     {
         parent::__construct($name);
+
+        if ($clientEntity) {
+            $this->setClientEntity($clientEntity);
+        } else {
+            $this->clientEntity = new ClientEntity();
+        }
 
         $this->onValidate[] = [$this, 'validateRedirectUri'];
 
@@ -68,7 +75,7 @@ class ClientForm extends Form
         $values = $this->getValues();
         $redirect_uris = $values['redirect_uri'];
         foreach ($redirect_uris as $redirect_uri) {
-            if (false === filter_var($redirect_uri, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+            if (false === filter_var($redirect_uri, FILTER_VALIDATE_URL)) {
                 $this->addError('Invalid URI: '.$redirect_uri);
             }
         }
@@ -81,21 +88,14 @@ class ClientForm extends Form
     {
         $values = parent::getValues(true);
 
-        $entity = new Module\oauth2\Entity\ClientEntity();
+        $this->clientEntity->setName($values['name']);
+        $this->clientEntity->setDescription($values['description']);
+        $this->clientEntity->setAuthSource($values['auth_source']);
+        $this->clientEntity->setScopes($this->splitWhitespaces($values['scopes']));
+        $this->clientEntity->setRedirectUri($this->splitWhitespaces($values['redirect_uri']));
+        $this->clientEntity->setConfidential($values['is_confidential']);
 
-        if ($this->clientEntity) {
-            $entity->setIdentifier($this->clientEntity->getIdentifier());
-            $entity->setSecret($this->clientEntity->getSecret());
-        }
-
-        $entity->setName($values['name']);
-        $entity->setDescription($values['description']);
-        $entity->setAuthSource($values['auth_source']);
-        $entity->setScopes($this->splitWhitespaces($values['scopes']));
-        $entity->setRedirectUri($this->splitWhitespaces($values['redirect_uri']));
-        $entity->setConfidential($values['is_confidential']);
-
-        return $entity;
+        return $this->clientEntity;
     }
 
     private function splitWhitespaces($string)
@@ -110,7 +110,7 @@ class ClientForm extends Form
     /**
      * {@inheritdoc}
      */
-    public function setClientEntity(Module\oauth2\Entity\ClientEntity $entity)
+    public function setClientEntity(ClientEntity $entity)
     {
         $this->clientEntity = $entity;
 
