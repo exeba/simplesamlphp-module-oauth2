@@ -5,6 +5,7 @@ namespace SimpleSAML\Test\Module\oauth2\Fixtures;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
+use SimpleSAML\Module\oauth2\Entity\AuthCodeEntity;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
 use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
@@ -102,6 +103,44 @@ class Fixtures implements FixtureInterface
         $token = new RefreshTokenEntity();
         $token->setIdentifier($identifier);
         $token->setAccessToken($accessToken);
+
+        return $token;
+    }
+
+    public static function newRevokedAuthCode(string $identifier, ClientEntity $client, $userIdentifier)
+    {
+        $token = self::newAuthCode($identifier, $client, $userIdentifier);
+        self::nonExpired($token);
+        self::revoked($token);
+
+        return $token;
+    }
+
+    public static function newExpiredAuthCode(string $identifier, ClientEntity $client, $userIdentifier)
+    {
+        $token = self::newAuthCode($identifier, $client, $userIdentifier);
+        self::expired($token);
+        self::nonRevoked($token);
+
+        return $token;
+    }
+
+    public static function newValidAuthCode(string $identifier, ClientEntity $client, $userIdentifier)
+    {
+        $token = self::newAuthCode($identifier, $client, $userIdentifier);
+        self::nonExpired($token);
+        self::nonRevoked($token);
+
+        return $token;
+    }
+
+    private static function newAuthCode(string $identifier, ClientEntity $client, $userIdentifier)
+    {
+        $token = new AuthCodeEntity();
+        $token->setIdentifier($identifier);
+        $token->setClient($client);
+        $token->setUserIdentifier($userIdentifier);
+        $token->setRedirectUri($client->getRedirectUri());
 
         return $token;
     }
