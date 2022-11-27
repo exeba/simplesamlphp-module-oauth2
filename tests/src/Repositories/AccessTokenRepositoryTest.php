@@ -5,9 +5,8 @@ namespace SimpleSAML\Module\oauth2\src\Repositories;
 use SimpleSAML\Module\oauth2\Repositories\AccessTokenRepository;
 use SimpleSAML\Module\oauth2\Repositories\ClientRepository;
 use SimpleSAML\Test\Module\oauth2\Fixtures\Fixtures;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class AccessTokenRepositoryTest extends KernelTestCase
+class AccessTokenRepositoryTest extends AbstractTokenRepositoryTest
 {
     private $clientRepository;
     private $repository;
@@ -19,70 +18,62 @@ class AccessTokenRepositoryTest extends KernelTestCase
         $this->clientRepository = $kernel->getContainer()->get(ClientRepository::class);
     }
 
-    private function getRepository(): AccessTokenRepository
+    protected function getRepository(): AccessTokenRepository
     {
         return $this->repository;
     }
 
-    private function getClientRepository(): ClientRepository
-    {
-        return $this->clientRepository;
-    }
-
-    public function testGetTokensForUser()
+    protected function newValidToken($tokenId)
     {
         $clientEntity = $this->getAnyClient();
-        $this->getRepository()->persistNewAccessToken(Fixtures::newValidAccessToken(
-            'valid-access-token-id',
+        $token = Fixtures::newValidAccessToken(
+            $tokenId,
             $clientEntity,
             'user-id'
-        ));
-        $this->getRepository()->persistNewAccessToken($accessToken = Fixtures::newExpiredAccessToken(
-            'expired-access-token-id',
-            $clientEntity,
-            'user-id'
-        ));
+        );
+        $this->getRepository()->persistNewAccessToken($token);
 
-        $tokens = $this->getRepository()->getTokensForUser('user-id');
-        $this->assertCount(2, $tokens);
+        return $token;
     }
 
-    public function testGetActiveTokensForUser()
+    protected function newExpiredToken($tokenId)
     {
         $clientEntity = $this->getAnyClient();
-        $this->getRepository()->persistNewAccessToken(Fixtures::newValidAccessToken(
-            'valid-access-token-id',
+        $token = Fixtures::newExpiredAccessToken(
+            $tokenId,
             $clientEntity,
             'user-id'
-        ));
-        $this->getRepository()->persistNewAccessToken($accessToken = Fixtures::newExpiredAccessToken(
-            'expired-access-token-id',
-            $clientEntity,
-            'user-id'
-        ));
+        );
+        $this->getRepository()->persistNewAccessToken($token);
 
-        $tokens = $this->getRepository()->getActiveTokensForUser('user-id');
-        $this->assertCount(1, $tokens);
+        return $token;
     }
 
-    public function testRevokeToken()
+    protected function newRevokedToken($tokenId)
     {
         $clientEntity = $this->getAnyClient();
-        $this->getRepository()->persistNewAccessToken(Fixtures::newValidAccessToken(
-            'valid-access-token-id',
+        $token = Fixtures::newRevokedAccessToken(
+            $tokenId,
             $clientEntity,
             'user-id'
-        ));
+        );
+        $this->getRepository()->persistNewAccessToken($token);
 
-        $this->assertCount(1, $this->getRepository()->getActiveTokensForUser('user-id'));
-        $this->getRepository()->revokeAccessToken('valid-access-token-id');
-        $this->assertCount(0, $this->getRepository()->getActiveTokensForUser('user-id'));
-        $this->assertTrue($this->getRepository()->isAccessTokenRevoked('valid-access-token-id'));
-        $this->assertTrue($this->getRepository()->isAccessTokenRevoked('valid-access-token-id'));
+        return $token;
     }
 
     private function getAnyClient()
     {
-        return $this->getClientRepository()->findAll()[0];
+        return $this->clientRepository->findAll()[0];
+    }
+
+    protected function isTokenRevoked($tokenId)
+    {
+        return $this->getRepository()->isAccessTokenRevoked($tokenId);
+    }
+
+    protected function revokeToken($tokenId)
+    {
+        $this->getRepository()->revokeAccessToken($tokenId);
     }
 }

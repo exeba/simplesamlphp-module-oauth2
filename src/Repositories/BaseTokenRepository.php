@@ -3,6 +3,7 @@
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 
 class BaseTokenRepository extends BaseRepository implements ExtendedTokenRepository
@@ -49,21 +50,28 @@ class BaseTokenRepository extends BaseRepository implements ExtendedTokenReposit
 
     public function getTokensForUser($userId)
     {
-        return $this->objectRepository->createQueryBuilder('token')
-            ->where('token.userIdentifier = :userId')
-            ->setParameter('userId', $userId)
+        $builder = $this->objectRepository->createQueryBuilder('token');
+
+        return $this->matchUser($userId, $builder)
             ->getQuery()->getResult();
     }
 
     public function getActiveTokensForUser($userId)
     {
-        return $this->objectRepository->createQueryBuilder('token')
-            ->where('token.userIdentifier = :userId')
+        $builder = $this->objectRepository->createQueryBuilder('token')
             ->andWhere('token.expiryDateTime > :now')
             ->andWhere('token.isRevoked = 0')
-            ->setParameter('userId', $userId)
-            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('now', new \DateTimeImmutable());
+
+        return $this->matchUser($userId, $builder)
             ->getQuery()->getResult();
+    }
+
+    protected function matchUser($userId, QueryBuilder $builder)
+    {
+        return $builder
+            ->andWhere('token.userIdentifier = :userId')
+            ->setParameter('userId', $userId);
     }
 
     protected function revokedTokensIdsQueryBuilder()

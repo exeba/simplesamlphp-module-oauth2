@@ -6,6 +6,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use SimpleSAML\Module\oauth2\Entity\AccessTokenEntity;
 use SimpleSAML\Module\oauth2\Entity\ClientEntity;
+use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
 class Fixtures implements FixtureInterface
 {
@@ -32,11 +33,20 @@ class Fixtures implements FixtureInterface
         return $clientEntity;
     }
 
+    public static function newRevokedAccessToken(string $identifier, ClientEntity $client, $userIdentifier)
+    {
+        $token = self::newAccessToken($identifier, $client, $userIdentifier);
+        self::nonExpired($token);
+        self::revoked($token);
+
+        return $token;
+    }
+
     public static function newExpiredAccessToken(string $identifier, ClientEntity $client, $userIdentifier)
     {
         $token = self::newAccessToken($identifier, $client, $userIdentifier);
-        $token->setExpiryDateTime((new \DateTimeImmutable())->modify('-1 month'));
-        $token->setRevoked(false);
+        self::expired($token);
+        self::nonRevoked($token);
 
         return $token;
     }
@@ -44,8 +54,8 @@ class Fixtures implements FixtureInterface
     public static function newValidAccessToken(string $identifier, ClientEntity $client, $userIdentifier)
     {
         $token = self::newAccessToken($identifier, $client, $userIdentifier);
-        $token->setExpiryDateTime((new \DateTimeImmutable())->modify('+1 month'));
-        $token->setRevoked(false);
+        self::nonExpired($token);
+        self::nonRevoked($token);
 
         return $token;
     }
@@ -58,5 +68,61 @@ class Fixtures implements FixtureInterface
         $token->setUserIdentifier($userIdentifier);
 
         return $token;
+    }
+
+    public static function newRevokedRefreshToken(string $identifier, AccessTokenEntity $accessToken)
+    {
+        $token = self::newRefreshToken($identifier, $accessToken);
+        self::nonExpired($token);
+        self::revoked($token);
+
+        return $token;
+    }
+
+    public static function newExpiredRefreshToken(string $identifier, AccessTokenEntity $accessToken)
+    {
+        $token = self::newRefreshToken($identifier, $accessToken);
+        self::expired($token);
+        self::nonRevoked($token);
+
+        return $token;
+    }
+
+    public static function newValidRefreshToken(string $identifier, AccessTokenEntity $accessToken)
+    {
+        $token = self::newRefreshToken($identifier, $accessToken);
+        self::nonExpired($token);
+        self::nonRevoked($token);
+
+        return $token;
+    }
+
+    private static function newRefreshToken(string $identifier, AccessTokenEntity $accessToken)
+    {
+        $token = new RefreshTokenEntity();
+        $token->setIdentifier($identifier);
+        $token->setAccessToken($accessToken);
+
+        return $token;
+    }
+
+    private static function nonExpired($token)
+    {
+        $token->setExpiryDateTime((new \DateTimeImmutable())->modify('+1 month'));
+    }
+
+    private static function expired($token)
+    {
+        $token->setExpiryDateTime((new \DateTimeImmutable())->modify('-1 month'));
+    }
+
+    private static function revoked($token)
+    {
+        $token->setRevoked(true);
+    }
+
+    private static function nonRevoked($token)
+    {
+        $token->setRevoked(false);
     }
 }

@@ -3,6 +3,7 @@
 namespace SimpleSAML\Module\oauth2\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use SimpleSAML\Module\oauth2\Entity\RefreshTokenEntity;
 
@@ -48,5 +49,13 @@ class RefreshTokenRepository extends BaseTokenRepository implements ExtendedRefr
     public function isRefreshTokenRevoked($tokenId)
     {
         return $this->isTokenRevoked($tokenId);
+    }
+
+    protected function matchUser($userId, QueryBuilder $builder)
+    {
+        return $builder
+            ->join('token.accessToken', 'aToken')
+            ->andWhere('aToken.userIdentifier = :userId')
+            ->setParameter('userId', $userId);
     }
 }
