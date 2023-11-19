@@ -111,11 +111,15 @@ services:
     factory: [ '@moduleConfig', 'getOptionalArray' ]
     arguments: [ 'singleValuedAttributes', null ]
 
+  OpenIDConnectServer\ClaimExtractor: ~
+  OpenIDConnectServer\IdTokenResponse: ~
+
   oauth2.unconfiguredAuthorizationServer:
     class: 'League\OAuth2\Server\AuthorizationServer'
     arguments:
       $privateKey: '@oauth2.privateKey'
       $encryptionKey: '@oauth2.encryptionKey'
+      $responseType: '@OpenIDConnectServer\IdTokenResponse'
 
   SimpleSAML\Module\oauth2\AuthorizationServerConfigurator:
     arguments:
@@ -163,6 +167,7 @@ services:
 
   SimpleSAML\Module\oauth2\Repositories\UserRepository: ~
   League\OAuth2\Server\Repositories\UserRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\UserRepository'
+  OpenIDConnectServer\Repositories\IdentityProviderInterface: '@SimpleSAML\Module\oauth2\Repositories\UserRepository'
 
   SimpleSAML\Module\oauth2\Repositories\ClientRepository: ~
   League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@SimpleSAML\Module\oauth2\Repositories\ClientRepository'

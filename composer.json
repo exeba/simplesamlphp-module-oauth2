@@ -34,7 +34,8 @@
         "laminas/laminas-diactoros": "^2.4",
         "symfony/psr-http-message-bridge": "^2.0",
         "psr/http-server-middleware": "^1.0",
-        "doctrine/orm": "^2.10"
+        "doctrine/orm": "^2.10",
+        "steverhoades/oauth2-openid-connect-server": "^2.6"
     },
     "require-dev": {
         "simplesamlphp/simplesamlphp"               : "~2.0.0",

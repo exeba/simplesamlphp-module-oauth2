@@ -11,8 +11,9 @@
 namespace SimpleSAML\Module\oauth2\Entity;
 
 use League\OAuth2\Server\Entities\UserEntityInterface;
+use OpenIDConnectServer\Entities\ClaimSetInterface;
 
-class UserEntity implements UserEntityInterface
+class UserEntity implements UserEntityInterface, ClaimSetInterface
 {
     /**
      * @var string
@@ -58,6 +59,11 @@ class UserEntity implements UserEntityInterface
     public function setIdentifier($identifier)
     {
         $this->identifier = $identifier;
+    }
+
+    public function getClaims()
+    {
+        return $this->getAttributes();
     }
 
     /**

@@ -6,9 +6,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use OpenIDConnectServer\Repositories\IdentityProviderInterface;
 use SimpleSAML\Module\oauth2\Entity\UserEntity;
 
-class UserRepository extends BaseRepository implements UserRepositoryInterface
+class UserRepository extends BaseRepository implements UserRepositoryInterface, IdentityProviderInterface
 {
     public function __construct(EntityManagerInterface $em)
     {
@@ -22,6 +23,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         ClientEntityInterface $clientEntity
     ) {
         throw new Exception('Not supported');
+    }
+
+    public function getUserEntityByIdentifier($identifier)
+    {
+        return $this->getUserEntity($identifier);
     }
 
     public function getUserEntity($userIdentifier): UserEntity
