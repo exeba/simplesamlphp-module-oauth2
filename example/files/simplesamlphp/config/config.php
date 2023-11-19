@@ -62,7 +62,7 @@ $config = [
      * When specified as a relative path, this is relative to the SimpleSAMLphp
      * root directory.
      */
-    'certdir' => 'cert/',
+    'certdir' => dirname(__DIR__).'/cert/',
     'loggingdir' => 'log/',
     'datadir' => 'data/',
     'tempdir' => '/tmp/simplesaml',
@@ -897,7 +897,7 @@ $config = [
      *
      * Defaults to true.
      */
-    'production' => true,
+    'production' => false,
 
     /*
      * SimpleSAMLphp modules can host static resources which are served through PHP.
@@ -1057,7 +1057,7 @@ $config = [
      * This option allows you to specify a directory for your metadata outside of the standard metadata directory
      * included in the standard distribution of the software.
      */
-    'metadatadir' => 'metadata',
+    'metadatadir' => dirname(__DIR__).'/metadata',
 
     /*
      * This option configures the metadata sources. The metadata sources is given as an array with

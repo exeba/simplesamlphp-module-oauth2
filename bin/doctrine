@@ -7,10 +7,15 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use SimpleSAML\Kernel;
 use SimpleSAML\Test\Module\oauth2\TestKernel;
 
+$developmentAutoload = getenv('SIMPLESAMLPHP_INSTALL_DIR').'/src/_autoload.php';
 $simpleSamlAutoload = dirname(__DIR__,3).'/src/_autoload.php';
 $standaloneAutoload = dirname(__DIR__).'/vendor/autoload.php';
 
-if (file_exists($simpleSamlAutoload)) {
+if (file_exists($developmentAutoload)) {
+    require_once $developmentAutoload;
+
+    $kernel = new Kernel('oauth2');
+} elseif (file_exists($simpleSamlAutoload)) {
     require_once $simpleSamlAutoload;
 
     $kernel = new Kernel('oauth2');

@@ -31,6 +31,14 @@ $config = [
     // You can create as many scopes as you want and assign attributes to them
     // WIP: Actually only basic scope is supported with all the attributes
     'scopes' => [
+        'openid' => [
+            'icon' => 'user',
+            'description' => [
+                'en' => 'Your username.',
+                'es' => 'Su nombre de usuario.'
+            ],
+            'attributes' => ['uid'],
+        ],
         'basic' => [
             'icon' => 'user',
             'description' => [
@@ -39,7 +47,7 @@ $config = [
             ],
             'attributes' => ['uid'],
         ],
-        'extra' => [
+        'extras' => [
             'icon' => 'user',
             'description' => [
                 'en' => 'Your username.',
