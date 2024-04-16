@@ -37,7 +37,7 @@
         "doctrine/orm": "^2.10"
     },
     "require-dev": {
-        "simplesamlphp/simplesamlphp"               : "~2.0.0",
+        "simplesamlphp/simplesamlphp"               : "^2.0.0",
         "phpunit/phpunit": "^9.0",
         "dama/doctrine-test-bundle": "^7.1",
         "doctrine/data-fixtures": "^1.5"
